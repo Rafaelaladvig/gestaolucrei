@@ -960,6 +960,19 @@
   /* Modal do card por cima do calendário */
   #modal-card { z-index: 400; }
 
+
+  /* ── EDITOR DE OPÇÕES (estilo/formato) ── */
+  #modal-editor-opcoes { z-index: 500; }
+  .editor-opcoes-wrap { max-width: 400px; width: 100%; }
+  .editor-opcoes-list { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; max-height: 300px; overflow-y: auto; }
+  .editor-opcoes-item { display: flex; align-items: center; gap: 6px; }
+  .editor-opcoes-item input { flex: 1; border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 8px; font-size: 13px; font-family: var(--font-body); background: var(--surface); color: var(--text); }
+  .editor-opcoes-item input:focus { outline: none; border-color: var(--verde); }
+  .btn-del-opcao { border: 1px solid var(--border2); background: transparent; border-radius: var(--radius); padding: 4px 7px; cursor: pointer; color: var(--rose); font-size: 12px; flex-shrink: 0; }
+  .btn-del-opcao:hover { background: #fdecea; }
+  .btn-add-opcao-editor { font-size: 12px; color: var(--verde); background: none; border: 1px dashed var(--verde); border-radius: var(--radius); padding: 5px 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+  .btn-add-opcao-editor:hover { background: var(--verde-light); }
+
 </style>
 </head>
 <body style="overflow:auto">
@@ -1572,26 +1585,19 @@
     </div>
     <div class="form-group">
       <label>estilo do conteúdo</label>
-      <select id="in-estilo" onchange="toggleEstiloOutro()">
-        <option value="">— selecione —</option>
-        <option value="lofi">Lo-fi</option>
-        <option value="broll">B-roll</option>
-        <option value="problema-solucao">Problema e solução</option>
-        <option value="outro">Outro</option>
-      </select>
+      <div style="display:flex;align-items:center;gap:6px">
+        <select id="in-estilo" onchange="toggleEstiloOutro()" style="flex:1"></select>
+        <button type="button" onclick="openEditorOpcoes('estilo')" title="Editar estilos" style="flex-shrink:0;border:1px solid var(--border);background:var(--surface2);border-radius:var(--radius);padding:4px 7px;cursor:pointer;font-size:12px;color:var(--text2)"><i class="ti ti-settings"></i></button>
+      </div>
       <input type="text" id="in-estilo-outro" placeholder="descreva o estilo..." style="display:none;margin-top:8px" />
     </div>
     <div class="form-row">
       <div class="form-group">
         <label>formato</label>
-        <select id="in-formato">
-          <option>Reels</option>
-          <option>Carrossel</option>
-          <option>Stories</option>
-          <option>Post estático</option>
-          <option>TikTok</option>
-          <option>Lives</option>
-        </select>
+        <div style="display:flex;align-items:center;gap:6px">
+          <select id="in-formato" style="flex:1"></select>
+          <button type="button" onclick="openEditorOpcoes('formato')" title="Editar formatos" style="flex-shrink:0;border:1px solid var(--border);background:var(--surface2);border-radius:var(--radius);padding:4px 7px;cursor:pointer;font-size:12px;color:var(--text2)"><i class="ti ti-settings"></i></button>
+        </div>
       </div>
       <div class="form-group">
         <label>data prevista</label>
@@ -1973,26 +1979,19 @@
     </div>
     <div class="form-group">
       <label>estilo do conteúdo</label>
-      <select id="in-estilo" onchange="toggleEstiloOutro()">
-        <option value="">— selecione —</option>
-        <option value="lofi">Lo-fi</option>
-        <option value="broll">B-roll</option>
-        <option value="problema-solucao">Problema e solução</option>
-        <option value="outro">Outro</option>
-      </select>
+      <div style="display:flex;align-items:center;gap:6px">
+        <select id="in-estilo" onchange="toggleEstiloOutro()" style="flex:1"></select>
+        <button type="button" onclick="openEditorOpcoes('estilo')" title="Editar estilos" style="flex-shrink:0;border:1px solid var(--border);background:var(--surface2);border-radius:var(--radius);padding:4px 7px;cursor:pointer;font-size:12px;color:var(--text2)"><i class="ti ti-settings"></i></button>
+      </div>
       <input type="text" id="in-estilo-outro" placeholder="descreva o estilo..." style="display:none;margin-top:8px" />
     </div>
     <div class="form-row">
       <div class="form-group">
         <label>formato</label>
-        <select id="in-formato">
-          <option>Reels</option>
-          <option>Carrossel</option>
-          <option>Stories</option>
-          <option>Post estático</option>
-          <option>TikTok</option>
-          <option>Lives</option>
-        </select>
+        <div style="display:flex;align-items:center;gap:6px">
+          <select id="in-formato" style="flex:1"></select>
+          <button type="button" onclick="openEditorOpcoes('formato')" title="Editar formatos" style="flex-shrink:0;border:1px solid var(--border);background:var(--surface2);border-radius:var(--radius);padding:4px 7px;cursor:pointer;font-size:12px;color:var(--text2)"><i class="ti ti-settings"></i></button>
+        </div>
       </div>
       <div class="form-group">
         <label>data prevista</label>
@@ -2387,6 +2386,20 @@
   </div>
 </div>
 
+<!-- MODAL EDITOR DE OPÇÕES -->
+<div class="backdrop" id="modal-editor-opcoes">
+  <div class="modal editor-opcoes-wrap">
+    <h3 id="editor-opcoes-title" style="font-family:var(--font-title);font-size:18px;color:var(--verde);margin-bottom:4px">Editar opções</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:8px">Adicione, edite ou remova as opções do dropdown.</p>
+    <div class="editor-opcoes-list" id="editor-opcoes-list"></div>
+    <button class="btn-add-opcao-editor" onclick="addEditorOpcaoRow()"><i class="ti ti-plus"></i> adicionar opção</button>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn-cancel" onclick="closeEditorOpcoes()" style="flex:1">cancelar</button>
+      <button class="btn-primary" onclick="saveEditorOpcoes()" style="flex:1">salvar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 
 const SUPABASE_URL = 'https://ceqvwrzyqjpxvekapqto.supabase.co';
@@ -2750,6 +2763,7 @@ function onLoggedIn(user) {
   document.getElementById('login-overlay').classList.add('hidden');
   document.getElementById('admin-email').textContent = user.email || '';
   showMenu();
+  startInactivityWatch();
 }
 
 function showMenu() {
@@ -3131,6 +3145,7 @@ let _gestaoLoaded = false;
 async function initGestao() {
   if (_gestaoLoaded) { render(); return; }
   _gestaoLoaded = true;
+  initSelects();
   await loadAll();
   render();
 }
@@ -3533,8 +3548,8 @@ const metaLabels = { views:'views', curtidas:'curtidas', comentarios:'coment.', 
 function cardHTML(c, st) {
   const prev = st === 'prod' ? 'fazer' : st === 'pronto' ? 'prod' : null;
   const next = st === 'fazer' ? 'prod' : st === 'prod' ? 'pronto' : st === 'pronto' ? 'postado' : null;
-  const nextL = { prod:'pronto →', pronto:'programado →', postado:'postado ✓ →' };
-  const prevL = { fazer:'← desenvolvimento', prod:'← conteúdo pronto' };
+  const nextL = { fazer:'pronto →', prod:'programado →' };
+  const prevL = { prod:'← desenvolvimento', pronto:'← programado', postado:'← programado' };
   const obj = c.objetivos || {};
   const estiloLabel = c.estilo === 'outro' && c.estiloOutro ? c.estiloOutro : (estiloLabels[c.estilo]||'');
   return `<div class="card" onclick="openView('${st}','${c.id}')" style="cursor:pointer">
@@ -3600,8 +3615,7 @@ function cardPostatoHTML(c) {
       }).join('')}
     </div>` : !hasMetrics ? `<button class="add-btn" onclick="event.stopPropagation();openCard('postado','${c.id}')" style="margin-top:6px;font-size:11px"><i class="ti ti-chart-bar"></i> adicionar métricas</button>` : ''}
     <div style="margin-top:6px">
-      <button class="move-btn" onclick="event.stopPropagation();moveCard('${c.id}','postado','pronto')" style="font-size:11px">← mover para
-programado</button>
+
     </div>
   </div>`;
 }
@@ -3728,11 +3742,13 @@ function openCard(st, id) {
   });
 
   const secMetricas = document.getElementById('section-metricas');
-  secMetricas.style.display = 'block';
-  ['views','alcance','curtidas','comentarios','shares','saves','seguidores','cliques','visitas'].forEach(k => {
-    const el = document.getElementById('m-'+k);
-    if (el) el.value = (st === 'postado' ? (m[k] || '') : '');
-  });
+  secMetricas.style.display = st === 'postado' ? 'block' : 'none';
+  if (st === 'postado') {
+    ['views','alcance','curtidas','comentarios','shares','saves','seguidores','cliques','visitas'].forEach(k => {
+      const el = document.getElementById('m-'+k);
+      if (el) el.value = m[k] || '';
+    });
+  }
 
   document.getElementById('modal-card').classList.add('open');
   setTimeout(() => document.getElementById('in-titulo').focus(), 100);
@@ -3824,10 +3840,7 @@ async function moveCard(id, from, to) {
   kanbanCache[wk] = week;
   render();
   await upsertCard(card, to, weekOffset);
-  // Ao mover para Postado, abrir modal de métricas automaticamente
-  if (to === 'postado') {
-    setTimeout(() => openCard('postado', id), 300);
-  }
+
 }
 
 function switchGestaoTab(tab) {
@@ -4716,6 +4729,151 @@ function renderCalendario() {
 document.getElementById('modal-calendario')?.addEventListener('click', e => {
   if (e.target.id === 'modal-calendario') closeCalendario();
 });
+
+// ── EDITOR DE OPÇÕES (estilo/formato) ─────────────────────
+const SB_KEY_OPCOES = 'gestao_opcoes_v1';
+
+const OPCOES_DEFAULT = {
+  estilo: [
+    { value: 'lofi', label: 'Lo-fi' },
+    { value: 'broll', label: 'B-roll' },
+    { value: 'problema-solucao', label: 'Problema e solução' },
+    { value: 'outro', label: 'Outro' },
+  ],
+  formato: [
+    { value: 'Reels', label: 'Reels' },
+    { value: 'Carrossel', label: 'Carrossel' },
+    { value: 'Stories', label: 'Stories' },
+    { value: 'Post estático', label: 'Post estático' },
+    { value: 'TikTok', label: 'TikTok' },
+    { value: 'Lives', label: 'Lives' },
+  ]
+};
+
+function loadOpcoes() {
+  try {
+    const saved = localStorage.getItem(SB_KEY_OPCOES);
+    return saved ? JSON.parse(saved) : { ...OPCOES_DEFAULT };
+  } catch { return { ...OPCOES_DEFAULT }; }
+}
+
+function saveOpcoes(opcoes) {
+  localStorage.setItem(SB_KEY_OPCOES, JSON.stringify(opcoes));
+}
+
+function populateSelect(selectId, tipo, currentValue) {
+  const opcoes = loadOpcoes();
+  const list = opcoes[tipo] || [];
+  const els = document.querySelectorAll('#' + selectId);
+  els.forEach(sel => {
+    const prev = currentValue !== undefined ? currentValue : sel.value;
+    sel.innerHTML = '<option value="">— selecione —</option>' +
+      list.map(o => `<option value="${o.value}" ${o.value === prev ? 'selected' : ''}>${o.label}</option>`).join('');
+  });
+}
+
+function initSelects() {
+  populateSelect('in-estilo', 'estilo');
+  populateSelect('in-formato', 'formato');
+}
+
+// Chamar ao abrir o modal de card
+const _origOpenCard = window.openCard;
+
+let _editorTipo = null;
+
+function openEditorOpcoes(tipo) {
+  _editorTipo = tipo;
+  const opcoes = loadOpcoes();
+  const list = opcoes[tipo] || [];
+  document.getElementById('editor-opcoes-title').textContent = tipo === 'estilo' ? 'Editar estilos de conteúdo' : 'Editar formatos';
+  const listEl = document.getElementById('editor-opcoes-list');
+  listEl.innerHTML = '';
+  list.forEach((o, i) => {
+    if (o.value === 'outro') return; // manter "Outro" fixo no estilo
+    const row = document.createElement('div');
+    row.className = 'editor-opcoes-item';
+    row.innerHTML = `
+      <input type="text" value="${o.label}" data-idx="${i}" placeholder="Nome da opção">
+      <button class="btn-del-opcao" onclick="this.parentElement.remove()"><i class="ti ti-trash"></i></button>
+    `;
+    listEl.appendChild(row);
+  });
+  document.getElementById('modal-editor-opcoes').classList.add('open');
+}
+
+function addEditorOpcaoRow() {
+  const listEl = document.getElementById('editor-opcoes-list');
+  const row = document.createElement('div');
+  row.className = 'editor-opcoes-item';
+  row.innerHTML = `
+    <input type="text" placeholder="Nome da opção">
+    <button class="btn-del-opcao" onclick="this.parentElement.remove()"><i class="ti ti-trash"></i></button>
+  `;
+  listEl.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function closeEditorOpcoes() {
+  document.getElementById('modal-editor-opcoes').classList.remove('open');
+  _editorTipo = null;
+}
+
+function saveEditorOpcoes() {
+  const inputs = document.querySelectorAll('#editor-opcoes-list input[type=text]');
+  const opcoes = loadOpcoes();
+  const newList = Array.from(inputs)
+    .map(inp => inp.value.trim())
+    .filter(Boolean)
+    .map(label => ({ value: label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''), label }));
+
+  // Manter "Outro" fixo no estilo
+  if (_editorTipo === 'estilo') {
+    newList.push({ value: 'outro', label: 'Outro' });
+  }
+
+  opcoes[_editorTipo] = newList;
+  saveOpcoes(opcoes);
+
+  // Atualizar selects
+  populateSelect('in-estilo', 'estilo');
+  populateSelect('in-formato', 'formato');
+
+  closeEditorOpcoes();
+}
+
+// Fechar ao clicar no backdrop
+document.getElementById('modal-editor-opcoes')?.addEventListener('click', e => {
+  if (e.target.id === 'modal-editor-opcoes') closeEditorOpcoes();
+});
+
+// ── LOGOFF POR INATIVIDADE (15 minutos) ──────────────────
+let _inactivityTimer = null;
+const INACTIVITY_MS = 15 * 60 * 1000; // 15 minutos
+
+function resetInactivityTimer() {
+  clearTimeout(_inactivityTimer);
+  _inactivityTimer = setTimeout(async () => {
+    const sb = getSupabase();
+    if (sb) await sb.auth.signOut();
+    // Esconder admin e mostrar login
+    document.getElementById('admin-page').style.display = 'none';
+    document.getElementById('admin-page').classList.remove('visible');
+    document.getElementById('login-overlay').classList.remove('hidden');
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-password').value = '';
+    setTimeout(() => document.getElementById('login-email').focus(), 100);
+    alert('Sessão encerrada por inatividade. Faça login novamente.');
+  }, INACTIVITY_MS);
+}
+
+// Iniciar timer ao fazer login e reiniciar em qualquer interação
+function startInactivityWatch() {
+  resetInactivityTimer();
+  ['mousemove','keydown','click','touchstart','scroll'].forEach(evt => {
+    document.addEventListener(evt, resetInactivityTimer, { passive: true });
+  });
+}
 
 // Gestão: sempre abre o admin
 window.addEventListener('load', () => openAdmin());
