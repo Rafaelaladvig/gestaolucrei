@@ -232,6 +232,7 @@
   /* ── MÓDULOS ── */
   .admin-module { display: none; padding: 2rem 1.5rem 4rem; max-width: 920px; margin: 0 auto; }
   .admin-module.active { display: block; }
+  #module-agenda { max-width: 1100px; }
 
   .admin-tabs {
     max-width: 920px; margin: 0 auto 1.5rem;
@@ -4979,10 +4980,6 @@ const TIPO_HEX = {
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
 async function initAgenda() {
-  if (!_calLoaded) {
-    await loadEventos();
-    _calLoaded = false; // recarrega sempre para ter dados frescos
-  }
   await loadEventos();
   renderCalendarioModule();
   scheduleAllLembretes();
