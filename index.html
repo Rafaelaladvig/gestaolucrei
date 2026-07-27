@@ -973,6 +973,83 @@
   .btn-add-opcao-editor { font-size: 12px; color: var(--verde); background: none; border: 1px dashed var(--verde); border-radius: var(--radius); padding: 5px 10px; cursor: pointer; width: 100%; margin-top: 4px; }
   .btn-add-opcao-editor:hover { background: var(--verde-light); }
 
+
+  /* ══ MÓDULO CALENDÁRIO ══════════════════════════════════ */
+  :root {
+    --ev-consulta: #C4673A;
+    --ev-tarefa: #3D5A3E;
+    --ev-compromisso: #3a6b9e;
+    --ev-pessoal: #7c5cbf;
+    --ev-geral: #8a8a8a;
+  }
+
+  /* Grade mensal */
+  .cal-nav { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .cal-nav-title { font-family:var(--font-title); font-size:20px; color:var(--verde); font-weight:500; flex:1; }
+  .cal-view-btns { display:flex; gap:4px; }
+  .cal-view-btn { font-size:11px; padding:4px 10px; border:1px solid var(--border); border-radius:20px; background:transparent; cursor:pointer; color:var(--text2); font-family:var(--font-body); transition:all 0.15s; }
+  .cal-view-btn.active { background:var(--verde); color:#fff; border-color:var(--verde); }
+
+  .cal-month-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-top:10px; }
+  .cal-month-label { text-align:center; font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; padding:4px 0; }
+  .cal-month-cell {
+    min-height:80px; border:1px solid var(--border); border-radius:6px; padding:4px;
+    background:var(--surface); cursor:pointer; transition:border-color 0.15s;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .cal-month-cell:hover { border-color:var(--verde); }
+  .cal-month-cell.hoje { border-color:var(--verde); background:var(--verde-light); }
+  .cal-month-cell.outro-mes { opacity:0.3; cursor:default; }
+  .cal-month-cell.outro-mes:hover { border-color:var(--border); }
+  .cal-month-day { font-size:11px; font-weight:700; color:var(--text2); margin-bottom:3px; flex-shrink:0; }
+  .cal-month-cell.hoje .cal-month-day { color:var(--verde); }
+  .cal-ev-chip {
+    font-size:9px; padding:1px 5px; border-radius:3px; margin-bottom:2px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#fff;
+    cursor:pointer; flex-shrink:0; line-height:1.5; font-weight:500;
+  }
+  .cal-ev-chip:hover { opacity:0.85; }
+  .cal-ev-more { font-size:8px; color:var(--text3); margin-top:1px; }
+
+  /* Lista de eventos */
+  .cal-list { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+  .cal-list-day { margin-bottom:4px; }
+  .cal-list-day-label { font-size:11px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid var(--border); }
+  .cal-list-item {
+    display:flex; align-items:flex-start; gap:10px; padding:10px 12px;
+    background:var(--surface); border:1px solid var(--border); border-radius:8px;
+    cursor:pointer; transition:border-color 0.15s, box-shadow 0.15s;
+    border-left:3px solid var(--ev-geral);
+  }
+  .cal-list-item:hover { border-color:var(--border2); box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+  .cal-list-item.concluido { opacity:0.5; }
+  .cal-list-item.concluido .cal-list-titulo { text-decoration:line-through; }
+  .cal-list-hora { font-size:11px; color:var(--text3); font-weight:600; white-space:nowrap; min-width:42px; padding-top:1px; }
+  .cal-list-body { flex:1; min-width:0; }
+  .cal-list-titulo { font-size:13px; font-weight:600; color:var(--text); }
+  .cal-list-meta { font-size:11px; color:var(--text3); margin-top:2px; display:flex; gap:6px; flex-wrap:wrap; }
+  .cal-list-tag { background:var(--surface2); border-radius:20px; padding:1px 7px; font-size:10px; }
+  .cal-list-check { width:18px; height:18px; border:2px solid var(--border2); border-radius:50%; flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-top:1px; transition:all 0.15s; }
+  .cal-list-check.done { background:var(--verde); border-color:var(--verde); color:#fff; }
+  .cal-empty { text-align:center; padding:3rem 1rem; color:var(--text3); font-size:13px; }
+
+  /* Modal de evento */
+  #modal-evento { z-index:500; }
+  .modal-evento-wrap { max-width:440px; width:100%; }
+  .cor-picker { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .cor-opt { width:28px; height:28px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:border-color 0.15s, transform 0.1s; flex-shrink:0; }
+  .cor-opt:hover { transform:scale(1.15); }
+  .cor-opt.selected { border-color: var(--text); }
+  .tipo-btns { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+  .tipo-btn { font-size:11px; padding:4px 10px; border-radius:20px; border:1.5px solid var(--border); background:transparent; cursor:pointer; font-family:var(--font-body); color:var(--text2); transition:all 0.15s; white-space:nowrap; }
+  .tipo-btn.selected { color:#fff; border-color:transparent; }
+  .lembrete-wrap { display:flex; align-items:center; gap:8px; }
+  .lead-search { position:relative; }
+  .lead-dropdown { position:absolute; top:100%; left:0; right:0; background:var(--surface); border:1px solid var(--border2); border-radius:var(--radius); max-height:160px; overflow-y:auto; z-index:10; box-shadow:0 4px 12px rgba(0,0,0,0.1); display:none; }
+  .lead-dropdown.open { display:block; }
+  .lead-opt { padding:8px 10px; font-size:12px; cursor:pointer; color:var(--text); }
+  .lead-opt:hover { background:var(--verde-light); }
+
 </style>
 </head>
 <body style="overflow:auto">
@@ -1030,6 +1107,14 @@
         </div>
         <div class="menu-card-title">Minha Página</div>
         <div class="menu-card-desc">Editor da página pública de links</div>
+      </button>
+
+      <button class="menu-card" onclick="openModule('calendario')">
+        <div class="menu-card-icon" style="background:#eaf0f5;color:#3a6b9e">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="menu-card-title">Calendário</div>
+        <div class="menu-card-desc">Agendamentos, tarefas e compromissos</div>
       </button>
 
     </div>
@@ -1964,6 +2049,63 @@
       <button class="btn-primary" id="btn-save-pergunta" onclick="savePergunta()">Salvar</button>
     </div>
   </div>
+  <!-- MÓDULO: CALENDÁRIO -->
+  <div class="admin-module" id="module-calendario">
+    <div style="max-width:1000px;margin:0 auto">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
+        <div>
+          <small style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;display:block;margin-bottom:2px">Rafaela Ladvig · Consultoria Financeira</small>
+          <p style="font-family:var(--font-title);font-size:22px;font-weight:400;color:var(--verde);letter-spacing:0.03em">calendário</p>
+        </div>
+        <button class="btn-primary" onclick="openEventoModal()">
+          <i class="ti ti-plus"></i> novo evento
+        </button>
+      </div>
+
+      <!-- Navegação -->
+      <div class="cal-nav">
+        <button class="icon-btn" onclick="calChangeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+        <button class="icon-btn" onclick="calChangeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+        <span class="cal-nav-title" id="cal-nav-title">—</span>
+        <button class="today-btn" onclick="calGoToday()">hoje</button>
+        <div class="cal-view-btns">
+          <button class="cal-view-btn active" id="cal-btn-mes" onclick="calSetView('mes')">Mês</button>
+          <button class="cal-view-btn" id="cal-btn-lista" onclick="calSetView('lista')">Lista</button>
+        </div>
+      </div>
+
+      <!-- Legenda de tipos -->
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin:10px 0;font-size:11px;color:var(--text3)">
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-consulta);margin-right:4px"></span>Consulta</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-tarefa);margin-right:4px"></span>Tarefa</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-compromisso);margin-right:4px"></span>Compromisso</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-pessoal);margin-right:4px"></span>Pessoal</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-geral);margin-right:4px"></span>Geral</span>
+      </div>
+
+      <!-- Grade do mês -->
+      <div id="cal-view-mes">
+        <div class="cal-month-grid" id="cal-month-labels">
+          <div class="cal-month-label">Dom</div>
+          <div class="cal-month-label">Seg</div>
+          <div class="cal-month-label">Ter</div>
+          <div class="cal-month-label">Qua</div>
+          <div class="cal-month-label">Qui</div>
+          <div class="cal-month-label">Sex</div>
+          <div class="cal-month-label">Sáb</div>
+        </div>
+        <div class="cal-month-grid" id="cal-month-grid"></div>
+      </div>
+
+      <!-- Lista de eventos -->
+      <div id="cal-view-lista" style="display:none">
+        <div class="cal-list" id="cal-list-content"></div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <!-- MODAIS DA GESTÃO DE CONTEÚDO (fora do módulo para position:fixed funcionar) -->
@@ -2400,6 +2542,86 @@
   </div>
 </div>
 
+<!-- MODAL EVENTO -->
+<div class="backdrop" id="modal-evento">
+  <div class="modal modal-evento-wrap">
+    <h3 id="modal-evento-title" style="font-family:var(--font-title);font-size:18px;color:var(--verde);margin-bottom:12px">novo evento</h3>
+    <input type="hidden" id="ev-id">
+
+    <div class="form-group" style="margin-bottom:10px">
+      <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Título</label>
+      <input class="field-input" id="ev-titulo" placeholder="Ex: Consulta com cliente, Reunião...">
+    </div>
+
+    <div class="form-group" style="margin-bottom:10px">
+      <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Tipo</label>
+      <div class="tipo-btns">
+        <button class="tipo-btn selected" data-tipo="consulta" style="background:var(--ev-consulta)" onclick="selectTipo('consulta',this)">Consulta</button>
+        <button class="tipo-btn" data-tipo="tarefa" onclick="selectTipo('tarefa',this)">Tarefa</button>
+        <button class="tipo-btn" data-tipo="compromisso" onclick="selectTipo('compromisso',this)">Compromisso</button>
+        <button class="tipo-btn" data-tipo="pessoal" onclick="selectTipo('pessoal',this)">Pessoal</button>
+        <button class="tipo-btn" data-tipo="geral" onclick="selectTipo('geral',this)">Geral</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      <div class="form-group">
+        <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Data</label>
+        <input class="field-input" type="date" id="ev-data">
+      </div>
+      <div class="form-group" id="ev-hora-wrap">
+        <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Início</label>
+        <input class="field-input" type="time" id="ev-hora-inicio">
+      </div>
+      <div class="form-group" id="ev-hora-fim-wrap">
+        <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Fim</label>
+        <input class="field-input" type="time" id="ev-hora-fim">
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:10px">
+      <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:flex;align-items:center;gap:6px">
+        <input type="checkbox" id="ev-dia-todo" onchange="toggleDiaTodo()"> Dia todo
+      </label>
+    </div>
+
+    <div class="form-group" style="margin-bottom:10px">
+      <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Descrição (opcional)</label>
+      <textarea class="field-input" id="ev-descricao" rows="2" placeholder="Detalhes do evento..." style="resize:vertical"></textarea>
+    </div>
+
+    <div class="form-group" style="margin-bottom:10px">
+      <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Vincular lead (opcional)</label>
+      <div class="lead-search">
+        <input class="field-input" id="ev-lead-busca" placeholder="Digite o nome do lead..." autocomplete="off" oninput="searchLeadEvento(this.value)">
+        <div class="lead-dropdown" id="ev-lead-dropdown"></div>
+        <input type="hidden" id="ev-lead-id">
+        <input type="hidden" id="ev-lead-nome">
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:14px">
+      <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Lembrete</label>
+      <select class="field-input" id="ev-lembrete">
+        <option value="">Sem lembrete</option>
+        <option value="15">15 minutos antes</option>
+        <option value="30">30 minutos antes</option>
+        <option value="60">1 hora antes</option>
+        <option value="120">2 horas antes</option>
+        <option value="1440">1 dia antes</option>
+      </select>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button class="btn-cancel" onclick="closeEventoModal()" style="flex:1">cancelar</button>
+      <button class="btn-primary" onclick="saveEvento()" id="btn-save-evento" style="flex:2">salvar evento</button>
+    </div>
+    <div style="margin-top:8px;text-align:center">
+      <button id="btn-del-evento" onclick="deleteEvento()" style="display:none;font-size:11px;color:var(--rose);background:none;border:none;cursor:pointer;text-decoration:underline">excluir evento</button>
+    </div>
+  </div>
+</div>
+
 <script>
 
 const SUPABASE_URL = 'https://ceqvwrzyqjpxvekapqto.supabase.co';
@@ -2789,6 +3011,7 @@ function openModule(name) {
   if (name === 'conteudo') initGestao();
   if (name === 'leads') initLeads();
   if (name === 'pagina') initPagina();
+  if (name === 'calendario') { initCalendario(); requestNotificationPermission(); }
 }
 
 async function logout() {
@@ -4728,6 +4951,386 @@ function renderCalendario() {
 // Fechar calendário ao clicar no backdrop
 document.getElementById('modal-calendario')?.addEventListener('click', e => {
   if (e.target.id === 'modal-calendario') closeCalendario();
+});
+
+// ══ MÓDULO CALENDÁRIO ════════════════════════════════════
+let eventosCache = [];
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth() + 1;
+let calView = 'mes';
+let _calLoaded = false;
+let editingEventoId = null;
+let selectedTipo = 'consulta';
+let _lembreteTimers = [];
+
+const TIPO_CORES = {
+  consulta: 'var(--ev-consulta)',
+  tarefa: 'var(--ev-tarefa)',
+  compromisso: 'var(--ev-compromisso)',
+  pessoal: 'var(--ev-pessoal)',
+  geral: 'var(--ev-geral)',
+};
+const TIPO_HEX = {
+  consulta: '#C4673A', tarefa: '#3D5A3E',
+  compromisso: '#3a6b9e', pessoal: '#7c5cbf', geral: '#8a8a8a',
+};
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+async function initCalendario() {
+  if (!_calLoaded) {
+    await loadEventos();
+    _calLoaded = false; // recarrega sempre para ter dados frescos
+  }
+  await loadEventos();
+  renderCalendarioModule();
+  scheduleAllLembretes();
+}
+
+async function loadEventos() {
+  try {
+    const hdr = await getSbHdr();
+    const r = await fetch(`${SB_URL}/rest/v1/eurafa_eventos?order=data_inicio.asc,hora_inicio.asc`, { headers: hdr });
+    if (!r.ok) throw new Error(await r.text());
+    eventosCache = await r.json();
+  } catch(e) { console.error('Erro ao carregar eventos:', e); eventosCache = []; }
+}
+
+function renderCalendarioModule() {
+  const meses_pt = MESES;
+  document.getElementById('cal-nav-title').textContent = `${meses_pt[calMonth-1]} ${calYear}`;
+  if (calView === 'mes') renderMes();
+  else renderLista();
+}
+
+function calChangeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1) { calMonth = 12; calYear--; }
+  renderCalendarioModule();
+}
+
+function calGoToday() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth() + 1;
+  renderCalendarioModule();
+}
+
+function calSetView(v) {
+  calView = v;
+  document.getElementById('cal-view-mes').style.display = v === 'mes' ? '' : 'none';
+  document.getElementById('cal-view-lista').style.display = v === 'lista' ? '' : 'none';
+  document.getElementById('cal-btn-mes').classList.toggle('active', v === 'mes');
+  document.getElementById('cal-btn-lista').classList.toggle('active', v === 'lista');
+  renderCalendarioModule();
+}
+
+function renderMes() {
+  const grid = document.getElementById('cal-month-grid');
+  grid.innerHTML = '';
+  const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const daysInPrev = new Date(calYear, calMonth - 1, 0).getDate();
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0,10);
+
+  // Eventos do mês indexados por dia
+  const prefix = `${calYear}-${String(calMonth).padStart(2,'0')}`;
+  const byDay = {};
+  eventosCache.forEach(ev => {
+    if (!ev.data_inicio.startsWith(prefix)) return;
+    const d = parseInt(ev.data_inicio.slice(8,10));
+    if (!byDay[d]) byDay[d] = [];
+    byDay[d].push(ev);
+  });
+
+  // Dias do mês anterior
+  for (let i = 0; i < firstDay; i++) {
+    const d = daysInPrev - firstDay + i + 1;
+    const cell = document.createElement('div');
+    cell.className = 'cal-month-cell outro-mes';
+    cell.innerHTML = `<div class="cal-month-day">${d}</div>`;
+    grid.appendChild(cell);
+  }
+
+  // Dias do mês atual
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const cell = document.createElement('div');
+    cell.className = 'cal-month-cell' + (dateStr === todayStr ? ' hoje' : '');
+    const evs = byDay[d] || [];
+    const maxShow = 2;
+    const chips = evs.slice(0, maxShow).map(ev => {
+      const cor = TIPO_HEX[ev.tipo] || '#8a8a8a';
+      const hora = ev.hora_inicio ? ev.hora_inicio.slice(0,5) + ' ' : '';
+      return `<div class="cal-ev-chip" style="background:${cor}" onclick="event.stopPropagation();openEventoModal('${ev.id}')" title="${ev.titulo}">${hora}${ev.titulo}</div>`;
+    }).join('');
+    const more = evs.length > maxShow ? `<div class="cal-ev-more">+${evs.length - maxShow} mais</div>` : '';
+    cell.innerHTML = `<div class="cal-month-day">${d}</div>${chips}${more}`;
+    cell.addEventListener('click', () => openEventoModal(null, dateStr));
+    grid.appendChild(cell);
+  }
+
+  // Completar última semana
+  const total = firstDay + daysInMonth;
+  const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let d = 1; d <= rem; d++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-month-cell outro-mes';
+    cell.innerHTML = `<div class="cal-month-day">${d}</div>`;
+    grid.appendChild(cell);
+  }
+}
+
+function renderLista() {
+  const cont = document.getElementById('cal-list-content');
+  cont.innerHTML = '';
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0,10);
+
+  // Próximos 60 dias
+  const futuros = eventosCache.filter(ev => ev.data_inicio >= todayStr)
+    .sort((a,b) => a.data_inicio.localeCompare(b.data_inicio) || (a.hora_inicio||'').localeCompare(b.hora_inicio||''));
+
+  if (!futuros.length) {
+    cont.innerHTML = '<div class="cal-empty"><i class="ti ti-calendar-off" style="font-size:32px;display:block;margin-bottom:8px"></i>Nenhum evento próximo</div>';
+    return;
+  }
+
+  // Agrupar por data
+  const byDate = {};
+  futuros.forEach(ev => {
+    if (!byDate[ev.data_inicio]) byDate[ev.data_inicio] = [];
+    byDate[ev.data_inicio].push(ev);
+  });
+
+  Object.entries(byDate).forEach(([date, evs]) => {
+    const [y,m,d] = date.split('-');
+    const dt = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
+    const isToday = date === todayStr;
+    const label = isToday ? 'Hoje' : dt.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
+
+    const dayEl = document.createElement('div');
+    dayEl.className = 'cal-list-day';
+    dayEl.innerHTML = `<div class="cal-list-day-label" style="${isToday ? 'color:var(--verde);font-size:12px' : ''}">${label}</div>`;
+
+    evs.forEach(ev => {
+      const cor = TIPO_HEX[ev.tipo] || '#8a8a8a';
+      const hora = ev.dia_todo ? 'Dia todo' : (ev.hora_inicio ? ev.hora_inicio.slice(0,5) : '—');
+      const item = document.createElement('div');
+      item.className = 'cal-list-item' + (ev.concluido ? ' concluido' : '');
+      item.style.borderLeftColor = cor;
+      item.innerHTML = `
+        <div class="cal-list-hora">${hora}</div>
+        <div class="cal-list-body">
+          <div class="cal-list-titulo">${ev.titulo}</div>
+          <div class="cal-list-meta">
+            <span class="cal-list-tag" style="background:${cor}20;color:${cor}">${ev.tipo}</span>
+            ${ev.lead_nome ? `<span class="cal-list-tag"><i class="ti ti-user" style="font-size:9px"></i> ${ev.lead_nome}</span>` : ''}
+            ${ev.descricao ? `<span>${ev.descricao.slice(0,40)}${ev.descricao.length>40?'...':''}</span>` : ''}
+          </div>
+        </div>
+        <div class="cal-list-check ${ev.concluido ? 'done' : ''}" onclick="event.stopPropagation();toggleEventoConcluido('${ev.id}')">
+          ${ev.concluido ? '<i class="ti ti-check" style="font-size:10px"></i>' : ''}
+        </div>`;
+      item.addEventListener('click', () => openEventoModal(ev.id));
+      dayEl.appendChild(item);
+    });
+
+    cont.appendChild(dayEl);
+  });
+}
+
+// ── MODAL DE EVENTO ──
+function openEventoModal(id, defaultDate) {
+  editingEventoId = id || null;
+  const ev = id ? eventosCache.find(e => e.id === id) : null;
+  document.getElementById('modal-evento-title').textContent = ev ? 'editar evento' : 'novo evento';
+  document.getElementById('btn-del-evento').style.display = ev ? 'inline' : 'none';
+  document.getElementById('ev-id').value = id || '';
+  document.getElementById('ev-titulo').value = ev?.titulo || '';
+  document.getElementById('ev-data').value = ev?.data_inicio || defaultDate || new Date().toISOString().slice(0,10);
+  document.getElementById('ev-hora-inicio').value = ev?.hora_inicio?.slice(0,5) || '';
+  document.getElementById('ev-hora-fim').value = ev?.hora_fim?.slice(0,5) || '';
+  document.getElementById('ev-dia-todo').checked = ev?.dia_todo || false;
+  document.getElementById('ev-descricao').value = ev?.descricao || '';
+  document.getElementById('ev-lembrete').value = ev?.lembrete || '';
+  document.getElementById('ev-lead-busca').value = ev?.lead_nome || '';
+  document.getElementById('ev-lead-id').value = ev?.lead_id || '';
+  document.getElementById('ev-lead-nome').value = ev?.lead_nome || '';
+
+  // Tipo
+  selectedTipo = ev?.tipo || 'consulta';
+  document.querySelectorAll('.tipo-btn').forEach(btn => {
+    const t = btn.dataset.tipo;
+    btn.classList.toggle('selected', t === selectedTipo);
+    btn.style.background = t === selectedTipo ? TIPO_HEX[t] : '';
+    btn.style.color = t === selectedTipo ? '#fff' : '';
+  });
+
+  toggleDiaTodo();
+  document.getElementById('modal-evento').classList.add('open');
+  setTimeout(() => document.getElementById('ev-titulo').focus(), 100);
+}
+
+function closeEventoModal() {
+  document.getElementById('modal-evento').classList.remove('open');
+  document.getElementById('ev-lead-dropdown').classList.remove('open');
+  editingEventoId = null;
+}
+
+function selectTipo(tipo, btn) {
+  selectedTipo = tipo;
+  document.querySelectorAll('.tipo-btn').forEach(b => {
+    const t = b.dataset.tipo;
+    b.classList.toggle('selected', t === tipo);
+    b.style.background = t === tipo ? TIPO_HEX[t] : '';
+    b.style.color = t === tipo ? '#fff' : '';
+  });
+}
+
+function toggleDiaTodo() {
+  const diaTodo = document.getElementById('ev-dia-todo').checked;
+  document.getElementById('ev-hora-wrap').style.opacity = diaTodo ? '0.3' : '1';
+  document.getElementById('ev-hora-fim-wrap').style.opacity = diaTodo ? '0.3' : '1';
+}
+
+function searchLeadEvento(q) {
+  const dd = document.getElementById('ev-lead-dropdown');
+  if (!q || q.length < 2) { dd.classList.remove('open'); return; }
+  const matches = leadsCache.filter(l => l.nome?.toLowerCase().includes(q.toLowerCase())).slice(0,6);
+  if (!matches.length) { dd.classList.remove('open'); return; }
+  dd.innerHTML = matches.map(l =>
+    `<div class="lead-opt" onclick="selectLeadEvento('${l.id}','${l.nome?.replace(/'/g,"\'")||''}')">${l.nome}</div>`
+  ).join('');
+  dd.classList.add('open');
+}
+
+function selectLeadEvento(id, nome) {
+  document.getElementById('ev-lead-id').value = id;
+  document.getElementById('ev-lead-nome').value = nome;
+  document.getElementById('ev-lead-busca').value = nome;
+  document.getElementById('ev-lead-dropdown').classList.remove('open');
+}
+
+async function saveEvento() {
+  const titulo = document.getElementById('ev-titulo').value.trim();
+  if (!titulo) { document.getElementById('ev-titulo').focus(); return; }
+
+  const btn = document.getElementById('btn-save-evento');
+  btn.disabled = true; btn.textContent = 'salvando...';
+
+  const id = editingEventoId || (Date.now().toString(36) + Math.random().toString(36).slice(2,5));
+  const payload = {
+    id,
+    titulo,
+    tipo: selectedTipo,
+    data_inicio: document.getElementById('ev-data').value,
+    hora_inicio: document.getElementById('ev-hora-inicio').value || null,
+    hora_fim: document.getElementById('ev-hora-fim').value || null,
+    dia_todo: document.getElementById('ev-dia-todo').checked,
+    descricao: document.getElementById('ev-descricao').value.trim() || null,
+    lead_id: document.getElementById('ev-lead-id').value || null,
+    lead_nome: document.getElementById('ev-lead-nome').value || null,
+    lembrete: parseInt(document.getElementById('ev-lembrete').value) || null,
+    concluido: editingEventoId ? (eventosCache.find(e=>e.id===editingEventoId)?.concluido||false) : false,
+    updated_at: new Date().toISOString(),
+  };
+
+  try {
+    const hdr = await getSbHdr();
+    const r = await fetch(`${SB_URL}/rest/v1/eurafa_eventos`, {
+      method: 'POST',
+      headers: { ...hdr, 'Prefer':'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(payload)
+    });
+    if (!r.ok) throw new Error(await r.text());
+
+    // Atualizar cache local
+    const idx = eventosCache.findIndex(e => e.id === id);
+    if (idx >= 0) eventosCache[idx] = payload;
+    else eventosCache.push(payload);
+    eventosCache.sort((a,b) => a.data_inicio.localeCompare(b.data_inicio));
+
+    scheduleAllLembretes();
+    renderCalendarioModule();
+    closeEventoModal();
+  } catch(e) {
+    console.error('Erro ao salvar evento:', e);
+    alert('Não foi possível salvar. Verifique sua conexão.');
+  }
+
+  btn.disabled = false; btn.innerHTML = 'salvar evento';
+}
+
+async function deleteEvento() {
+  if (!editingEventoId || !confirm('Excluir este evento?')) return;
+  try {
+    const hdr = await getSbHdr();
+    await fetch(`${SB_URL}/rest/v1/eurafa_eventos?id=eq.${editingEventoId}`, { method:'DELETE', headers: hdr });
+    eventosCache = eventosCache.filter(e => e.id !== editingEventoId);
+    renderCalendarioModule();
+    closeEventoModal();
+  } catch(e) { alert('Não foi possível excluir.'); }
+}
+
+async function toggleEventoConcluido(id) {
+  const ev = eventosCache.find(e => e.id === id);
+  if (!ev) return;
+  ev.concluido = !ev.concluido;
+  try {
+    const hdr = await getSbHdr();
+    await fetch(`${SB_URL}/rest/v1/eurafa_eventos?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { ...hdr, 'Prefer':'return=minimal' },
+      body: JSON.stringify({ concluido: ev.concluido })
+    });
+  } catch(e) { ev.concluido = !ev.concluido; }
+  renderCalendarioModule();
+}
+
+// ── LEMBRETES (notificações do navegador) ──
+function scheduleAllLembretes() {
+  _lembreteTimers.forEach(t => clearTimeout(t));
+  _lembreteTimers = [];
+  if (!('Notification' in window)) return;
+
+  const now = Date.now();
+  eventosCache.forEach(ev => {
+    if (!ev.lembrete || ev.concluido || !ev.hora_inicio) return;
+    const [y,m,d] = ev.data_inicio.split('-').map(Number);
+    const [h,min] = ev.hora_inicio.split(':').map(Number);
+    const evTime = new Date(y, m-1, d, h, min).getTime();
+    const notifyTime = evTime - ev.lembrete * 60000;
+    const diff = notifyTime - now;
+    if (diff < 0) return;
+
+    const t = setTimeout(() => {
+      if (Notification.permission === 'granted') {
+        new Notification(`📅 ${ev.titulo}`, {
+          body: `Começa em ${ev.lembrete} minutos${ev.lead_nome ? ` · ${ev.lead_nome}` : ''}`,
+          icon: '/favicon.ico',
+        });
+      }
+    }, diff);
+    _lembreteTimers.push(t);
+  });
+}
+
+function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+// Fechar modais ao clicar no backdrop
+document.getElementById('modal-evento')?.addEventListener('click', e => {
+  if (e.target.id === 'modal-evento') closeEventoModal();
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.lead-search')) {
+    document.getElementById('ev-lead-dropdown')?.classList.remove('open');
+  }
 });
 
 // ── EDITOR DE OPÇÕES (estilo/formato) ─────────────────────
