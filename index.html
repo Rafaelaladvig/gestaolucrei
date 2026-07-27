@@ -326,7 +326,7 @@
     position: fixed; inset: 0; background: rgba(44,24,16,0.55); backdrop-filter: blur(4px);
     display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem;
   }
-  #pergunta-modal-overlay.hidden { display: none; }
+  #pergunta-modal-overlay.hidden { display: none; pointer-events: none; }
   .pergunta-modal {
     background: var(--branco); border-radius: 14px; padding: 2rem; width: 100%; max-width: 480px;
     max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(44,24,16,0.2);
@@ -354,7 +354,8 @@
     position: fixed; inset: 0; background: rgba(44,24,16,0.55); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center; z-index: 100; padding: 1rem;
   }
-  #login-overlay.hidden { display: none; }
+  #login-overlay.hidden { display: none; pointer-events: none; }
+  #login-overlay { pointer-events: all; }
   .login-box { background: var(--branco); border-radius: 12px; padding: 2.5rem 2rem; width: 100%; max-width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(44,24,16,0.18); }
   .login-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: var(--musgo); margin-bottom: 0.4rem; }
   .login-sub { font-size: 0.8rem; color: var(--cinza); margin-bottom: 1.5rem; }
@@ -837,7 +838,7 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 1.5rem;
   }
-  #crop-overlay-pagina.hidden { display: none; }
+  #crop-overlay-pagina.hidden { display: none; pointer-events: none; }
   #crop-container-pagina {
     position: relative;
     width: min(300px, 85vw); height: min(300px, 85vw);
@@ -2487,7 +2488,7 @@
 </div>
 
 <!-- LOGIN MODAL -->
-<div id="login-overlay">
+<div id="login-overlay" class="hidden">
   <div class="login-box">
     <p class="login-title">Área restrita</p>
     <p class="login-sub">Entre com seu e-mail e senha</p>
