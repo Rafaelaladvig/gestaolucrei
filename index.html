@@ -1109,11 +1109,11 @@
         <div class="menu-card-desc">Editor da página pública de links</div>
       </button>
 
-      <button class="menu-card" onclick="openModule('calendario')">
+      <button class="menu-card" onclick="openModule('agenda')">
         <div class="menu-card-icon" style="background:#eaf0f5;color:#3a6b9e">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </div>
-        <div class="menu-card-title">Calendário</div>
+        <div class="menu-card-title">Agenda</div>
         <div class="menu-card-desc">Agendamentos, tarefas e compromissos</div>
       </button>
 
@@ -1656,408 +1656,15 @@
       <button class="crop-btn confirm" onclick="confirmCropPagina()">Confirmar</button>
     </div>
   </div>
-
-<!-- MODAIS DA GESTÃO DE CONTEÚDO (fora do módulo para position:fixed funcionar) -->
-<!-- ===== MODAL CONTEÚDO ===== -->
-<div class="backdrop" id="modal-card">
-  <div class="modal">
-    <h3 id="card-modal-title">novo conteúdo</h3>
-
-    <!-- BLOCO BÁSICO -->
-    <div class="form-group">
-      <label>título / tema</label>
-      <input type="text" id="in-titulo" placeholder="ex: como calcular preço justo na manicure" />
-    </div>
-    <div class="form-group">
-      <label>estilo do conteúdo</label>
-      <div style="display:flex;align-items:center;gap:6px">
-        <select id="in-estilo" onchange="toggleEstiloOutro()" style="flex:1"></select>
-        <button type="button" onclick="openEditorOpcoes('estilo')" title="Editar estilos" style="flex-shrink:0;border:1px solid var(--border);background:var(--surface2);border-radius:var(--radius);padding:4px 7px;cursor:pointer;font-size:12px;color:var(--text2)"><i class="ti ti-settings"></i></button>
-      </div>
-      <input type="text" id="in-estilo-outro" placeholder="descreva o estilo..." style="display:none;margin-top:8px" />
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>formato</label>
-        <div style="display:flex;align-items:center;gap:6px">
-          <select id="in-formato" style="flex:1"></select>
-          <button type="button" onclick="openEditorOpcoes('formato')" title="Editar formatos" style="flex-shrink:0;border:1px solid var(--border);background:var(--surface2);border-radius:var(--radius);padding:4px 7px;cursor:pointer;font-size:12px;color:var(--text2)"><i class="ti ti-settings"></i></button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>data prevista</label>
-        <input type="date" id="in-data" />
-      </div>
-    </div>
-
-    <!-- DESENVOLVIMENTO -->
-    <div class="modal-section">
-      <div class="modal-section-title"><i class="ti ti-pencil" style="font-size:13px"></i> desenvolvimento</div>
-      <div class="form-group">
-        <label>roteiro / desenvolvimento do post</label>
-        <textarea id="in-obs" placeholder="gancho, estrutura do conteúdo, referências, call to action, hashtags..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>legenda</label>
-        <textarea id="in-legenda" class="legenda" placeholder="Escreva aqui a legenda completa que vai no post..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>hashtags</label>
-        <input type="text" id="in-hashtags" placeholder="#financas #empreendedora #manicure..." />
-      </div>
-    </div>
-
-    <!-- OBJETIVO (aparece em todas as fases) -->
-    <div class="modal-section" id="section-objetivo">
-      <div class="modal-section-title"><i class="ti ti-target" style="font-size:13px"></i> objetivo do post</div>
-      <div class="form-group">
-        <label>foco principal</label>
-        <select id="in-obj-foco">
-          <option value="">— selecione —</option>
-          <option value="seguidores">Ganhar seguidores</option>
-          <option value="alcance">Ampliar alcance</option>
-          <option value="engajamento">Engajamento geral</option>
-          <option value="vendas">Gerar vendas / leads</option>
-          <option value="autoridade">Construir autoridade</option>
-          <option value="salvar">Conteúdo para salvar</option>
-          <option value="compartilhar">Conteúdo para compartilhar</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>nota sobre o objetivo</label>
-        <textarea id="in-obj-nota" placeholder="Ex: Quero que esse post gere curiosidade sobre o quiz..." rows="2" style="width:100%;resize:vertical;border:1px solid var(--border);border-radius:var(--radius);padding:8px;font-size:13px;font-family:inherit;background:var(--surface)"></textarea>
-      </div>
-    </div>
-
-    <!-- MÉTRICAS + METAS (só aparece quando status = postado) -->
-    <div class="modal-section" id="section-metricas" style="display:none">
-      <div class="modal-section-title"><i class="ti ti-chart-bar" style="font-size:13px"></i> metas e métricas</div>
-      <p class="metrica-hint">Defina as metas e preencha os resultados após publicar</p>
-      <div class="obj-grid" style="margin-bottom:14px">
-        <div class="form-group">
-          <label>meta visualizações</label>
-          <input type="number" id="o-views" placeholder="ex: 5000" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta curtidas</label>
-          <input type="number" id="o-curtidas" placeholder="ex: 200" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta comentários</label>
-          <input type="number" id="o-comentarios" placeholder="ex: 30" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta salvamentos</label>
-          <input type="number" id="o-saves" placeholder="ex: 100" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta compartilh.</label>
-          <input type="number" id="o-shares" placeholder="ex: 50" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta seguidores</label>
-          <input type="number" id="o-seguidores" placeholder="ex: 20" min="0" />
-        </div>
-      </div>
-      <div class="modal-section-title"><i class="ti ti-chart-dots" style="font-size:13px"></i> resultados reais</div>
-      <div class="metricas-modal">
-        <div class="form-group">
-          <label>visualizações</label>
-          <input type="number" id="m-views" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>alcance</label>
-          <input type="number" id="m-alcance" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>curtidas</label>
-          <input type="number" id="m-curtidas" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>comentários</label>
-          <input type="number" id="m-comentarios" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>compartilhamentos</label>
-          <input type="number" id="m-shares" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>salvamentos</label>
-          <input type="number" id="m-saves" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>novos seguidores</label>
-          <input type="number" id="m-seguidores" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>cliques no link</label>
-          <input type="number" id="m-cliques" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>visitas ao perfil</label>
-          <input type="number" id="m-visitas" placeholder="0" min="0" />
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeCardModal()">cancelar</button>
-      <button class="btn-primary" onclick="saveCard()">salvar</button>
-    </div>
-  </div>
-</div>
-
-  <!-- DASHBOARD -->
-
-<!-- ===== MODAL LEAD — FORMULÁRIO ===== -->
-<div class="backdrop" id="modal-lead">
-  <div class="modal" style="max-width:500px">
-    <h3 id="lead-modal-title">novo lead</h3>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>nome</label>
-        <input type="text" id="l-nome" placeholder="Nome completo" />
-      </div>
-      <div class="form-group">
-        <label>whatsapp</label>
-        <input type="text" id="l-whats" placeholder="(00) 00000-0000" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label>e-mail (opcional)</label>
-      <input type="text" id="l-email" placeholder="email@exemplo.com" />
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>serviço de interesse</label>
-        <select id="l-servico">
-          <option value="">— selecione —</option>
-          <option>Lucrei — Plano Pessoal</option>
-          <option>Lucrei — Plano Empreendedora</option>
-          <option>Consultoria financeira</option>
-          <option>Mentoria</option>
-          <option>Outro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>temperatura</label>
-        <select id="l-temp">
-          <option value="morno">Morno</option>
-          <option value="quente">Quente 🔥</option>
-          <option value="frio">Frio</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>origem</label>
-        <select id="l-origem">
-          <option value="">— selecione —</option>
-          <option>Instagram — Reels</option>
-          <option>Instagram — Carrossel</option>
-          <option>Instagram — Stories</option>
-          <option>Instagram — Bio</option>
-          <option>TikTok</option>
-          <option>Indicação</option>
-          <option>WhatsApp</option>
-          <option>Outro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>próximo follow-up</label>
-        <input type="date" id="l-followup" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label>anotações</label>
-      <textarea id="l-notas" placeholder="Contexto, objeções, próximo passo..."></textarea>
-    </div>
-    <input type="hidden" id="l-status-hidden" value="novo">
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeLeadModal()">cancelar</button>
-      <button class="btn-primary" onclick="saveLead()">salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL LEAD — VISUALIZAÇÃO ===== -->
-<div class="backdrop" id="modal-lead-view">
-  <div class="modal" style="max-width:500px">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:1rem">
-      <div>
-        <div id="lv-temp-badge" style="margin-bottom:6px"></div>
-        <h3 id="lv-nome" style="margin-bottom:0"></h3>
-      </div>
-      <div style="display:flex;gap:6px;flex-shrink:0">
-        <button class="btn-cancel" onclick="switchToLeadEdit()" style="padding:6px 12px;font-size:12px"><i class="ti ti-pencil"></i> editar</button>
-        <button class="del-btn" onclick="closeLeadViewModal()" style="font-size:18px;padding:4px 6px"><i class="ti ti-x"></i></button>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-      <div class="lead-view-section"><div class="lead-view-label">whatsapp</div><div class="lead-view-value" id="lv-whats">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">e-mail</div><div class="lead-view-value" id="lv-email">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">serviço</div><div class="lead-view-value" id="lv-servico">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">origem</div><div class="lead-view-value" id="lv-origem">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">follow-up</div><div class="lead-view-value" id="lv-followup">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">status</div><div class="lead-view-value" id="lv-status">—</div></div>
-    </div>
-
-    <div id="lv-notas-block" style="display:none;margin-bottom:14px">
-      <div class="lead-view-label" style="margin-bottom:6px">anotações</div>
-      <div id="lv-notas" style="font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap;background:var(--surface2);border-radius:var(--radius);padding:12px"></div>
-    </div>
-
-    <!-- Adicionar anotação rápida -->
-    <div class="modal-section">
-      <div class="modal-section-title"><i class="ti ti-message" style="font-size:12px"></i> adicionar anotação</div>
-      <textarea id="lv-nova-nota" placeholder="Registre o que conversou, objeções, próximo passo..." style="min-height:60px"></textarea>
-      <div style="display:flex;justify-content:flex-end;margin-top:6px">
-        <button class="btn-primary" onclick="addLeadNota()" style="font-size:12px;padding:6px 14px">registrar</button>
-      </div>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px">
-      <div id="lv-move-btns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-      <button class="del-btn" id="lv-del-btn" style="font-size:13px;display:flex;align-items:center;gap:4px"><i class="ti ti-trash"></i> excluir</button>
-    </div>
-  </div>
-</div>
-
-
-<div class="backdrop" id="modal-meta">
-  <div class="modal" style="max-width:320px">
-    <h3>meta mensal de posts</h3>
-    <div class="form-group">
-      <label>quantos posts por mês?</label>
-      <input type="number" id="meta-input" min="1" max="30" placeholder="ex: 5" />
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeMetaModal()">cancelar</button>
-      <button class="btn-primary" onclick="saveMeta()">salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL IDEIA ===== -->
-<div class="backdrop" id="modal-ideia">
-  <div class="modal">
-    <h3>nova ideia</h3>
-    <div class="form-group">
-      <label>ideia / tema</label>
-      <input type="text" id="idea-in-titulo" placeholder="ex: série sobre precificação para manicures" />
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>categoria</label>
-        <select id="idea-in-cat">
-          <option value="financas">Finanças</option>
-          <option value="cases">Cases</option>
-          <option value="dicas">Dicas</option>
-          <option value="motivacao">Motivação</option>
-          <option value="outro">Outro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>formato sugerido</label>
-        <select id="idea-in-fmt">
-          <option>Reels</option>
-          <option>Carrossel</option>
-          <option>Stories</option>
-          <option>Post estático</option>
-          <option>TikTok</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>anotações / referências</label>
-      <textarea id="idea-in-note" placeholder="o que inspirou, gancho, fontes, referências..."></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeIdeaModal()">cancelar</button>
-      <button class="btn-primary" onclick="saveIdea()">salvar ideia</button>
-    </div>
-  </div>
-</div>
-
-<!-- LOGIN MODAL -->
-<div id="login-overlay">
-  <div class="login-box">
-    <p class="login-title">Área restrita</p>
-    <p class="login-sub">Entre com seu e-mail e senha</p>
-    <input class="login-input" type="email" id="login-email" placeholder="seu@email.com" autocomplete="username">
-    <input class="login-input" type="password" id="login-password" placeholder="Senha" autocomplete="current-password">
-    <p class="login-error" id="login-error">E-mail ou senha incorretos.</p>
-    <button class="btn-primary" id="btn-login" style="width:100%;justify-content:center" onclick="doLogin()">Entrar</button>
-  </div>
-</div>
-
-<!-- PERGUNTA EDIT MODAL -->
-<div id="pergunta-modal-overlay" class="hidden">
-  <div class="pergunta-modal">
-    <h3 id="pergunta-modal-title">Nova pergunta</h3>
-    <input type="hidden" id="pg-id">
-
-    <div class="field-group">
-      <label class="field-label">Pergunta (título)</label>
-      <input class="field-input" id="pg-titulo" placeholder="Ex: Qual é o seu nome?">
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Texto de apoio (opcional)</label>
-      <input class="field-input" id="pg-subtitulo" placeholder="Ex: Pode ser só o primeiro nome">
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Identificador do campo</label>
-      <input class="field-input" id="pg-campo-id" placeholder="Ex: nome (sem espaços ou acentos)">
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Tipo de resposta</label>
-      <select class="field-select" id="pg-tipo" onchange="onTipoChange()">
-        <option value="text">Texto curto</option>
-        <option value="tel">Telefone / WhatsApp</option>
-        <option value="textarea">Texto longo</option>
-        <option value="choice">Escolha única</option>
-        <option value="choice-other">Escolha única + opção "outro"</option>
-        <option value="multi">Múltipla escolha</option>
-      </select>
-    </div>
-
-    <div class="field-group" id="pg-placeholder-group">
-      <label class="field-label">Texto de exemplo (placeholder)</label>
-      <input class="field-input" id="pg-placeholder" placeholder="Ex: Seu nome">
-    </div>
-
-    <div class="field-group" id="pg-opcoes-group" style="display:none">
-      <label class="field-label">Opções</label>
-      <div class="opcoes-list" id="pg-opcoes-list"></div>
-      <button class="btn-add-opcao" onclick="addOpcaoField()">+ adicionar opção</button>
-    </div>
-
-    <div class="field-group">
-      <label class="field-checkbox-row">
-        <input type="checkbox" id="pg-obrigatoria" checked>
-        Pergunta obrigatória
-      </label>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closePerguntaModal()">Cancelar</button>
-      <button class="btn-primary" id="btn-save-pergunta" onclick="savePergunta()">Salvar</button>
-    </div>
-  </div>
   <!-- MÓDULO: CALENDÁRIO -->
-  <div class="admin-module" id="module-calendario">
+  <div class="admin-module" id="module-agenda">
     <div style="max-width:1000px;margin:0 auto">
 
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
         <div>
           <small style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;display:block;margin-bottom:2px">Rafaela Ladvig · Consultoria Financeira</small>
-          <p style="font-family:var(--font-title);font-size:22px;font-weight:400;color:var(--verde);letter-spacing:0.03em">calendário</p>
+          <p style="font-family:var(--font-title);font-size:22px;font-weight:400;color:var(--verde);letter-spacing:0.03em">agenda</p>
         </div>
         <button class="btn-primary" onclick="openEventoModal()">
           <i class="ti ti-plus"></i> novo evento
@@ -2542,6 +2149,400 @@
   </div>
 </div>
 
+
+<!-- MODAIS DA GESTÃO DE CONTEÚDO (fora do módulo para position:fixed funcionar) -->
+<!-- ===== MODAL CONTEÚDO ===== -->
+<div class="backdrop" id="modal-card">
+  <div class="modal">
+    <h3 id="card-modal-title">novo conteúdo</h3>
+
+    <!-- BLOCO BÁSICO -->
+    <div class="form-group">
+      <label>título / tema</label>
+      <input type="text" id="in-titulo" placeholder="ex: como calcular preço justo na manicure" />
+    </div>
+    <div class="form-group">
+      <label>estilo do conteúdo</label>
+      <div style="display:flex;align-items:center;gap:6px">
+        <select id="in-estilo" onchange="toggleEstiloOutro()" style="flex:1"></select>
+        <button type="button" onclick="openEditorOpcoes('estilo')" title="Editar estilos" style="flex-shrink:0;border:1px solid var(--border);background:var(--surface2);border-radius:var(--radius);padding:4px 7px;cursor:pointer;font-size:12px;color:var(--text2)"><i class="ti ti-settings"></i></button>
+      </div>
+      <input type="text" id="in-estilo-outro" placeholder="descreva o estilo..." style="display:none;margin-top:8px" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>formato</label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <select id="in-formato" style="flex:1"></select>
+          <button type="button" onclick="openEditorOpcoes('formato')" title="Editar formatos" style="flex-shrink:0;border:1px solid var(--border);background:var(--surface2);border-radius:var(--radius);padding:4px 7px;cursor:pointer;font-size:12px;color:var(--text2)"><i class="ti ti-settings"></i></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>data prevista</label>
+        <input type="date" id="in-data" />
+      </div>
+    </div>
+
+    <!-- DESENVOLVIMENTO -->
+    <div class="modal-section">
+      <div class="modal-section-title"><i class="ti ti-pencil" style="font-size:13px"></i> desenvolvimento</div>
+      <div class="form-group">
+        <label>roteiro / desenvolvimento do post</label>
+        <textarea id="in-obs" placeholder="gancho, estrutura do conteúdo, referências, call to action, hashtags..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>legenda</label>
+        <textarea id="in-legenda" class="legenda" placeholder="Escreva aqui a legenda completa que vai no post..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>hashtags</label>
+        <input type="text" id="in-hashtags" placeholder="#financas #empreendedora #manicure..." />
+      </div>
+    </div>
+
+    <!-- OBJETIVO (aparece em todas as fases) -->
+    <div class="modal-section" id="section-objetivo">
+      <div class="modal-section-title"><i class="ti ti-target" style="font-size:13px"></i> objetivo do post</div>
+      <div class="form-group">
+        <label>foco principal</label>
+        <select id="in-obj-foco">
+          <option value="">— selecione —</option>
+          <option value="seguidores">Ganhar seguidores</option>
+          <option value="alcance">Ampliar alcance</option>
+          <option value="engajamento">Engajamento geral</option>
+          <option value="vendas">Gerar vendas / leads</option>
+          <option value="autoridade">Construir autoridade</option>
+          <option value="salvar">Conteúdo para salvar</option>
+          <option value="compartilhar">Conteúdo para compartilhar</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>nota sobre o objetivo</label>
+        <textarea id="in-obj-nota" placeholder="Ex: Quero que esse post gere curiosidade sobre o quiz..." rows="2" style="width:100%;resize:vertical;border:1px solid var(--border);border-radius:var(--radius);padding:8px;font-size:13px;font-family:inherit;background:var(--surface)"></textarea>
+      </div>
+    </div>
+
+    <!-- MÉTRICAS + METAS (só aparece quando status = postado) -->
+    <div class="modal-section" id="section-metricas" style="display:none">
+      <div class="modal-section-title"><i class="ti ti-chart-bar" style="font-size:13px"></i> metas e métricas</div>
+      <p class="metrica-hint">Defina as metas e preencha os resultados após publicar</p>
+      <div class="obj-grid" style="margin-bottom:14px">
+        <div class="form-group">
+          <label>meta visualizações</label>
+          <input type="number" id="o-views" placeholder="ex: 5000" min="0" />
+        </div>
+        <div class="form-group">
+          <label>meta curtidas</label>
+          <input type="number" id="o-curtidas" placeholder="ex: 200" min="0" />
+        </div>
+        <div class="form-group">
+          <label>meta comentários</label>
+          <input type="number" id="o-comentarios" placeholder="ex: 30" min="0" />
+        </div>
+        <div class="form-group">
+          <label>meta salvamentos</label>
+          <input type="number" id="o-saves" placeholder="ex: 100" min="0" />
+        </div>
+        <div class="form-group">
+          <label>meta compartilh.</label>
+          <input type="number" id="o-shares" placeholder="ex: 50" min="0" />
+        </div>
+        <div class="form-group">
+          <label>meta seguidores</label>
+          <input type="number" id="o-seguidores" placeholder="ex: 20" min="0" />
+        </div>
+      </div>
+      <div class="modal-section-title"><i class="ti ti-chart-dots" style="font-size:13px"></i> resultados reais</div>
+      <div class="metricas-modal">
+        <div class="form-group">
+          <label>visualizações</label>
+          <input type="number" id="m-views" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>alcance</label>
+          <input type="number" id="m-alcance" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>curtidas</label>
+          <input type="number" id="m-curtidas" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>comentários</label>
+          <input type="number" id="m-comentarios" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>compartilhamentos</label>
+          <input type="number" id="m-shares" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>salvamentos</label>
+          <input type="number" id="m-saves" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>novos seguidores</label>
+          <input type="number" id="m-seguidores" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>cliques no link</label>
+          <input type="number" id="m-cliques" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>visitas ao perfil</label>
+          <input type="number" id="m-visitas" placeholder="0" min="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeCardModal()">cancelar</button>
+      <button class="btn-primary" onclick="saveCard()">salvar</button>
+    </div>
+  </div>
+</div>
+
+  <!-- DASHBOARD -->
+
+<!-- ===== MODAL LEAD — FORMULÁRIO ===== -->
+<div class="backdrop" id="modal-lead">
+  <div class="modal" style="max-width:500px">
+    <h3 id="lead-modal-title">novo lead</h3>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>nome</label>
+        <input type="text" id="l-nome" placeholder="Nome completo" />
+      </div>
+      <div class="form-group">
+        <label>whatsapp</label>
+        <input type="text" id="l-whats" placeholder="(00) 00000-0000" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>e-mail (opcional)</label>
+      <input type="text" id="l-email" placeholder="email@exemplo.com" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>serviço de interesse</label>
+        <select id="l-servico">
+          <option value="">— selecione —</option>
+          <option>Lucrei — Plano Pessoal</option>
+          <option>Lucrei — Plano Empreendedora</option>
+          <option>Consultoria financeira</option>
+          <option>Mentoria</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>temperatura</label>
+        <select id="l-temp">
+          <option value="morno">Morno</option>
+          <option value="quente">Quente 🔥</option>
+          <option value="frio">Frio</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>origem</label>
+        <select id="l-origem">
+          <option value="">— selecione —</option>
+          <option>Instagram — Reels</option>
+          <option>Instagram — Carrossel</option>
+          <option>Instagram — Stories</option>
+          <option>Instagram — Bio</option>
+          <option>TikTok</option>
+          <option>Indicação</option>
+          <option>WhatsApp</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>próximo follow-up</label>
+        <input type="date" id="l-followup" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>anotações</label>
+      <textarea id="l-notas" placeholder="Contexto, objeções, próximo passo..."></textarea>
+    </div>
+    <input type="hidden" id="l-status-hidden" value="novo">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeLeadModal()">cancelar</button>
+      <button class="btn-primary" onclick="saveLead()">salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL LEAD — VISUALIZAÇÃO ===== -->
+<div class="backdrop" id="modal-lead-view">
+  <div class="modal" style="max-width:500px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:1rem">
+      <div>
+        <div id="lv-temp-badge" style="margin-bottom:6px"></div>
+        <h3 id="lv-nome" style="margin-bottom:0"></h3>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="btn-cancel" onclick="switchToLeadEdit()" style="padding:6px 12px;font-size:12px"><i class="ti ti-pencil"></i> editar</button>
+        <button class="del-btn" onclick="closeLeadViewModal()" style="font-size:18px;padding:4px 6px"><i class="ti ti-x"></i></button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+      <div class="lead-view-section"><div class="lead-view-label">whatsapp</div><div class="lead-view-value" id="lv-whats">—</div></div>
+      <div class="lead-view-section"><div class="lead-view-label">e-mail</div><div class="lead-view-value" id="lv-email">—</div></div>
+      <div class="lead-view-section"><div class="lead-view-label">serviço</div><div class="lead-view-value" id="lv-servico">—</div></div>
+      <div class="lead-view-section"><div class="lead-view-label">origem</div><div class="lead-view-value" id="lv-origem">—</div></div>
+      <div class="lead-view-section"><div class="lead-view-label">follow-up</div><div class="lead-view-value" id="lv-followup">—</div></div>
+      <div class="lead-view-section"><div class="lead-view-label">status</div><div class="lead-view-value" id="lv-status">—</div></div>
+    </div>
+
+    <div id="lv-notas-block" style="display:none;margin-bottom:14px">
+      <div class="lead-view-label" style="margin-bottom:6px">anotações</div>
+      <div id="lv-notas" style="font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap;background:var(--surface2);border-radius:var(--radius);padding:12px"></div>
+    </div>
+
+    <!-- Adicionar anotação rápida -->
+    <div class="modal-section">
+      <div class="modal-section-title"><i class="ti ti-message" style="font-size:12px"></i> adicionar anotação</div>
+      <textarea id="lv-nova-nota" placeholder="Registre o que conversou, objeções, próximo passo..." style="min-height:60px"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:6px">
+        <button class="btn-primary" onclick="addLeadNota()" style="font-size:12px;padding:6px 14px">registrar</button>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px">
+      <div id="lv-move-btns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      <button class="del-btn" id="lv-del-btn" style="font-size:13px;display:flex;align-items:center;gap:4px"><i class="ti ti-trash"></i> excluir</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="backdrop" id="modal-meta">
+  <div class="modal" style="max-width:320px">
+    <h3>meta mensal de posts</h3>
+    <div class="form-group">
+      <label>quantos posts por mês?</label>
+      <input type="number" id="meta-input" min="1" max="30" placeholder="ex: 5" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeMetaModal()">cancelar</button>
+      <button class="btn-primary" onclick="saveMeta()">salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL IDEIA ===== -->
+<div class="backdrop" id="modal-ideia">
+  <div class="modal">
+    <h3>nova ideia</h3>
+    <div class="form-group">
+      <label>ideia / tema</label>
+      <input type="text" id="idea-in-titulo" placeholder="ex: série sobre precificação para manicures" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>categoria</label>
+        <select id="idea-in-cat">
+          <option value="financas">Finanças</option>
+          <option value="cases">Cases</option>
+          <option value="dicas">Dicas</option>
+          <option value="motivacao">Motivação</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>formato sugerido</label>
+        <select id="idea-in-fmt">
+          <option>Reels</option>
+          <option>Carrossel</option>
+          <option>Stories</option>
+          <option>Post estático</option>
+          <option>TikTok</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>anotações / referências</label>
+      <textarea id="idea-in-note" placeholder="o que inspirou, gancho, fontes, referências..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeIdeaModal()">cancelar</button>
+      <button class="btn-primary" onclick="saveIdea()">salvar ideia</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="login-overlay">
+  <div class="login-box">
+    <p class="login-title">Área restrita</p>
+    <p class="login-sub">Entre com seu e-mail e senha</p>
+    <input class="login-input" type="email" id="login-email" placeholder="seu@email.com" autocomplete="username">
+    <input class="login-input" type="password" id="login-password" placeholder="Senha" autocomplete="current-password">
+    <p class="login-error" id="login-error">E-mail ou senha incorretos.</p>
+    <button class="btn-primary" id="btn-login" style="width:100%;justify-content:center" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- PERGUNTA EDIT MODAL -->
+<div id="pergunta-modal-overlay" class="hidden">
+  <div class="pergunta-modal">
+    <h3 id="pergunta-modal-title">Nova pergunta</h3>
+    <input type="hidden" id="pg-id">
+
+    <div class="field-group">
+      <label class="field-label">Pergunta (título)</label>
+      <input class="field-input" id="pg-titulo" placeholder="Ex: Qual é o seu nome?">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Texto de apoio (opcional)</label>
+      <input class="field-input" id="pg-subtitulo" placeholder="Ex: Pode ser só o primeiro nome">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Identificador do campo</label>
+      <input class="field-input" id="pg-campo-id" placeholder="Ex: nome (sem espaços ou acentos)">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Tipo de resposta</label>
+      <select class="field-select" id="pg-tipo" onchange="onTipoChange()">
+        <option value="text">Texto curto</option>
+        <option value="tel">Telefone / WhatsApp</option>
+        <option value="textarea">Texto longo</option>
+        <option value="choice">Escolha única</option>
+        <option value="choice-other">Escolha única + opção "outro"</option>
+        <option value="multi">Múltipla escolha</option>
+      </select>
+    </div>
+
+    <div class="field-group" id="pg-placeholder-group">
+      <label class="field-label">Texto de exemplo (placeholder)</label>
+      <input class="field-input" id="pg-placeholder" placeholder="Ex: Seu nome">
+    </div>
+
+    <div class="field-group" id="pg-opcoes-group" style="display:none">
+      <label class="field-label">Opções</label>
+      <div class="opcoes-list" id="pg-opcoes-list"></div>
+      <button class="btn-add-opcao" onclick="addOpcaoField()">+ adicionar opção</button>
+    </div>
+
+    <div class="field-group">
+      <label class="field-checkbox-row">
+        <input type="checkbox" id="pg-obrigatoria" checked>
+        Pergunta obrigatória
+      </label>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closePerguntaModal()">Cancelar</button>
+      <button class="btn-primary" id="btn-save-pergunta" onclick="savePergunta()">Salvar</button>
+    </div>
+  </div>
+
 <!-- MODAL EVENTO -->
 <div class="backdrop" id="modal-evento">
   <div class="modal modal-evento-wrap">
@@ -3011,7 +3012,7 @@ function openModule(name) {
   if (name === 'conteudo') initGestao();
   if (name === 'leads') initLeads();
   if (name === 'pagina') initPagina();
-  if (name === 'calendario') { initCalendario(); requestNotificationPermission(); }
+  if (name === 'agenda') { initAgenda(); requestNotificationPermission(); }
 }
 
 async function logout() {
@@ -4976,7 +4977,7 @@ const TIPO_HEX = {
 };
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-async function initCalendario() {
+async function initAgenda() {
   if (!_calLoaded) {
     await loadEventos();
     _calLoaded = false; // recarrega sempre para ter dados frescos
