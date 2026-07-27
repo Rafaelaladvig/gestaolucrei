@@ -1713,7 +1713,8 @@
 
     </div>
   </div>
-</div>
+
+</div><!-- /admin-page -->
 
 <!-- MODAIS DA GESTÃO DE CONTEÚDO (fora do módulo para position:fixed funcionar) -->
 <!-- ===== MODAL CONTEÚDO ===== -->
@@ -3006,7 +3007,7 @@ function openModule(name) {
   const mod = document.getElementById('module-' + name);
   if (mod) mod.classList.add('active');
   document.getElementById('topbar-back').classList.add('visible');
-  const titles = { prospeccao: 'Prospecção', conteudo: 'Gestão de Conteúdo', leads: 'Leads', pagina: 'Minha Página' };
+  const titles = { prospeccao: 'Prospecção', conteudo: 'Gestão de Conteúdo', leads: 'Leads', pagina: 'Minha Página', agenda: 'Agenda' };
   document.getElementById('topbar-section').textContent = titles[name] || name;
   if (name === 'prospeccao') switchTab('respostas');
   if (name === 'conteudo') initGestao();
