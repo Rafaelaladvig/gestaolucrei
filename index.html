@@ -3995,9 +3995,14 @@ async function saveLead() {
   renderLeads();
 
   try {
-    const r = await fetch(`${SB_URL}/rest/v1/eurafa_leads`, {
-      method: 'POST',
-      headers: { ...(await getSbHdr()), 'Prefer':'resolution=merge-duplicates' },
+    const hdr = await getSbHdr();
+    const method = editingLeadId ? 'PATCH' : 'POST';
+    const url = editingLeadId 
+      ? `${SB_URL}/rest/v1/eurafa_leads?id=eq.${editingLeadId}`
+      : `${SB_URL}/rest/v1/eurafa_leads`;
+    const r = await fetch(url, {
+      method,
+      headers: { ...hdr, 'Prefer': 'return=minimal' },
       body: JSON.stringify({
         id: lead.id,
         nome: lead.nome,
@@ -4011,10 +4016,14 @@ async function saveLead() {
         notas: lead.notas,
       })
     });
-    if (!r.ok) throw new Error(await r.text());
+    if (!r.ok) {
+      const errText = await r.text();
+      console.error('Erro Supabase leads:', errText);
+      throw new Error(errText);
+    }
   } catch(e) {
     console.error('Erro ao salvar lead:', e);
-    alert('Não foi possível salvar agora. Verifique sua conexão.');
+    alert('Erro ao salvar: ' + (e.message || e));
   }
 }
 
