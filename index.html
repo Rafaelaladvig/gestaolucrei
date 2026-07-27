@@ -3825,10 +3825,10 @@ async function initLeads() {
 
 async function loadLeads() {
   try {
-    const _hdr = await getSbHdr();
-    const r = await fetch(`${SB_URL}/rest/v1/eurafa_leads?order=created_at.desc`, { headers: _hdr });
-    if (!r.ok) throw new Error(await r.text());
-    const rows = await r.json();
+    const sb = getSupabase();
+    if (!sb) throw new Error('SDK não disponível');
+    const { data: rows, error } = await sb.from('eurafa_leads').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
     leadsCache = rows.map(r => ({
       id: r.id,
       nome: r.nome,
@@ -3930,11 +3930,8 @@ async function moveLead(id, novoStatus) {
   lead.status = novoStatus;
   renderLeads();
   try {
-    await fetch(`${SB_URL}/rest/v1/eurafa_leads?id=eq.${id}`, {
-      method: 'PATCH',
-      headers: { ...(await getSbHdr()), 'Prefer':'return=minimal' },
-      body: JSON.stringify({ status: novoStatus })
-    });
+    const sb = getSupabase();
+    if (sb) await sb.from('eurafa_leads').update({ status: novoStatus }).eq('id', id);
   } catch(e) { console.error('Erro ao mover lead:', e); }
 }
 
@@ -3969,11 +3966,11 @@ async function saveLead() {
   const lead = {
     id: editingLeadId || (Date.now().toString(36) + Math.random().toString(36).slice(2,6)),
     nome,
-    whatsapp: document.getElementById('l-whats').value.trim(),
-    email: document.getElementById('l-email').value.trim(),
-    servico: document.getElementById('l-servico').value,
-    temperatura: document.getElementById('l-temp').value,
-    origem: document.getElementById('l-origem').value,
+    whatsapp: document.getElementById('l-whats').value.trim() || null,
+    email: document.getElementById('l-email').value.trim() || null,
+    servico: document.getElementById('l-servico').value || null,
+    temperatura: document.getElementById('l-temp').value || 'morno',
+    origem: document.getElementById('l-origem').value || null,
     status: document.getElementById('l-status-hidden').value || 'novo',
     followup: document.getElementById('l-followup').value || null,
     notas: editingLeadId ? (leadsCache.find(l => l.id === editingLeadId)?.notas || []) : [],
@@ -3984,6 +3981,7 @@ async function saveLead() {
     lead.notas = [{ texto: notaTexto, data: new Date().toISOString() }, ...lead.notas];
   }
 
+  // Atualizar cache local imediatamente
   if (editingLeadId) {
     const idx = leadsCache.findIndex(l => l.id === editingLeadId);
     if (idx >= 0) leadsCache[idx] = { ...leadsCache[idx], ...lead };
@@ -3994,36 +3992,38 @@ async function saveLead() {
   closeLeadModal();
   renderLeads();
 
+  // Salvar no Supabase via SDK
   try {
-    const hdr = await getSbHdr();
-    const method = editingLeadId ? 'PATCH' : 'POST';
-    const url = editingLeadId 
-      ? `${SB_URL}/rest/v1/eurafa_leads?id=eq.${editingLeadId}`
-      : `${SB_URL}/rest/v1/eurafa_leads`;
-    const r = await fetch(url, {
-      method,
-      headers: { ...hdr, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({
-        id: lead.id,
-        nome: lead.nome,
-        whatsapp: lead.whatsapp || null,
-        email: lead.email || null,
-        servico: lead.servico || null,
-        temperatura: lead.temperatura,
-        origem: lead.origem || null,
-        status: lead.status,
-        followup: lead.followup,
-        notas: lead.notas,
-      })
-    });
-    if (!r.ok) {
-      const errText = await r.text();
-      console.error('Erro Supabase leads:', errText);
-      throw new Error(errText);
+    const sb = getSupabase();
+    if (!sb) throw new Error('SDK não disponível');
+
+    const payload = {
+      id: lead.id,
+      nome: lead.nome,
+      whatsapp: lead.whatsapp,
+      email: lead.email,
+      servico: lead.servico,
+      temperatura: lead.temperatura,
+      origem: lead.origem,
+      status: lead.status,
+      followup: lead.followup,
+      notas: lead.notas,
+    };
+
+    let result;
+    if (editingLeadId) {
+      result = await sb.from('eurafa_leads').update(payload).eq('id', editingLeadId);
+    } else {
+      result = await sb.from('eurafa_leads').insert(payload);
+    }
+
+    if (result.error) {
+      console.error('Erro Supabase:', result.error);
+      alert('Erro ao salvar lead: ' + result.error.message);
     }
   } catch(e) {
     console.error('Erro ao salvar lead:', e);
-    alert('Erro ao salvar: ' + (e.message || e));
+    alert('Erro: ' + (e.message || e));
   }
 }
 
@@ -4113,11 +4113,8 @@ async function addLeadNota() {
   openLeadView(id);
 
   try {
-    await fetch(`${SB_URL}/rest/v1/eurafa_leads?id=eq.${id}`, {
-      method: 'PATCH',
-      headers: { ...(await getSbHdr()), 'Prefer':'return=minimal' },
-      body: JSON.stringify({ notas: l.notas })
-    });
+    const sb = getSupabase();
+    if (sb) await sb.from('eurafa_leads').update({ notas: l.notas }).eq('id', id);
   } catch(e) { console.error('Erro ao salvar nota:', e); }
 }
 
@@ -4126,7 +4123,8 @@ async function deleteLeadConfirm(id) {
   leadsCache = leadsCache.filter(l => l.id !== id);
   renderLeads();
   try {
-    await fetch(`${SB_URL}/rest/v1/eurafa_leads?id=eq.${id}`, { method:'DELETE', headers: await getSbHdr() });
+    const sb = getSupabase();
+    if (sb) await sb.from('eurafa_leads').delete().eq('id', id);
   } catch(e) { console.error('Erro ao excluir lead:', e); }
 }
 
