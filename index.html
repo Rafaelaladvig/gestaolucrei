@@ -536,7 +536,8 @@
   .empty-ideas i { font-size: 36px; display: block; margin-bottom: 8px; opacity: 0.3; }
 
   /* MODAL */
-  .backdrop { display: none; position: fixed; inset: 0; background: rgba(44,36,22,0.35); z-index: 200; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
+  .backdrop { display: none; position: fixed; inset: 0; background: rgba(44,36,22,0.35); z-index: 200; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; pointer-events: none; }
+  .backdrop.open { pointer-events: all; }
   .backdrop.open { display: flex; }
   .modal { background: var(--surface); border-radius: var(--radius-lg); padding: 1.75rem; width: 100%; max-width: 520px; box-shadow: 0 8px 40px rgba(44,36,22,0.12); max-height: 90vh; overflow-y: auto; }
   .modal h3 { font-family: var(--font-title); font-size: 22px; font-weight: 600; margin-bottom: 1.25rem; color: var(--verde); }
@@ -901,7 +902,8 @@
 
 
   /* ── CALENDÁRIO ── */
-  #modal-calendario { z-index: 300; align-items: flex-start; padding: 0; }
+  #modal-calendario { z-index: 300; align-items: flex-start; padding: 0; pointer-events: none; }
+  #modal-calendario.open { pointer-events: all; }
   .cal-wrap {
     width: 100%; height: 100vh; max-width: 100%;
     border-radius: 0; margin: 0;
@@ -1050,6 +1052,20 @@
   .lead-dropdown.open { display:block; }
   .lead-opt { padding:8px 10px; font-size:12px; cursor:pointer; color:var(--text); }
   .lead-opt:hover { background:var(--verde-light); }
+
+
+  /* ── EDITOR DE CATEGORIAS ── */
+  #modal-editor-cats { z-index: 600; }
+  .cat-list { display:flex; flex-direction:column; gap:8px; margin:12px 0; max-height:320px; overflow-y:auto; }
+  .cat-item { display:flex; align-items:center; gap:8px; }
+  .cat-item input[type=text] { flex:1; border:1px solid var(--border); border-radius:var(--radius); padding:6px 8px; font-size:13px; font-family:var(--font-body); background:var(--surface); color:var(--text); }
+  .cat-item input[type=text]:focus { outline:none; border-color:var(--verde); }
+  .cat-color-btn { width:32px; height:32px; border-radius:50%; border:3px solid rgba(0,0,0,0.15); cursor:pointer; flex-shrink:0; position:relative; overflow:hidden; }
+  .cat-color-btn input[type=color] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; border:none; padding:0; }
+  .cat-del-btn { border:1px solid var(--border2); background:transparent; border-radius:var(--radius); padding:5px 8px; cursor:pointer; color:var(--rose); font-size:12px; flex-shrink:0; }
+  .cat-del-btn:hover { background:#fdecea; }
+  .btn-add-cat { font-size:12px; color:var(--verde); background:none; border:1px dashed var(--verde); border-radius:var(--radius); padding:6px 12px; cursor:pointer; width:100%; margin-top:4px; }
+  .btn-add-cat:hover { background:var(--verde-light); }
 
 </style>
 </head>
@@ -1684,14 +1700,8 @@
         </div>
       </div>
 
-      <!-- Legenda de tipos -->
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin:10px 0;font-size:11px;color:var(--text3)">
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-consulta);margin-right:4px"></span>Consulta</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-tarefa);margin-right:4px"></span>Tarefa</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-compromisso);margin-right:4px"></span>Compromisso</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-pessoal);margin-right:4px"></span>Pessoal</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ev-geral);margin-right:4px"></span>Geral</span>
-      </div>
+      <!-- Legenda de categorias (dinâmica) -->
+      <div id="cal-legenda" style="display:flex;gap:12px;flex-wrap:wrap;margin:10px 0;font-size:11px;color:var(--text3)"></div>
 
       <!-- Grade do mês -->
       <div id="cal-view-mes">
@@ -2557,14 +2567,11 @@
     </div>
 
     <div class="form-group" style="margin-bottom:10px">
-      <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:4px">Tipo</label>
-      <div class="tipo-btns">
-        <button class="tipo-btn selected" data-tipo="consulta" style="background:var(--ev-consulta)" onclick="selectTipo('consulta',this)">Consulta</button>
-        <button class="tipo-btn" data-tipo="tarefa" onclick="selectTipo('tarefa',this)">Tarefa</button>
-        <button class="tipo-btn" data-tipo="compromisso" onclick="selectTipo('compromisso',this)">Compromisso</button>
-        <button class="tipo-btn" data-tipo="pessoal" onclick="selectTipo('pessoal',this)">Pessoal</button>
-        <button class="tipo-btn" data-tipo="geral" onclick="selectTipo('geral',this)">Geral</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">Categoria</label>
+        <button type="button" onclick="openEditorCategorias()" style="font-size:10px;color:var(--verde);background:none;border:none;cursor:pointer;text-decoration:underline">+ gerenciar categorias</button>
       </div>
+      <div class="tipo-btns" id="tipo-btns-wrap"></div>
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
@@ -2621,6 +2628,20 @@
     </div>
     <div style="margin-top:8px;text-align:center">
       <button id="btn-del-evento" onclick="deleteEvento()" style="display:none;font-size:11px;color:var(--rose);background:none;border:none;cursor:pointer;text-decoration:underline">excluir evento</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITOR DE CATEGORIAS -->
+<div class="backdrop" id="modal-editor-cats">
+  <div class="modal" style="max-width:420px;width:100%">
+    <h3 style="font-family:var(--font-title);font-size:18px;color:var(--verde);margin-bottom:4px">Categorias da Agenda</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:8px">Personalize nome e cor de cada categoria.</p>
+    <div class="cat-list" id="cat-list"></div>
+    <button class="btn-add-cat" onclick="addCatRow()"><i class="ti ti-plus"></i> nova categoria</button>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn-cancel" onclick="closeEditorCategorias()" style="flex:1">cancelar</button>
+      <button class="btn-primary" onclick="saveEditorCategorias()" style="flex:1">salvar</button>
     </div>
   </div>
 </div>
@@ -4966,20 +4987,31 @@ let editingEventoId = null;
 let selectedTipo = 'consulta';
 let _lembreteTimers = [];
 
-const TIPO_CORES = {
-  consulta: 'var(--ev-consulta)',
-  tarefa: 'var(--ev-tarefa)',
-  compromisso: 'var(--ev-compromisso)',
-  pessoal: 'var(--ev-pessoal)',
-  geral: 'var(--ev-geral)',
-};
-const TIPO_HEX = {
-  consulta: '#C4673A', tarefa: '#3D5A3E',
-  compromisso: '#3a6b9e', pessoal: '#7c5cbf', geral: '#8a8a8a',
-};
+// Categorias editáveis — salvas no localStorage
+const CAT_KEY = 'gestao_categorias_v1';
+const CAT_DEFAULT = [
+  { id: 'consulta',    nome: 'Consulta',    cor: '#C4673A' },
+  { id: 'tarefa',      nome: 'Tarefa',      cor: '#3D5A3E' },
+  { id: 'compromisso', nome: 'Compromisso', cor: '#3a6b9e' },
+  { id: 'pessoal',     nome: 'Pessoal',     cor: '#7c5cbf' },
+  { id: 'geral',       nome: 'Geral',       cor: '#8a8a8a' },
+];
+
+function getCategorias() {
+  try { const s = localStorage.getItem(CAT_KEY); return s ? JSON.parse(s) : [...CAT_DEFAULT]; }
+  catch { return [...CAT_DEFAULT]; }
+}
+function saveCategorias(cats) { localStorage.setItem(CAT_KEY, JSON.stringify(cats)); }
+function getCorCategoria(id) {
+  return getCategorias().find(c => c.id === id)?.cor || '#8a8a8a';
+}
+
+// Compatibilidade com código antigo
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
 async function initAgenda() {
+  renderLegenda();
+  renderTipoBtns();
   await loadEventos();
   renderCalendarioModule();
   scheduleAllLembretes();
@@ -5060,7 +5092,7 @@ function renderMes() {
     const evs = byDay[d] || [];
     const maxShow = 2;
     const chips = evs.slice(0, maxShow).map(ev => {
-      const cor = TIPO_HEX[ev.tipo] || '#8a8a8a';
+      const cor = getCorCategoria(ev.tipo);
       const hora = ev.hora_inicio ? ev.hora_inicio.slice(0,5) + ' ' : '';
       return `<div class="cal-ev-chip" style="background:${cor}" onclick="event.stopPropagation();openEventoModal('${ev.id}')" title="${ev.titulo}">${hora}${ev.titulo}</div>`;
     }).join('');
@@ -5114,7 +5146,7 @@ function renderLista() {
     dayEl.innerHTML = `<div class="cal-list-day-label" style="${isToday ? 'color:var(--verde);font-size:12px' : ''}">${label}</div>`;
 
     evs.forEach(ev => {
-      const cor = TIPO_HEX[ev.tipo] || '#8a8a8a';
+      const cor = getCorCategoria(ev.tipo);
       const hora = ev.dia_todo ? 'Dia todo' : (ev.hora_inicio ? ev.hora_inicio.slice(0,5) : '—');
       const item = document.createElement('div');
       item.className = 'cal-list-item' + (ev.concluido ? ' concluido' : '');
@@ -5158,14 +5190,9 @@ function openEventoModal(id, defaultDate) {
   document.getElementById('ev-lead-id').value = ev?.lead_id || '';
   document.getElementById('ev-lead-nome').value = ev?.lead_nome || '';
 
-  // Tipo
-  selectedTipo = ev?.tipo || 'consulta';
-  document.querySelectorAll('.tipo-btn').forEach(btn => {
-    const t = btn.dataset.tipo;
-    btn.classList.toggle('selected', t === selectedTipo);
-    btn.style.background = t === selectedTipo ? TIPO_HEX[t] : '';
-    btn.style.color = t === selectedTipo ? '#fff' : '';
-  });
+  // Tipo / Categoria
+  selectedTipo = ev?.tipo || getCategorias()[0]?.id || 'geral';
+  renderTipoBtns(selectedTipo);
 
   toggleDiaTodo();
   document.getElementById('modal-evento').classList.add('open');
@@ -5178,13 +5205,15 @@ function closeEventoModal() {
   editingEventoId = null;
 }
 
-function selectTipo(tipo, btn) {
+function selectTipo(tipo, btn, cor) {
   selectedTipo = tipo;
-  document.querySelectorAll('.tipo-btn').forEach(b => {
-    const t = b.dataset.tipo;
-    b.classList.toggle('selected', t === tipo);
-    b.style.background = t === tipo ? TIPO_HEX[t] : '';
-    b.style.color = t === tipo ? '#fff' : '';
+  const corFinal = cor || getCorCategoria(tipo);
+  document.querySelectorAll('#tipo-btns-wrap .tipo-btn').forEach(b => {
+    const isSel = b.dataset.tipo === tipo;
+    b.classList.toggle('selected', isSel);
+    b.style.background = isSel ? corFinal : '';
+    b.style.color = isSel ? '#fff' : '';
+    b.style.borderColor = isSel ? corFinal : '';
   });
 }
 
@@ -5447,6 +5476,93 @@ function saveEditorOpcoes() {
 // Fechar ao clicar no backdrop
 document.getElementById('modal-editor-opcoes')?.addEventListener('click', e => {
   if (e.target.id === 'modal-editor-opcoes') closeEditorOpcoes();
+});
+
+// ── EDITOR DE CATEGORIAS DA AGENDA ────────────────────────
+function renderLegenda() {
+  const el = document.getElementById('cal-legenda');
+  if (!el) return;
+  const cats = getCategorias();
+  el.innerHTML = cats.map(c =>
+    `<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c.cor};margin-right:4px;vertical-align:middle"></span>${c.nome}</span>`
+  ).join('');
+}
+
+function renderTipoBtns(selectedId) {
+  const wrap = document.getElementById('tipo-btns-wrap');
+  if (!wrap) return;
+  const cats = getCategorias();
+  const sel = selectedId || selectedTipo || cats[0]?.id;
+  wrap.innerHTML = cats.map(c => {
+    const isSel = c.id === sel;
+    return `<button class="tipo-btn ${isSel?'selected':''}" data-tipo="${c.id}"
+      style="${isSel ? `background:${c.cor};color:#fff;border-color:${c.cor}` : ''}"
+      onclick="selectTipo('${c.id}',this,'${c.cor}')">${c.nome}</button>`;
+  }).join('');
+  if (!selectedId && cats.length) { selectedTipo = cats[0].id; }
+}
+
+function openEditorCategorias() {
+  const cats = getCategorias();
+  const list = document.getElementById('cat-list');
+  list.innerHTML = '';
+  cats.forEach((c, i) => {
+    const row = document.createElement('div');
+    row.className = 'cat-item';
+    row.innerHTML = `
+      <div class="cat-color-btn" style="background:${c.cor}" title="Clique para mudar a cor">
+        <input type="color" value="${c.cor}" oninput="this.parentElement.style.background=this.value" data-idx="${i}">
+      </div>
+      <input type="text" value="${c.nome}" placeholder="Nome da categoria" data-idx="${i}">
+      <button class="cat-del-btn" onclick="this.closest('.cat-item').remove()" title="Remover">
+        <i class="ti ti-trash"></i>
+      </button>`;
+    list.appendChild(row);
+  });
+  document.getElementById('modal-editor-cats').classList.add('open');
+}
+
+function addCatRow() {
+  const list = document.getElementById('cat-list');
+  const row = document.createElement('div');
+  row.className = 'cat-item';
+  const randomCor = '#' + Math.floor(Math.random()*0xAAAAAA+0x555555).toString(16).padStart(6,'0');
+  row.innerHTML = `
+    <div class="cat-color-btn" style="background:${randomCor}" title="Clique para mudar a cor">
+      <input type="color" value="${randomCor}" oninput="this.parentElement.style.background=this.value">
+    </div>
+    <input type="text" placeholder="Nome da categoria">
+    <button class="cat-del-btn" onclick="this.closest('.cat-item').remove()">
+      <i class="ti ti-trash"></i>
+    </button>`;
+  list.appendChild(row);
+  row.querySelector('input[type=text]').focus();
+}
+
+function closeEditorCategorias() {
+  document.getElementById('modal-editor-cats').classList.remove('open');
+}
+
+function saveEditorCategorias() {
+  const rows = document.querySelectorAll('#cat-list .cat-item');
+  const cats = Array.from(rows).map(row => {
+    const nome = row.querySelector('input[type=text]').value.trim();
+    const cor = row.querySelector('input[type=color]').value;
+    if (!nome) return null;
+    const id = nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-');
+    return { id, nome, cor };
+  }).filter(Boolean);
+
+  if (!cats.length) { alert('Adicione ao menos uma categoria.'); return; }
+  saveCategorias(cats);
+  closeEditorCategorias();
+  renderLegenda();
+  renderTipoBtns();
+}
+
+// Fechar ao clicar no backdrop
+document.getElementById('modal-editor-cats')?.addEventListener('click', e => {
+  if (e.target.id === 'modal-editor-cats') closeEditorCategorias();
 });
 
 // ── LOGOFF POR INATIVIDADE (15 minutos) ──────────────────
