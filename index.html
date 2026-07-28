@@ -326,7 +326,7 @@
     position: fixed; inset: 0; background: rgba(44,24,16,0.55); backdrop-filter: blur(4px);
     display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem;
   }
-  #pergunta-modal-overlay.hidden { display: none; pointer-events: none; }
+  #pergunta-modal-overlay.hidden { display: none !important; pointer-events: none; }
   .pergunta-modal {
     background: var(--branco); border-radius: 14px; padding: 2rem; width: 100%; max-width: 480px;
     max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(44,24,16,0.2);
@@ -1648,7 +1648,7 @@
 </div>
 
 <!-- PERGUNTA EDIT MODAL -->
-<div id="pergunta-modal-overlay" class="hidden" style="position:fixed;inset:0;background:rgba(44,24,16,0.55);backdrop-filter:blur(4px);z-index:600;display:flex;align-items:center;justify-content:center;padding:1rem">
+<div id="pergunta-modal-overlay" class="hidden" style="position:fixed;inset:0;background:rgba(44,24,16,0.55);backdrop-filter:blur(4px);z-index:600;align-items:center;justify-content:center;padding:1rem">
   <div style="background:white;border-radius:12px;padding:2rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto">
     <h3 id="pergunta-modal-title" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1.2rem;color:#3D5A3E">Nova pergunta</h3>
     <input type="hidden" id="pg-id">
