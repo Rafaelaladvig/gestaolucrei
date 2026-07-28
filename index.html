@@ -1123,6 +1123,7 @@
   <div id="admin-menu" style="display:none">
     <h2 class="menu-greeting">Olá, <em>Rafaela</em> 👋</h2>
     <p class="menu-sub">O que você quer fazer hoje?</p>
+    <button onclick="diagnostico()" style="font-size:10px;background:none;border:1px dashed #ccc;border-radius:4px;padding:3px 8px;cursor:pointer;color:#aaa;margin-bottom:1rem">🔧 diagnóstico</button>
     <div class="menu-grid">
 
       <button class="menu-card" onclick="openModule('prospeccao')">
@@ -2864,9 +2865,11 @@ async function renderPerguntasList() {
 }
 
 async function toggleAtiva(id, ativa) {
-  const sb = getSupabase();
-  if (!sb) return;
-  const { error } = await sb.from('perguntas').update({ ativa }).eq('id', id);
+  const hdr = await getSbHdr();
+  const r = await fetch(`${SB_URL}/rest/v1/perguntas?id=eq.${id}`, {
+    method:'PATCH', headers:{...hdr,'Prefer':'return=minimal'}, body:JSON.stringify({ativa})
+  });
+  const error = r.ok ? null : {message: await r.text()};
   if (error) {
     console.error('Erro ao atualizar:', error);
     alert('Não foi possível atualizar agora.');
@@ -2894,9 +2897,9 @@ async function movePergunta(id, direction) {
 
 async function deletePergunta(id) {
   if (!confirm('Excluir essa pergunta? Essa ação não pode ser desfeita.')) return;
-  const sb = getSupabase();
-  if (!sb) return;
-  const { error } = await sb.from('perguntas').delete().eq('id', id);
+  const hdr = await getSbHdr();
+  const rDel = await fetch(`${SB_URL}/rest/v1/perguntas?id=eq.${id}`,{method:'DELETE',headers:hdr});
+  const error = rDel.ok ? null : {message: await rDel.text()};
   if (error) {
     console.error('Erro ao excluir pergunta:', error);
     alert('Não foi possível excluir agora.');
@@ -3866,10 +3869,10 @@ async function initLeads() {
 
 async function loadLeads() {
   try {
-    const sb = getSupabase();
-    if (!sb) throw new Error('SDK não disponível');
-    const { data: rows, error } = await sb.from('eurafa_leads').select('*').order('created_at', { ascending: false });
-    if (error) throw error;
+    const hdr = await getSbHdr();
+    const r = await fetch(`${SB_URL}/rest/v1/eurafa_leads?order=created_at.desc`, { headers: hdr });
+    if (!r.ok) throw new Error(await r.text());
+    const rows = await r.json();
     leadsCache = rows.map(r => ({
       id: r.id,
       nome: r.nome,
@@ -3971,8 +3974,11 @@ async function moveLead(id, novoStatus) {
   lead.status = novoStatus;
   renderLeads();
   try {
-    const sb = getSupabase();
-    if (sb) await sb.from('eurafa_leads').update({ status: novoStatus }).eq('id', id);
+    const hdr = await getSbHdr();
+    await fetch(`${SB_URL}/rest/v1/eurafa_leads?id=eq.${id}`, {
+      method: 'PATCH', headers: { ...hdr, 'Prefer':'return=minimal' },
+      body: JSON.stringify({ status: novoStatus })
+    });
   } catch(e) { console.error('Erro ao mover lead:', e); }
 }
 
@@ -4068,6 +4074,9 @@ async function saveLead() {
       alert('Erro ' + r.status + ': ' + errText);
     } else {
       console.log('Lead salvo com sucesso!');
+      // Recarregar do banco para garantir dados atualizados
+      await loadLeads();
+      renderLeads();
     }
   } catch(e) {
     console.error('Erro ao salvar lead:', e);
@@ -4161,8 +4170,11 @@ async function addLeadNota() {
   openLeadView(id);
 
   try {
-    const sb = getSupabase();
-    if (sb) await sb.from('eurafa_leads').update({ notas: l.notas }).eq('id', id);
+    const hdr = await getSbHdr();
+    await fetch(`${SB_URL}/rest/v1/eurafa_leads?id=eq.${id}`, {
+      method: 'PATCH', headers: { ...hdr, 'Prefer':'return=minimal' },
+      body: JSON.stringify({ notas: l.notas })
+    });
   } catch(e) { console.error('Erro ao salvar nota:', e); }
 }
 
@@ -4171,8 +4183,10 @@ async function deleteLeadConfirm(id) {
   leadsCache = leadsCache.filter(l => l.id !== id);
   renderLeads();
   try {
-    const sb = getSupabase();
-    if (sb) await sb.from('eurafa_leads').delete().eq('id', id);
+    const hdr = await getSbHdr();
+    await fetch(`${SB_URL}/rest/v1/eurafa_leads?id=eq.${id}`, {
+      method: 'DELETE', headers: hdr
+    });
   } catch(e) { console.error('Erro ao excluir lead:', e); }
 }
 
@@ -5352,6 +5366,56 @@ document.getElementById('modal-editor-cats')?.addEventListener('click', e => {
   if (e.target.id === 'modal-editor-cats') closeEditorCategorias();
 });
 
+// ── DIAGNÓSTICO ──────────────────────────────────────────
+async function diagnostico() {
+  const linhas = [];
+  linhas.push('=== DIAGNÓSTICO DO SISTEMA ===');
+  linhas.push('Token: ' + (_authToken ? _authToken.slice(0,20)+'...' : 'NULL ⚠️'));
+  
+  // Testar conexão com Supabase
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/eurafa_leads?limit=1`, {
+      headers: { 
+        'apikey': SUPABASE_ANON_KEY, 
+        'Authorization': 'Bearer ' + (_authToken || SUPABASE_ANON_KEY)
+      }
+    });
+    linhas.push('Conexão Supabase: ' + r.status + ' ' + (r.ok ? '✓' : '✗'));
+    if (!r.ok) linhas.push('Erro: ' + await r.text());
+  } catch(e) {
+    linhas.push('Conexão falhou: ' + e.message);
+  }
+
+  // Testar insert simples
+  try {
+    const testId = 'teste-' + Date.now();
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/eurafa_leads`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + (_authToken || SUPABASE_ANON_KEY),
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ id: testId, nome: 'TESTE DIAGNOSTICO', status: 'novo', temperatura: 'morno' })
+    });
+    linhas.push('Insert teste: ' + r.status + ' ' + (r.ok ? '✓ FUNCIONOU!' : '✗ FALHOU'));
+    if (!r.ok) linhas.push('Erro insert: ' + await r.text());
+    else {
+      // Limpar o teste
+      await fetch(`${SUPABASE_URL}/rest/v1/eurafa_leads?id=eq.${testId}`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + (_authToken || SUPABASE_ANON_KEY) }
+      });
+      linhas.push('Registro de teste removido ✓');
+    }
+  } catch(e) {
+    linhas.push('Insert falhou: ' + e.message);
+  }
+
+  alert(linhas.join('\n'));
+}
+
 // ── LOGOFF POR INATIVIDADE (15 minutos) ──────────────────
 let _inactivityTimer = null;
 const INACTIVITY_MS = 15 * 60 * 1000; // 15 minutos
@@ -5404,4 +5468,3 @@ window.addEventListener('load', () => openAdmin());
 
 </body>
 </html>
- 
