@@ -2300,13 +2300,11 @@ async function startQuiz() {
 }
 
 async function loadQuestions() {
-  const sb = await waitForSupabase(5000);
-  if (!sb) { questions = []; return; }
-  const { data, error } = await sb
-    .from('perguntas')
-    .select('*')
-    .eq('ativa', true)
-    .order('ordem', { ascending: true });
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/perguntas?ativa=eq.true&order=ordem.asc`, {
+    headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY}
+  });
+  const data = r.ok ? await r.json() : [];
+  const error = r.ok ? null : {message:'Erro ao carregar perguntas'};
   if (error) {
     console.error('Erro ao carregar perguntas:', error);
     questions = [];
@@ -2789,12 +2787,10 @@ async function deleteEntry(id, e) {
 let perguntasCache = [];
 
 async function getAllPerguntas() {
-  const sb = getSupabase();
-  if (!sb) return [];
-  const { data, error } = await sb
-    .from('perguntas')
-    .select('*')
-    .order('ordem', { ascending: true });
+  const hdrP = await getSbHdr();
+  const rP = await fetch(`${SB_URL}/rest/v1/perguntas?order=ordem.asc`,{headers:hdrP});
+  const data = rP.ok ? await rP.json() : [];
+  const error = rP.ok ? null : {message:await rP.text()};
   if (error) {
     console.error('Erro ao buscar perguntas:', error);
     return [];
@@ -3861,8 +3857,6 @@ let _leadsLoaded = false;
 let editingLeadId = null;
 
 async function initLeads() {
-  if (_leadsLoaded) { renderLeads(); return; }
-  _leadsLoaded = true;
   await loadLeads();
   renderLeads();
 }
@@ -3870,9 +3864,12 @@ async function initLeads() {
 async function loadLeads() {
   try {
     const hdr = await getSbHdr();
+    console.log('loadLeads token:', hdr.Authorization.slice(0,30));
     const r = await fetch(`${SB_URL}/rest/v1/eurafa_leads?order=created_at.desc`, { headers: hdr });
+    console.log('loadLeads status:', r.status);
     if (!r.ok) throw new Error(await r.text());
     const rows = await r.json();
+    console.log('loadLeads rows:', rows.length);
     leadsCache = rows.map(r => ({
       id: r.id,
       nome: r.nome,
