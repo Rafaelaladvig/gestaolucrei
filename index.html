@@ -1610,6 +1610,72 @@
 </div>
 </div><!-- /admin-page -->
 
+<!-- MODAL VIEW — VISUALIZAÇÃO DO CARD -->
+<div class="backdrop" id="modal-view">
+  <div class="modal" style="max-width:560px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:1.25rem">
+      <div>
+        <div id="view-badges" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"></div>
+        <h3 id="view-titulo" style="margin-bottom:0;font-size:18px"></h3>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="btn-cancel" id="view-edit-btn" onclick="switchToEdit()"><i class="ti ti-pencil"></i> editar</button>
+        <button class="del-btn" onclick="closeViewModal()" style="font-size:18px;padding:4px 6px"><i class="ti ti-x"></i></button>
+      </div>
+    </div>
+    <div id="view-foco-row" style="display:none;margin-bottom:12px"></div>
+    <div id="view-obs-block" style="display:none">
+      <div class="modal-section-title" style="margin-bottom:8px"><i class="ti ti-pencil" style="font-size:13px"></i> roteiro / desenvolvimento</div>
+      <div id="view-obs" style="font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap;background:var(--surface2);border-radius:var(--radius);padding:12px;margin-bottom:14px"></div>
+    </div>
+    <div id="view-legenda-block" style="display:none">
+      <div class="modal-section-title" style="margin-bottom:8px"><i class="ti ti-align-left" style="font-size:13px"></i> legenda</div>
+      <div id="view-legenda" style="font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;background:var(--surface2);border-radius:var(--radius);padding:12px;margin-bottom:14px;border-left:3px solid var(--verde)"></div>
+    </div>
+    <div id="view-hashtags-block" style="display:none">
+      <div class="modal-section-title" style="margin-bottom:8px"><i class="ti ti-hash" style="font-size:13px"></i> hashtags</div>
+      <div id="view-hashtags" style="font-size:12px;color:var(--verde);line-height:1.8;background:var(--verde-light);border-radius:var(--radius);padding:10px 12px;margin-bottom:14px;cursor:pointer" title="clique para copiar" onclick="copyHashtags()"></div>
+    </div>
+    <div id="view-metricas-block" style="display:none">
+      <div class="modal-section-title" style="margin-bottom:8px"><i class="ti ti-chart-bar" style="font-size:13px"></i> métricas</div>
+      <div id="view-metricas-grid" class="comp-grid"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px">
+      <div id="view-move-btns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      <button class="del-btn" id="view-del-btn" style="font-size:13px;padding:4px 8px;display:flex;align-items:center;gap:4px"><i class="ti ti-trash"></i> excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- PERGUNTA EDIT MODAL -->
+<div id="pergunta-modal-overlay" class="hidden" style="position:fixed;inset:0;background:rgba(44,24,16,0.55);backdrop-filter:blur(4px);z-index:600;display:flex;align-items:center;justify-content:center;padding:1rem">
+  <div style="background:white;border-radius:12px;padding:2rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto">
+    <h3 id="pergunta-modal-title" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1.2rem;color:#3D5A3E">Nova pergunta</h3>
+    <input type="hidden" id="pg-id">
+    <div style="margin-bottom:0.8rem"><label style="font-size:0.78rem;font-weight:600;color:#5a3d2b;display:block;margin-bottom:4px">Pergunta</label><input class="field-input" id="pg-titulo" placeholder="Ex: Qual é o seu nome?" style="width:100%"></div>
+    <div style="margin-bottom:0.8rem"><label style="font-size:0.78rem;font-weight:600;color:#5a3d2b;display:block;margin-bottom:4px">Texto de apoio (opcional)</label><input class="field-input" id="pg-subtitulo" placeholder="Ex: Pode ser só o primeiro nome" style="width:100%"></div>
+    <div style="margin-bottom:0.8rem"><label style="font-size:0.78rem;font-weight:600;color:#5a3d2b;display:block;margin-bottom:4px">ID do campo</label><input class="field-input" id="pg-campo-id" placeholder="Ex: nome" style="width:100%"></div>
+    <div style="margin-bottom:0.8rem"><label style="font-size:0.78rem;font-weight:600;color:#5a3d2b;display:block;margin-bottom:4px">Tipo</label>
+      <select class="field-input" id="pg-tipo" onchange="onTipoChange()" style="width:100%">
+        <option value="text">Texto curto</option><option value="tel">Telefone</option>
+        <option value="textarea">Texto longo</option><option value="choice">Escolha única</option>
+        <option value="choice-other">Escolha única + outro</option><option value="multi">Múltipla escolha</option>
+      </select>
+    </div>
+    <div style="margin-bottom:0.8rem" id="pg-placeholder-group"><label style="font-size:0.78rem;font-weight:600;color:#5a3d2b;display:block;margin-bottom:4px">Placeholder</label><input class="field-input" id="pg-placeholder" placeholder="Ex: Seu nome" style="width:100%"></div>
+    <div style="margin-bottom:0.8rem;display:none" id="pg-opcoes-group">
+      <label style="font-size:0.78rem;font-weight:600;color:#5a3d2b;display:block;margin-bottom:4px">Opções</label>
+      <div id="pg-opcoes-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
+      <button class="btn-add-opcao" onclick="addOpcaoField()">+ adicionar opção</button>
+    </div>
+    <div style="margin-bottom:1rem"><label style="display:flex;align-items:center;gap:8px;font-size:0.84rem"><input type="checkbox" id="pg-obrigatoria" checked> Obrigatória</label></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-cancel" onclick="closePerguntaModal()" style="flex:1">Cancelar</button>
+      <button class="btn-primary" id="btn-save-pergunta" onclick="savePergunta()" style="flex:1">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAIS DA GESTÃO DE CONTEÚDO (fora do módulo para position:fixed funcionar) -->
 <!-- ===== MODAL CONTEÚDO ===== -->
 <div class="backdrop" id="modal-card">
@@ -3691,12 +3757,12 @@ function copyHashtags() {
   });
 }
 
-document.getElementById('modal-card').addEventListener('click', e => { if (e.target.id === 'modal-card') closeCardModal(); });
-document.getElementById('modal-ideia').addEventListener('click', e => { if (e.target.id === 'modal-ideia') closeIdeaModal(); });
-document.getElementById('modal-view').addEventListener('click', e => { if (e.target.id === 'modal-view') closeViewModal(); });
-document.getElementById('modal-meta').addEventListener('click', e => { if (e.target.id === 'modal-meta') closeMetaModal(); });
-document.getElementById('modal-lead').addEventListener('click', e => { if (e.target.id === 'modal-lead') closeLeadModal(); });
-document.getElementById('modal-lead-view').addEventListener('click', e => { if (e.target.id === 'modal-lead-view') closeLeadViewModal(); });
+document.getElementById('modal-card')?.addEventListener('click', e => { if (e.target.id === 'modal-card') closeCardModal(); });
+document.getElementById('modal-ideia')?.addEventListener('click', e => { if (e.target.id === 'modal-ideia') closeIdeaModal(); });
+document.getElementById('modal-view')?.addEventListener('click', e => { if (e.target.id === 'modal-view') closeViewModal(); });
+document.getElementById('modal-meta')?.addEventListener('click', e => { if (e.target.id === 'modal-meta') closeMetaModal(); });
+document.getElementById('modal-lead')?.addEventListener('click', e => { if (e.target.id === 'modal-lead') closeLeadModal(); });
+document.getElementById('modal-lead-view')?.addEventListener('click', e => { if (e.target.id === 'modal-lead-view') closeLeadViewModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCardModal(); closeIdeaModal(); closeViewModal(); closeMetaModal(); closeLeadModal(); closeLeadViewModal(); } });
 
 // Inicialização gerenciada pelo openModule()
