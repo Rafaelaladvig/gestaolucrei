@@ -3230,7 +3230,11 @@ async function upsertCard(card, status, offset) {
       metricas: card.metricas || {},
     });
     setSyncStatus('ok');
-  } catch(e) { console.error(e); setSyncStatus('error'); }
+  } catch(e) {
+    console.error('upsertCard erro:', e);
+    setSyncStatus('error');
+    alert('Erro ao salvar conteúdo: ' + (e.message || e));
+  }
 }
 
 async function deleteCard_sb(id) {
@@ -3250,7 +3254,11 @@ async function upsertIdea(idea) {
       note: idea.note || null,
     });
     setSyncStatus('ok');
-  } catch(e) { console.error(e); setSyncStatus('error'); }
+  } catch(e) {
+    console.error('upsertIdea erro:', e);
+    setSyncStatus('error');
+    alert('Erro ao salvar ideia: ' + (e.message || e));
+  }
 }
 
 async function deleteIdea_sb(id) {
@@ -3437,7 +3445,7 @@ const metaLabels = { views:'views', curtidas:'curtidas', comentarios:'coment.', 
 function cardHTML(c, st) {
   const prev = st === 'prod' ? 'fazer' : st === 'pronto' ? 'prod' : null;
   const next = st === 'fazer' ? 'prod' : st === 'prod' ? 'pronto' : st === 'pronto' ? 'postado' : null;
-  const nextL = { fazer:'pronto →', prod:'programado →' };
+  const nextL = { fazer:'pronto →', prod:'programado →', pronto:'postado →' };
   const prevL = { prod:'← desenvolvimento', pronto:'← programado', postado:'← programado' };
   const obj = c.objetivos || {};
   const estiloLabel = c.estilo === 'outro' && c.estiloOutro ? c.estiloOutro : (estiloLabels[c.estilo]||'');
