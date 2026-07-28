@@ -1295,7 +1295,59 @@
       <button class="filter-btn" onclick="filterIdeas('outro', this)">Outro</button>
     </div>
     <div class="ideas-grid" id="ideas-grid"></div>
-  </div>  </div><!-- /module-conteudo -->
+  </div>
+
+  <div id="view-dashboard" class="view">
+    <div class="dash-wrap">
+      <div class="dash-period-row">
+        <h2><i class="ti ti-chart-bar" style="color:var(--purple)"></i> Dashboard</h2>
+        <div class="dash-period-btns">
+          <button class="dash-period-btn active" onclick="setDashPeriod(30,this)">30 dias</button>
+          <button class="dash-period-btn" onclick="setDashPeriod(60,this)">60 dias</button>
+          <button class="dash-period-btn" onclick="setDashPeriod(90,this)">90 dias</button>
+        </div>
+      </div>
+      <div class="dash-block">
+        <div class="dash-block-title"><i class="ti ti-activity"></i> visão geral</div>
+        <div class="dash-nums" id="dash-nums"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="dash-block">
+          <div class="dash-block-title"><i class="ti ti-layout-grid"></i> formatos mais usados</div>
+          <div id="dash-fmt-rows"></div>
+        </div>
+        <div class="dash-block">
+          <div class="dash-block-title"><i class="ti ti-target"></i> foco dos posts</div>
+          <div id="dash-foco-rows"></div>
+        </div>
+      </div>
+      <div class="dash-block" style="margin-top:14px">
+        <div class="dash-block-title"><i class="ti ti-eye"></i> top 5 — visualizações</div>
+        <div id="dash-top-views"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+        <div class="dash-block">
+          <div class="dash-block-title"><i class="ti ti-heart"></i> top 5 — curtidas</div>
+          <div id="dash-top-curtidas"></div>
+        </div>
+        <div class="dash-block">
+          <div class="dash-block-title"><i class="ti ti-bookmark"></i> top 5 — salvamentos</div>
+          <div id="dash-top-saves"></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+        <div class="dash-block">
+          <div class="dash-block-title"><i class="ti ti-share"></i> top 5 — compartilhamentos</div>
+          <div id="dash-top-shares"></div>
+        </div>
+        <div class="dash-block">
+          <div class="dash-block-title"><i class="ti ti-users"></i> top 5 — seguidores gerados</div>
+          <div id="dash-top-seguidores"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- /module-conteudo -->
 
   <!-- MÓDULO: GESTÃO DE LEADS -->
   <div class="admin-module" id="module-leads">
