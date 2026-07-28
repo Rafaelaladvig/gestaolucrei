@@ -2250,7 +2250,8 @@
 
 <script>
 
-let _authToken = null; // token guardado após login
+let _authToken = null;    // token guardado após login
+let _refreshToken = null; // refresh token
 
 const SUPABASE_URL = 'https://ceqvwrzyqjpxvekapqto.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcXZ3cnp5cWpweHZla2FwcXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDU1MDUsImV4cCI6MjA5NzgyMTUwNX0.IJZlL7UT07KHHDRMpkkMShWIVQfQgcbZjSxWtpF3VvU';
@@ -2546,22 +2547,24 @@ document.addEventListener('keydown', e => {
 async function openAdmin() {
   document.body.style.overflow = 'auto';
 
-  const sb = await waitForSupabase();
-  if (!sb) {
-    document.getElementById('login-overlay').classList.remove('hidden');
-    setTimeout(() => document.getElementById('login-email').focus(), 200);
-    return;
+  // Se já temos token, verificar se ainda é válido
+  if (_authToken) {
+    try {
+      const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + _authToken }
+      });
+      if (r.ok) {
+        const user = await r.json();
+        showAdminPage();
+        onLoggedIn(user, _authToken);
+        return;
+      }
+    } catch(e) {}
   }
 
-  const { data: { session } } = await sb.auth.getSession();
-  if (session && session.user) {
-    _authToken = session.access_token || null;
-    showAdminPage();
-    onLoggedIn(session.user, _authToken);
-  } else {
-    document.getElementById('login-overlay').classList.remove('hidden');
-    setTimeout(() => document.getElementById('login-email').focus(), 200);
-  }
+  // Sem token válido — mostrar login
+  document.getElementById('login-overlay').classList.remove('hidden');
+  setTimeout(() => document.getElementById('login-email').focus(), 200);
 }
 
 function showAdminPage() {
@@ -2586,28 +2589,41 @@ async function doLogin() {
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span>';
 
-  const sb = await waitForSupabase();
-  if (!sb) {
-    errEl.textContent = 'Não foi possível conectar. Verifique sua internet e tente novamente.';
+  try {
+    // Login via fetch direto — não depende do SDK (evita bloqueio do Edge)
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await r.json();
+
+    if (!r.ok || !data.access_token) {
+      errEl.textContent = 'E-mail ou senha incorretos.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = 'Entrar';
+      return;
+    }
+
+    _authToken = data.access_token;
+    _refreshToken = data.refresh_token || null;
+    const user = data.user || { email };
+    btn.disabled = false;
+    btn.innerHTML = 'Entrar';
+    onLoggedIn(user, _authToken);
+
+  } catch(e) {
+    console.error('Erro no login:', e);
+    errEl.textContent = 'Erro de conexão. Verifique sua internet.';
     errEl.style.display = 'block';
     btn.disabled = false;
     btn.innerHTML = 'Entrar';
-    return;
   }
-
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
-
-  btn.disabled = false;
-  btn.innerHTML = 'Entrar';
-
-  if (error || !data.user) {
-    errEl.textContent = 'E-mail ou senha incorretos.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  _authToken = data.session?.access_token || null;
-  onLoggedIn(data.user, _authToken);
 }
 
 function onLoggedIn(user, token) {
@@ -2646,8 +2662,16 @@ function openModule(name) {
 }
 
 async function logout() {
-  const sb = getSupabase();
-  if (sb) await sb.auth.signOut();
+  if (_authToken) {
+    try {
+      await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + _authToken }
+      });
+    } catch(e) {}
+  }
+  _authToken = null;
+  _refreshToken = null;
   // Mostrar login overlay
   document.getElementById('login-overlay').classList.remove('hidden');
   document.getElementById('login-email').value = '';
@@ -5380,3 +5404,4 @@ window.addEventListener('load', () => openAdmin());
 
 </body>
 </html>
+ 
