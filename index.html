@@ -570,8 +570,19 @@ async function fazerCadastro(){
     const r=await fetch(`${SB}/auth/v1/signup`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SBKEY},body:JSON.stringify({email,password:senha,data:{nome}})});
     const d=await r.json();
     if(!r.ok)throw new Error(d.msg||d.error_description||'Erro ao criar conta');
-    if(d.access_token){TOKEN=d.access_token;iniciarSistema(d.user||{email});}
-    else{err.style.color='var(--musgo)';err.textContent='Conta criada! Verifique seu e-mail para confirmar.';}
+    if(d.access_token){
+      TOKEN=d.access_token;
+      iniciarSistema(d.user||{email});
+    } else if(d.user) {
+      // Conta criada mas sem token (email confirmation ativo no Supabase)
+      // Fazer login automático
+      err.style.color='var(--musgo)';
+      err.textContent='Conta criada! Entrando automaticamente...';
+      setTimeout(()=>fazerLogin2(email,document.getElementById('c-senha').value),800);
+    } else {
+      err.style.color='var(--musgo)';
+      err.textContent='Conta criada! Faca login com suas credenciais.';
+    }
   }catch(e){err.textContent=e.message||'Erro de conexao.';}
   btn.disabled=false;btn.textContent='Criar conta';
 }
@@ -792,10 +803,11 @@ function abrirModalPost(id,statusDefault){
   document.getElementById('post-id').value=p?.id||'';
   document.getElementById('post-status-val').value=status;
   document.getElementById('post-titulo').value=p?.titulo||'';
-  document.getElementById('post-estilo').value=p?.estilo||'';
-  document.getElementById('post-formato').value=p?.formato||'';
+  // Popular selects com opções customizadas
+  popularSelect('post-estilo','estilo',p?.estilo||'');
+  popularSelect('post-formato','formato',p?.formato||'');
+  popularSelect('post-foco','foco',p?.objetivos?.foco||'');
   document.getElementById('post-data').value=p?.data_prevista||'';
-  document.getElementById('post-foco').value=p?.objetivos?.foco||'';
   document.getElementById('post-obs').value=p?.obs||'';
   document.getElementById('post-legenda').value=p?.legenda||'';
   document.getElementById('post-hashtags').value=p?.hashtags||'';
@@ -872,7 +884,17 @@ async function renderIdeias(){
     if(!ideias.length){grid.innerHTML='';vazio.style.display='block';return;}
     vazio.style.display='none';
     const cats={financas:'Financas',cases:'Cases',dicas:'Dicas',motivacao:'Motivacao',outro:'Outro'};
-    grid.innerHTML=ideias.map(i=>`<div class="ideia-card" onclick="abrirModalIdeia('${i.id}')"><div class="ideia-cat">${cats[i.categoria]||i.categoria||'Geral'}</div><div class="ideia-titulo">${i.titulo}</div>${i.obs?`<div class="ideia-obs">${i.obs.slice(0,100)}${i.obs.length>100?'...':''}</div>`:''}</div>`).join('');
+    grid.innerHTML=ideias.map(i=>{
+      const fotos=Array.isArray(i.fotos)?i.fotos:[];
+      const thumb=fotos.length?`<div style="height:90px;border-radius:6px;overflow:hidden;margin-bottom:.5rem"><img src="${fotos[0]}" style="width:100%;height:100%;object-fit:cover"></div>`:'';
+      const countFotos=fotos.length>1?`<span style="font-size:.65rem;color:var(--cinza2)"> · ${fotos.length} fotos</span>`:'';
+      return `<div class="ideia-card" onclick="abrirModalIdeia('${i.id}')">
+        ${thumb}
+        <div class="ideia-cat">${cats[i.categoria]||i.categoria||'Geral'}${countFotos}</div>
+        <div class="ideia-titulo">${i.titulo}</div>
+        ${i.obs?`<div class="ideia-obs">${i.obs.slice(0,100)}${i.obs.length>100?'...':''}</div>`:''}
+      </div>`;
+    }).join('');
   }catch(e){grid.innerHTML='<div style="color:red">Erro: '+e.message+'</div>';}
 }
 function abrirModalIdeia(id){
@@ -883,7 +905,10 @@ function abrirModalIdeia(id){
   document.getElementById('ideia-obs').value=i?.obs||'';
   document.getElementById('ideia-modal-titulo').textContent=id?'Editar ideia':'Nova ideia';
   document.getElementById('ideia-del-btn').style.display=id?'inline-flex':'none';
+  // Carregar fotos
+  _ideia_fotos = Array.isArray(i?.fotos) ? [...i.fotos] : [];
   document.getElementById('modal-ideia').classList.add('aberto');
+  setTimeout(()=>renderFotosIdeia(), 50);
 }
 function fecharModalIdeia(){
   document.getElementById('modal-ideia').classList.remove('aberto');
@@ -893,7 +918,12 @@ async function salvarIdeia(){
   const titulo=document.getElementById('ideia-titulo').value.trim();
   if(!titulo){alert('Preencha a ideia.');return;}
   const id=document.getElementById('ideia-id').value;
-  const payload={titulo,categoria:document.getElementById('ideia-cat').value,obs:document.getElementById('ideia-obs').value.trim()||null};
+  const payload={
+    titulo,
+    categoria:document.getElementById('ideia-cat').value,
+    obs:document.getElementById('ideia-obs').value.trim()||null,
+    fotos:_ideia_fotos.length?_ideia_fotos:null,
+  };
   try{
     if(id){await sbPatch('eurafa_ideias',`id=eq.${id}`,payload);}
     else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('eurafa_ideias',payload);}
@@ -1027,18 +1057,7 @@ function salvarEditorOpts() {
   fecharEditorOpts();
 }
 
-// Chamar popularSelect ao abrir o modal de post
-const _origAbrirModalPost = abrirModalPost;
-function abrirModalPost(id, statusDefault) {
-  _origAbrirModalPost(id, statusDefault);
-  // Após abrir, popular com opções customizadas
-  setTimeout(() => {
-    const p = id ? posts.find(x=>x.id===id) : null;
-    popularSelect('post-estilo','estilo', p?.estilo||'');
-    popularSelect('post-formato','formato', p?.formato||'');
-    popularSelect('post-foco','foco', p?.objetivos?.foco||'');
-  }, 10);
-}
+// popularSelect é chamado dentro da própria abrirModalPost (sem wrapper)
 
 // ══ FOTOS DE INSPIRACAO ══════════════════════════════════
 let _ideia_fotos = []; // array de base64
@@ -1076,64 +1095,23 @@ function removerFotoIdeia(i) {
   renderFotosIdeia();
 }
 
-// Sobrescrever abrirModalIdeia para lidar com fotos
-const _origAbrirModalIdeia = abrirModalIdeia;
-function abrirModalIdeia(id) {
-  _origAbrirModalIdeia(id);
-  const i = id ? ideias.find(x=>x.id===id) : null;
-  _ideia_fotos = Array.isArray(i?.fotos) ? [...i.fotos] : [];
-  renderFotosIdeia();
-}
+// fotos tratadas diretamente na função original (sem wrapper)
+// salvarIdeia já inclui fotos (integrado na função original)
 
-// Sobrescrever salvarIdeia para incluir fotos
-const _origSalvarIdeia = salvarIdeia;
-async function salvarIdeia() {
-  const titulo = document.getElementById('ideia-titulo').value.trim();
-  if (!titulo) { alert('Preencha a ideia.'); return; }
-  const id = document.getElementById('ideia-id').value;
-  const payload = {
-    titulo,
-    categoria: document.getElementById('ideia-cat').value,
-    obs: document.getElementById('ideia-obs').value.trim()||null,
-    fotos: _ideia_fotos.length ? _ideia_fotos : null,
-  };
-  try {
-    if (id) { await sbPatch('eurafa_ideias',`id=eq.${id}`,payload); }
-    else { payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5); await sbPost('eurafa_ideias',payload); }
-    fecharModalIdeia();
-    renderIdeias();
-  } catch(e) { alert('Erro: '+e.message); }
-}
-
-// Sobrescrever renderIdeias para mostrar thumb de fotos
-const _origRenderIdeias = renderIdeias;
-async function renderIdeias() {
-  const grid = document.getElementById('ideias-grid');
-  const vazio = document.getElementById('ideias-vazio');
-  grid.innerHTML = '<div style="color:var(--cinza);padding:1rem">Carregando...</div>';
-  try {
-    ideias = await sbGet('eurafa_ideias','order=created_at.desc');
-    if (!ideias.length) { grid.innerHTML=''; vazio.style.display='block'; return; }
-    vazio.style.display = 'none';
-    const cats = {financas:'Financas',cases:'Cases',dicas:'Dicas',motivacao:'Motivacao',outro:'Outro'};
-    grid.innerHTML = ideias.map(i => {
-      const fotos = Array.isArray(i.fotos) ? i.fotos : [];
-      const thumb = fotos.length ? `<div style="height:100px;border-radius:6px;overflow:hidden;margin-bottom:.5rem;background:var(--creme2)"><img src="${fotos[0]}" style="width:100%;height:100%;object-fit:cover"></div>` : '';
-      const count = fotos.length > 1 ? `<span style="font-size:.65rem;color:var(--cinza2)"><i class="ti ti-camera" style="font-size:.65rem"></i> ${fotos.length} fotos</span>` : '';
-      return `<div class="ideia-card" onclick="abrirModalIdeia('${i.id}')">
-        ${thumb}
-        <div class="ideia-cat">${cats[i.categoria]||i.categoria||'Geral'} ${count}</div>
-        <div class="ideia-titulo">${i.titulo}</div>
-        ${i.obs?`<div class="ideia-obs">${i.obs.slice(0,100)}${i.obs.length>100?'...':''}</div>`:''}
-      </div>`;
-    }).join('');
-  } catch(e) { grid.innerHTML = '<div style="color:red">Erro: '+e.message+'</div>'; }
-}
+// renderIdeias já atualizada na função original
 
 // Fechar modal editor ao clicar fora
 document.getElementById('modal-editor-opt').addEventListener('click', e => {
   if (e.target.id === 'modal-editor-opt') fecharEditorOpts();
 });
+
+async function fazerLogin2(email, senha) {
+  try {
+    const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SBKEY},body:JSON.stringify({email,password:senha})});
+    const d=await r.json();
+    if(d.access_token){TOKEN=d.access_token;iniciarSistema(d.user||{email});}
+  } catch(e) {}
+}
 
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
