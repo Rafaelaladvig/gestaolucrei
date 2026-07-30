@@ -1,1766 +1,872 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Rafaela Ladvig — gestão & marketing</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestão · Rafaela Ladvig</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    /* Paleta Rafaela Ladvig */
-    --bg: #F7F4EF;
-    --surface: #FFFFFF;
-    --surface2: #F0EBE3;
-    --border: rgba(0,0,0,0.08);
-    --border2: rgba(0,0,0,0.15);
-    --text: #2C2416;
-    --text2: #6B5C4A;
-    --text3: #A8947E;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --musgo:#3D5A3E;--musgo2:#4e7050;
+  --terra:#C4673A;--terra2:#d97a4d;
+  --creme:#F9F5F0;--creme2:#EFE9E1;
+  --marrom:#2C1810;--marrom2:#5a3d2b;
+  --cinza:#8a8a8a;--cinza2:#b0a99e;
+  --branco:#ffffff;--verde-light:#eef4ee;
+  --danger:#cc4444;--r:8px;
+}
+html,body{height:100%;font-family:'Poppins',sans-serif;background:var(--creme);color:var(--marrom);overflow:hidden}
 
-    /* Cores da marca */
-    --verde: #3D5A3E;        /* verde musgo */
-    --verde-light: #E8EFE8;
-    --terracota: #C4673A;    /* terracota */
-    --terracota-light: #F5E9E2;
-    --marrom: #3B2A1A;       /* marrom escuro */
-    --marrom-light: #EDE5DB;
-    --bege: #D4BFA8;         /* bege dourado */
-    --bege-light: #FAF6F1;
+/* LOGIN */
+#tela-login{position:fixed;inset:0;background:var(--musgo);display:flex;align-items:center;justify-content:center;padding:1.5rem;z-index:1000}
+#tela-login.oculto{display:none}
+.login-card{background:var(--branco);border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:360px;box-shadow:0 24px 60px rgba(44,24,16,.25)}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--musgo);text-align:center;margin-bottom:.3rem}
+.login-sub{font-size:.78rem;color:var(--cinza);text-align:center;margin-bottom:1.8rem}
+.login-tabs{display:flex;border-bottom:2px solid var(--creme2);margin-bottom:1.5rem}
+.login-tab{flex:1;padding:.6rem;font-size:.82rem;font-weight:500;color:var(--cinza);background:none;border:none;cursor:pointer;transition:color .2s}
+.login-tab.ativo{color:var(--musgo);border-bottom:2px solid var(--musgo);margin-bottom:-2px}
+.campo{margin-bottom:.9rem}
+.campo label{display:block;font-size:.72rem;font-weight:600;color:var(--marrom2);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.06em}
+.campo input{width:100%;border:1.5px solid var(--creme2);border-radius:var(--r);padding:.7rem .9rem;font-family:'Poppins',sans-serif;font-size:.9rem;color:var(--marrom);outline:none;transition:border-color .2s}
+.campo input:focus{border-color:var(--terra)}
+.msg-erro{font-size:.75rem;color:var(--danger);min-height:1.2em;margin-bottom:.5rem}
+.btn-acao{width:100%;padding:.85rem;background:var(--musgo);color:var(--branco);border:none;border-radius:var(--r);font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:background .2s}
+.btn-acao:hover{background:var(--musgo2)}
+.btn-acao:disabled{opacity:.55;cursor:default}
 
-    /* Aliases para o sistema */
-    --primary: var(--verde);
-    --primary-light: var(--verde-light);
-    --primary-dark: #2A3F2B;
-    --accent: var(--terracota);
-    --accent-light: var(--terracota-light);
+/* SHELL */
+#shell{display:none;height:100vh;flex-direction:column}
+#shell.visivel{display:flex}
+.topbar{background:var(--musgo);padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-nome{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:rgba(249,245,240,.9);font-weight:300}
+.topbar-nome span{color:rgba(249,245,240,.5);font-size:.85rem;font-style:italic}
+.topbar-dir{display:flex;align-items:center;gap:.8rem}
+.topbar-user{font-size:.7rem;color:rgba(249,245,240,.45)}
+.btn-voltar{width:28px;height:28px;border-radius:6px;border:1px solid rgba(249,245,240,.2);background:none;color:rgba(249,245,240,.65);cursor:pointer;display:none;align-items:center;justify-content:center}
+.btn-voltar.vis{display:flex}
+.btn-sair{font-size:.72rem;color:rgba(249,245,240,.55);background:none;border:none;cursor:pointer;padding:3px 8px;border-radius:4px}
+.btn-sair:hover{color:var(--creme);background:rgba(249,245,240,.1)}
+.conteudo{flex:1;overflow-y:auto}
 
-    /* Status cores */
-    --amber: #C4673A;
-    --amber-light: #F5E9E2;
-    --blue: #3D5A3E;
-    --blue-light: #E8EFE8;
-    --green: #3B6B3C;
-    --green-light: #E3EEE3;
-    --rose: #8B3A1A;
-    --rose-light: #F5E3DB;
-    --pink: #C4673A;
-    --pink-light: #F5E9E2;
-    --teal: #3D5A3E;
-    --teal-light: #E8EFE8;
+/* MENU */
+#menu{display:none;max-width:700px;margin:0 auto;padding:2rem 1.5rem 4rem}
+#menu.vis{display:block}
+.menu-titulo{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:300;color:var(--marrom);margin-bottom:.3rem}
+.menu-titulo em{font-style:italic;color:var(--terra)}
+.menu-sub{font-size:.8rem;color:var(--cinza);margin-bottom:2rem}
+.menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+@media(max-width:420px){.menu-grid{grid-template-columns:1fr}}
+.menu-card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:14px;padding:1.4rem;text-align:left;cursor:pointer;transition:all .2s}
+.menu-card:hover{border-color:var(--terra);box-shadow:0 4px 20px rgba(196,103,58,.12);transform:translateY(-2px)}
+.menu-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:.9rem;font-size:1.3rem}
+.menu-card-titulo{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--marrom);margin-bottom:.25rem}
+.menu-card-desc{font-size:.73rem;color:var(--cinza);line-height:1.5}
 
-    --radius: 8px; --radius-lg: 14px;
-    --font-title: 'Cormorant Garamond', Georgia, serif;
-    --font-body: 'Poppins', system-ui, sans-serif;
-  }
+/* MODULOS */
+.modulo{display:none;padding:1.5rem 1.5rem 4rem;max-width:1200px;margin:0 auto}
+.modulo.ativo{display:block}
+.modulo-tag{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--cinza);margin-bottom:.2rem}
+.modulo-titulo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--musgo);margin-bottom:1.2rem}
 
-  body { font-family: var(--font-body); background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+/* TABS */
+.tabs{display:flex;gap:6px;margin-bottom:1.2rem;flex-wrap:wrap}
+.tab-btn{padding:.45rem 1rem;border-radius:20px;border:1.5px solid var(--creme2);background:none;font-family:'Poppins',sans-serif;font-size:.78rem;cursor:pointer;color:var(--cinza2);transition:all .2s}
+.tab-btn.ativo{background:var(--musgo);color:var(--branco);border-color:var(--musgo)}
 
-  /* Títulos em Cormorant */
-  h1, h2, h3, .modal h3 { font-family: var(--font-title); letter-spacing: 0.02em; }
+/* BOTOES */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.1rem;border-radius:var(--r);font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;border:none;transition:all .2s}
+.btn-verde{background:var(--musgo);color:var(--branco)}.btn-verde:hover{background:var(--musgo2)}
+.btn-outline{background:none;border:1.5px solid var(--creme2);color:var(--marrom2)}.btn-outline:hover{border-color:var(--musgo);color:var(--musgo)}
+.btn-ghost{background:none;border:none;color:var(--cinza);padding:.4rem .6rem;cursor:pointer}.btn-ghost:hover{color:var(--marrom)}
+.btn-danger{background:none;border:none;color:var(--danger);padding:.4rem .6rem;font-size:.8rem;cursor:pointer;font-family:'Poppins',sans-serif}
+.btn:disabled{opacity:.5;cursor:default}
 
+/* INPUTS */
+.inp{width:100%;border:1.5px solid var(--creme2);border-radius:var(--r);padding:.6rem .9rem;font-family:'Poppins',sans-serif;font-size:.85rem;color:var(--marrom);outline:none;transition:border-color .2s;background:var(--branco)}
+.inp:focus{border-color:var(--terra)}
+textarea.inp{resize:vertical;min-height:80px}
+select.inp{cursor:pointer}
+.campo-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--marrom2);margin-bottom:.3rem;display:block}
 
-  .app { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
-  .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 12px; }
-  .header-left h1 { font-family: var(--font-title); font-size: 26px; font-weight: 600; color: var(--verde); letter-spacing: 0.04em; }
-  .header-left p { font-size: 12px; color: var(--text3); margin-top: 3px; font-weight: 300; letter-spacing: 0.02em; }
-  .header-left small { font-size: 11px; color: var(--bege); text-transform: uppercase; letter-spacing: 0.12em; display: block; margin-bottom: 2px; }
-  .tabs { display: flex; gap: 4px; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 4px; }
-  .tab { padding: 7px 14px; font-size: 12px; border: none; background: transparent; color: var(--text2); border-radius: 6px; cursor: pointer; font-family: var(--font-body); display: flex; align-items: center; gap: 6px; transition: all 0.15s; font-weight: 400; letter-spacing: 0.02em; }
-  .tab.active { background: var(--verde); color: #fff; font-weight: 500; }
-  .tab:not(.active):hover { background: var(--verde-light); color: var(--verde); }
+/* MODAL */
+.backdrop{position:fixed;inset:0;background:rgba(44,24,16,.45);backdrop-filter:blur(3px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:1.5rem;overflow-y:auto}
+.backdrop.aberto{display:flex}
+.modal-box{background:var(--branco);border-radius:14px;padding:1.8rem;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(44,24,16,.2);margin:auto}
+.modal-box.grande{max-width:660px}
+.modal-titulo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--musgo);margin-bottom:1.2rem}
+.modal-footer{display:flex;gap:.6rem;margin-top:1.4rem;justify-content:flex-end;flex-wrap:wrap}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.form-grupo{margin-bottom:.9rem}
+.modal-secao{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--cinza);margin:.9rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid var(--creme2)}
 
-  /* STATS */
-  .stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 1.5rem; }
-  .stat { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
-  .stat-num { font-family: var(--font-title); font-size: 26px; font-weight: 600; color: var(--text); }
-  .stat-label { font-size: 10px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 400; }
+/* PROSPECCAO */
+.resp-card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:12px;padding:1.2rem;margin-bottom:.8rem}
+.resp-nome{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--marrom);margin-bottom:.15rem}
+.resp-data{font-size:.7rem;color:var(--cinza);margin-bottom:.8rem}
+.resp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:5px;font-size:.76rem;margin-bottom:.6rem}
+.resp-item span{color:var(--cinza)}
+.resp-dor{font-size:.76rem;margin-bottom:.5rem}
+.resp-msg{font-size:.78rem;color:var(--marrom2);background:var(--creme);padding:.7rem .9rem;border-radius:6px;font-style:italic;border-left:3px solid var(--terra)}
+.perg-item{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:.9rem 1rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.8rem}
+.perg-ordem{font-size:.72rem;color:var(--cinza2);min-width:20px;text-align:center}
+.perg-body{flex:1}
+.perg-titulo-text{font-size:.88rem;font-weight:500;color:var(--marrom)}
+.perg-meta{font-size:.7rem;color:var(--cinza);margin-top:2px}
+.perg-acoes{display:flex;gap:.3rem}
 
-  .view { display: none; }
-  .view.active { display: block; }
+/* KANBAN */
+.stats-bar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.stat-box{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:.8rem 1.1rem;flex:1;min-width:110px}
+.stat-num{font-size:1.4rem;font-weight:600;color:var(--marrom)}
+.stat-label{font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza);margin-top:2px}
+.meta-bar-wrap{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.meta-bar-track{flex:1;min-width:120px;height:8px;background:var(--creme2);border-radius:4px;overflow:hidden}
+.meta-bar-fill{height:100%;background:var(--musgo);border-radius:4px;transition:width .5s}
+.meta-label{font-size:.78rem;color:var(--cinza);white-space:nowrap}
+.semana-nav{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.semana-titulo{font-size:.88rem;font-weight:500;color:var(--marrom)}
+.nav-btn{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--creme2);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--cinza2);transition:all .2s}
+.nav-btn:hover{border-color:var(--musgo);color:var(--musgo)}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;align-items:start}
+@media(max-width:900px){.kanban{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.kanban{grid-template-columns:1fr}}
+.col{background:var(--creme);border-radius:12px;padding:.8rem}
+.col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;padding-bottom:.6rem;border-bottom:1.5px solid var(--creme2)}
+.col-titulo{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:.4rem}
+.col-count{font-size:.72rem;font-weight:600;color:var(--cinza2);background:var(--creme2);border-radius:10px;padding:.1rem .5rem}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.post-card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:.9rem;margin-bottom:.6rem;cursor:pointer;transition:all .2s}
+.post-card:hover{border-color:var(--terra);box-shadow:0 3px 12px rgba(196,103,58,.1)}
+.post-titulo{font-size:.85rem;font-weight:500;color:var(--marrom);line-height:1.35;margin-bottom:.5rem}
+.post-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.4rem}
+.tag{font-size:.65rem;padding:.15rem .5rem;border-radius:10px;background:var(--creme);color:var(--cinza2);border:1px solid var(--creme2)}
+.post-data{font-size:.68rem;color:var(--cinza2)}
+.add-card-btn{width:100%;padding:.55rem;border-radius:8px;border:1.5px dashed var(--creme2);background:none;cursor:pointer;font-size:.75rem;color:var(--cinza2);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.3rem;font-family:'Poppins',sans-serif}
+.add-card-btn:hover{border-color:var(--musgo);color:var(--musgo)}
+.col-vazio{text-align:center;padding:1.5rem .5rem;color:var(--cinza2);font-size:.75rem}
+.sync-status{font-size:.72rem;color:var(--cinza);display:flex;align-items:center;gap:.3rem}
 
-  /* WEEK NAV */
-  .week-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-  .week-label { font-size: 13px; color: var(--text2); font-weight: 400; font-family: var(--font-title); font-size: 15px; }
-  .week-nav { display: flex; gap: 4px; }
-  .icon-btn { border: 0.5px solid var(--border2); background: var(--surface); color: var(--text2); border-radius: 6px; width: 30px; height: 30px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; }
-  .icon-btn:hover { background: var(--verde-light); color: var(--verde); }
-  .today-btn { border: 0.5px solid var(--border2); background: var(--surface); color: var(--text2); border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: var(--font-body); }
-  .today-btn:hover { background: var(--verde-light); color: var(--verde); }
+/* IDEIAS */
+.ideias-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem}
+.ideia-card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:.9rem;cursor:pointer;transition:all .2s}
+.ideia-card:hover{border-color:var(--musgo)}
+.ideia-titulo{font-size:.85rem;font-weight:500;color:var(--marrom);margin-bottom:.3rem}
+.ideia-cat{font-size:.68rem;color:var(--terra);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+.ideia-obs{font-size:.75rem;color:var(--cinza);line-height:1.5}
 
-  /* KANBAN — 4 colunas */
-  .kanban { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
-  .col { background: var(--surface2); border-radius: var(--radius-lg); padding: 14px; min-height: 200px; }
-  .col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .col-title { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); font-family: var(--font-body); }
-  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .dot-amber { background: var(--terracota); }
-  .dot-blue  { background: var(--verde); }
-  .dot-green { background: #3B6B3C; }
-  .dot-rose  { background: var(--marrom); }
-  .col-count { font-size: 11px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 1px 8px; color: var(--text3); }
+/* DASH */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.7rem;margin-bottom:1.2rem}
+.dash-stat{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem}
+.dash-stat-num{font-size:1.5rem;font-weight:600;color:var(--musgo)}
+.dash-stat-label{font-size:.7rem;color:var(--cinza);text-transform:uppercase;letter-spacing:.08em}
+.ranking-item{display:flex;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px solid var(--creme2)}
+.ranking-item:last-child{border-bottom:none}
+.ranking-pos{font-size:.72rem;font-weight:700;color:var(--cinza2);min-width:20px}
+.ranking-titulo{flex:1;font-size:.8rem;color:var(--marrom)}
+.ranking-val{font-size:.82rem;font-weight:600;color:var(--musgo)}
+.card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:12px;padding:1.2rem}
 
-  /* CARDS */
-  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; transition: box-shadow 0.15s; }
-  .card:hover { box-shadow: 0 2px 12px rgba(61,90,62,0.08); }
-  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 3px; }
-  .card-format { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; font-weight: 500; }
-  .card-edit-btn { border: none; background: transparent; color: var(--text3); cursor: pointer; font-size: 13px; padding: 1px 3px; border-radius: 4px; flex-shrink: 0; }
-  .card-edit-btn:hover { color: var(--verde); background: var(--verde-light); }
-  .card-title { font-family: var(--font-title); font-size: 15px; font-weight: 600; line-height: 1.35; margin-bottom: 5px; color: var(--text); }
-  .card-desc { font-size: 12px; color: var(--text2); line-height: 1.4; margin-bottom: 5px; }
-  .card-legenda-preview { font-size: 11px; color: var(--text3); line-height: 1.3; margin-bottom: 5px; border-left: 2px solid var(--bege); padding-left: 6px; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .card-footer { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .card-date { font-size: 11px; color: var(--text3); flex-shrink: 0; }
-  .card-actions { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-  .move-btn { font-size: 10px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); padding: 2px 6px; border-radius: 5px; cursor: pointer; font-family: var(--font-body); white-space: nowrap; max-width: 100%; }
-  .move-btn.fwd { border-color: var(--verde); color: var(--verde); }
-  .move-btn:hover { background: var(--verde-light); }
-  .del-btn { border: none; background: transparent; color: var(--text3); cursor: pointer; font-size: 13px; padding: 2px 4px; border-radius: 4px; flex-shrink: 0; }
-  .del-btn:hover { color: #c0392b; background: #fdecea; }
+/* METRICAS */
+.metricas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+@media(max-width:420px){.metricas-grid{grid-template-columns:repeat(2,1fr)}}
+.metrica-box{background:var(--creme);border-radius:8px;padding:.6rem .8rem}
+.metrica-label{font-size:.65rem;color:var(--cinza);margin-bottom:.2rem}
+.metrica-input{width:100%;border:none;background:none;font-family:'Poppins',sans-serif;font-size:1rem;font-weight:600;color:var(--musgo);outline:none}
+.move-btns{display:flex;gap:.4rem;flex-wrap:wrap}
+.btn-mover{padding:.35rem .7rem;font-size:.72rem;border-radius:6px;border:1.5px solid var(--creme2);background:none;cursor:pointer;color:var(--marrom2);transition:all .15s;font-family:'Poppins',sans-serif}
+.btn-mover:hover{border-color:var(--musgo);color:var(--musgo)}
 
-  /* CARD POSTADO */
-  .card-postado { background: var(--surface); border: 0.5px solid var(--border); border-left: 3px solid var(--marrom); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
-  .card-postado-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 6px; }
-  .card-postado-title { font-family: var(--font-title); font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--text); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
-  .card-postado-format { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
-  .metricas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 8px; }
-  .metrica { background: var(--surface2); border-radius: 6px; padding: 5px 8px; }
-  .metrica-val { font-family: var(--font-title); font-size: 16px; font-weight: 600; color: var(--text); line-height: 1; }
-  .metrica-label { font-size: 10px; color: var(--text3); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.3px; }
-  .metrica.destaque .metrica-val { color: var(--marrom); }
-
-  .add-btn { width: 100%; border: 1px dashed var(--bege); background: transparent; color: var(--text3); border-radius: var(--radius); padding: 8px; font-size: 12px; cursor: pointer; font-family: var(--font-body); display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 4px; }
-  .add-btn:hover { background: var(--verde-light); color: var(--verde); border-color: var(--verde); }
-  .empty-col { text-align: center; padding: 1.5rem 0; color: var(--text3); font-size: 12px; }
-  .empty-col i { font-size: 22px; display: block; margin-bottom: 4px; opacity: 0.3; }
-
-  /* IDEAS */
-  .ideas-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .ideas-header h2 { font-family: var(--font-title); font-size: 22px; font-weight: 600; color: var(--verde); }
-  .ideas-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
-  .filter-btn { font-size: 12px; border: 0.5px solid var(--border2); background: var(--surface); color: var(--text2); padding: 4px 14px; border-radius: 20px; cursor: pointer; font-family: var(--font-body); }
-  .filter-btn.active { background: var(--verde); color: #fff; border-color: var(--verde); }
-  .ideas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-  .idea-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px; }
-  .idea-tag { font-size: 10px; padding: 2px 9px; border-radius: 10px; display: inline-block; margin-bottom: 7px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; }
-  .tag-financas  { background: var(--verde-light); color: var(--verde); }
-  .tag-cases     { background: var(--marrom-light); color: var(--marrom); }
-  .tag-dicas     { background: var(--terracota-light); color: var(--terracota); }
-  .tag-motivacao { background: var(--bege-light); color: #7A5C3A; }
-  .tag-outro     { background: var(--surface2); color: var(--text2); }
-  .idea-title { font-family: var(--font-title); font-size: 15px; font-weight: 600; line-height: 1.35; margin-bottom: 5px; color: var(--text); }
-  .idea-note { font-size: 12px; color: var(--text2); line-height: 1.4; }
-  .idea-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 4px; }
-  .idea-date { font-size: 11px; color: var(--text3); }
-  .idea-use { font-size: 11px; border: 0.5px solid var(--verde); background: transparent; color: var(--verde); padding: 3px 9px; border-radius: 5px; cursor: pointer; font-family: var(--font-body); }
-  .idea-use:hover { background: var(--verde-light); }
-  .empty-ideas { text-align: center; padding: 3rem 1rem; color: var(--text3); grid-column: 1/-1; }
-  .empty-ideas i { font-size: 36px; display: block; margin-bottom: 8px; opacity: 0.3; }
-
-  /* MODAL */
-  .backdrop { display: none; position: fixed; inset: 0; background: rgba(44,36,22,0.35); z-index: 200; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
-  .backdrop.open { display: flex; }
-  .modal { background: var(--surface); border-radius: var(--radius-lg); padding: 1.75rem; width: 100%; max-width: 520px; box-shadow: 0 8px 40px rgba(44,36,22,0.12); max-height: 90vh; overflow-y: auto; }
-  .modal h3 { font-family: var(--font-title); font-size: 22px; font-weight: 600; margin-bottom: 1.25rem; color: var(--verde); }
-  .modal-section { border-top: 0.5px solid var(--border); padding-top: 14px; margin-top: 14px; }
-  .modal-section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text3); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-  .form-group { margin-bottom: 14px; }
-  label { font-size: 11px; color: var(--text2); display: block; margin-bottom: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
-  input[type="text"], input[type="date"], input[type="number"], select, textarea { width: 100%; font-family: var(--font-body); font-size: 13px; border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 9px 12px; background: var(--surface); color: var(--text); outline: none; }
-  input:focus, select:focus, textarea:focus { border-color: var(--verde); box-shadow: 0 0 0 3px rgba(61,90,62,0.1); }
-  textarea { resize: vertical; min-height: 80px; }
-  textarea.legenda { min-height: 100px; font-size: 12px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 1.25rem; }
-  .btn-cancel { border: 0.5px solid var(--border2); background: transparent; color: var(--text2); padding: 9px 18px; border-radius: var(--radius); cursor: pointer; font-family: var(--font-body); font-size: 13px; }
-  .btn-cancel:hover { background: var(--surface2); }
-  .btn-primary { border: none; background: var(--verde); color: #fff; padding: 9px 20px; border-radius: var(--radius); cursor: pointer; font-family: var(--font-body); font-size: 13px; font-weight: 500; letter-spacing: 0.02em; }
-  .btn-primary:hover { background: var(--primary-dark); }
-  .btn-add-idea { display: flex; align-items: center; gap: 6px; border: none; background: var(--verde); color: #fff; padding: 9px 18px; border-radius: var(--radius); cursor: pointer; font-family: var(--font-body); font-size: 13px; font-weight: 500; }
-  .btn-add-idea:hover { background: var(--primary-dark); }
-
-  /* Seção métricas no modal */
-  .metricas-modal { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .metrica-hint { font-size: 11px; color: var(--text3); margin-top: -10px; margin-bottom: 10px; }
-
-  /* Objetivos */
-  .obj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .obj-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
-  .obj-badge-main { background: var(--verde-light); color: var(--verde); }
-  .estilo-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.4px; background: var(--terracota-light); color: var(--terracota); margin-bottom: 4px; }
-  .card-obj-preview { margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; }
-  .obj-pill { font-size: 10px; background: var(--verde-light); color: var(--verde); border-radius: 10px; padding: 2px 7px; }
-
-  /* Comparativo meta vs resultado */
-  .comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 8px; }
-  .comp-item { background: var(--surface2); border-radius: 6px; padding: 6px 8px; }
-  .comp-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px; }
-  .comp-row { display: flex; align-items: baseline; justify-content: space-between; gap: 4px; }
-  .comp-real { font-family: var(--font-title); font-size: 16px; font-weight: 600; }
-  .comp-meta { font-size: 10px; color: var(--text3); }
-  .comp-hit { color: #3B6B3C; }
-  .comp-miss { color: var(--terracota); }
-
-  /* META SEMANAL */
-  .meta-bar-wrap { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 1rem; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .meta-bar-label { font-size: 13px; font-weight: 500; white-space: nowrap; color: var(--text2); }
-  .meta-bar-track { flex: 1; min-width: 120px; height: 6px; background: var(--surface2); border-radius: 10px; overflow: hidden; }
-  .meta-bar-fill { height: 100%; border-radius: 10px; background: var(--verde); transition: width 0.4s; }
-  .meta-bar-fill.hit { background: #3B6B3C; }
-  .meta-bar-count { font-size: 13px; color: var(--text2); white-space: nowrap; }
-  .meta-edit-btn { border: 0.5px solid var(--border2); background: transparent; color: var(--text3); border-radius: 6px; padding: 3px 8px; font-size: 12px; cursor: pointer; font-family: var(--font-body); }
-  .meta-edit-btn:hover { background: var(--verde-light); color: var(--verde); }
-
-  /* DASHBOARD */
-  .dash-wrap { max-width: 820px; margin: 0 auto; }
-  .dash-period-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem; }
-  .dash-period-row h2 { font-family: var(--font-title); font-size: 22px; font-weight: 600; color: var(--verde); }
-  .dash-period-btns { display: flex; gap: 4px; }
-  .dash-period-btn { font-size: 12px; border: 0.5px solid var(--border2); background: var(--surface); color: var(--text2); padding: 5px 14px; border-radius: 20px; cursor: pointer; font-family: var(--font-body); }
-  .dash-period-btn.active { background: var(--verde); color: #fff; border-color: var(--verde); }
-
-  /* bloco do dashboard */
-  .dash-block { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 14px; }
-  .dash-block-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text3); margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
-
-  /* números resumo */
-  .dash-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .dash-num-item { text-align: center; padding: 12px 8px; background: var(--surface2); border-radius: var(--radius); }
-  .dash-num-val { font-family: var(--font-title); font-size: 26px; font-weight: 600; line-height: 1; }
-  .dash-num-label { font-size: 10px; color: var(--text2); margin-top: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
-
-  /* barras de ranking */
-  .dash-rank-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .dash-rank-row:last-child { margin-bottom: 0; }
-  .dash-rank-label { font-size: 13px; min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dash-rank-bar-wrap { flex: 1; }
-  .dash-rank-bar { height: 7px; background: var(--surface2); border-radius: 10px; overflow: hidden; }
-  .dash-rank-fill { height: 100%; border-radius: 10px; background: var(--verde); transition: width 0.4s; }
-  .dash-rank-val { font-size: 12px; font-weight: 600; color: var(--text2); min-width: 28px; text-align: right; }
-  .dash-fmt-pill { font-size: 10px; background: var(--verde-light); color: var(--verde); border-radius: 10px; padding: 2px 8px; display: inline-block; font-weight: 500; }
-
-  /* top posts */
-  .dash-top-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
-  .dash-top-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .dash-top-rank { font-size: 18px; font-weight: 700; color: var(--border2); min-width: 28px; text-align: center; line-height: 1.4; }
-  .dash-top-rank.gold { color: #C9963A; }
-  .dash-top-rank.silver { color: #A8A8A8; }
-  .dash-top-rank.bronze { color: #C97C3A; }
-  .dash-top-body { flex: 1; }
-  .dash-top-title { font-family: var(--font-title); font-size: 15px; font-weight: 600; margin-bottom: 3px; line-height: 1.35; color: var(--text); }
-  .dash-top-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px; color: var(--text3); }
-  .dash-top-highlight { font-weight: 700; color: var(--terracota); font-size: 13px; }
-
-  .dash-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .dash-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
-  .dash-table tr:last-child td { border-bottom: none; }
-  .dash-bar { height: 6px; background: var(--surface2); border-radius: 6px; margin-top: 4px; overflow: hidden; }
-  .dash-bar-fill { height: 100%; border-radius: 6px; background: var(--verde); }
-  .dash-highlight { color: var(--terracota); font-weight: 600; }
-  .dash-empty { text-align: center; padding: 1.5rem; color: var(--text3); font-size: 13px; }
-
-  /* ── LEADS ─────────────────────────────────────────── */
-  .leads-wrap { max-width: 1060px; margin: 0 auto; }
-  .leads-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
-  .leads-header h2 { font-family: var(--font-title); font-size: 22px; font-weight: 600; color: var(--verde); }
-  .leads-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 1.25rem; }
-  .lead-stat { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; text-align: center; }
-  .lead-stat-num { font-family: var(--font-title); font-size: 24px; font-weight: 600; }
-  .lead-stat-label { font-size: 10px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
-
-  /* Pipeline kanban */
-  .leads-pipeline { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
-  .lead-col { background: var(--surface2); border-radius: var(--radius-lg); padding: 12px; min-height: 180px; }
-  .lead-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .lead-col-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; display: flex; align-items: center; gap: 5px; color: var(--text2); }
-  .lead-col-count { font-size: 11px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 1px 7px; color: var(--text3); }
-
-  /* Card de lead */
-  .lead-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 11px 13px; margin-bottom: 8px; cursor: pointer; transition: box-shadow 0.15s; }
-  .lead-card:hover { box-shadow: 0 2px 12px rgba(61,90,62,0.08); }
-  .lead-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; margin-bottom: 4px; }
-  .lead-name { font-family: var(--font-title); font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.3; }
-  .lead-card-btns { display: flex; gap: 3px; flex-shrink: 0; }
-  .lead-temp { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; display: inline-block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.3px; }
-  .temp-quente { background: #FDECEA; color: #C0392B; }
-  .temp-morno  { background: var(--terracota-light); color: var(--terracota); }
-  .temp-frio   { background: var(--verde-light); color: var(--verde); }
-  .lead-servico { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
-  .lead-origem { font-size: 10px; color: var(--text3); display: flex; align-items: center; gap: 4px; }
-  .lead-followup { font-size: 10px; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
-  .followup-ok   { color: var(--text3); }
-  .followup-warn { color: var(--terracota); font-weight: 500; }
-  .followup-late { color: #C0392B; font-weight: 600; }
-  .lead-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; flex-wrap: wrap; gap: 4px; }
-  .lead-move-btn { font-size: 10px; border: 0.5px solid var(--verde); color: var(--verde); background: transparent; padding: 2px 6px; border-radius: 5px; cursor: pointer; font-family: var(--font-body); white-space: nowrap; }
-  .lead-move-btn:hover { background: var(--verde-light); }
-  .lead-move-btn.back { border-color: var(--border2); color: var(--text3); }
-  .lead-move-btn.back:hover { background: var(--surface2); }
-  .lead-perdido { background: var(--surface); border: 0.5px solid var(--border); border-left: 3px solid #C0392B; border-radius: var(--radius); padding: 11px 13px; margin-bottom: 8px; opacity: 0.7; cursor: pointer; }
-  .lead-perdido:hover { opacity: 1; }
-
-  /* Modal de visualização do lead */
-  .lead-view-section { margin-bottom: 16px; }
-  .lead-view-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); margin-bottom: 4px; }
-  .lead-view-value { font-size: 14px; color: var(--text); line-height: 1.5; }
-  .lead-hist-item { padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; color: var(--text2); line-height: 1.4; }
-  .lead-hist-item:last-child { border-bottom: none; }
-  .lead-hist-date { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
-
-  @media (max-width: 900px) { .leads-pipeline { grid-template-columns: repeat(3, 1fr); } .leads-stats { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 560px) { .leads-pipeline { grid-template-columns: 1fr 1fr; } }
-
-  @media (max-width: 760px) {
-    .kanban { grid-template-columns: repeat(2, 1fr); }
-    .stats-bar { grid-template-columns: repeat(3, 1fr); }
-    .form-row, .form-row-3 { grid-template-columns: 1fr; }
-    .metricas-modal { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 480px) {
-    .kanban { grid-template-columns: 1fr; }
-    .stats-bar { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  #login-overlay{position:fixed;inset:0;background:rgba(44,24,16,.6);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
-  #login-overlay.hidden{display:none!important}
-  .login-box{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:340px;text-align:center;box-shadow:0 20px 60px rgba(44,24,16,.2)}
-  .login-titulo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:#3D5A3E;margin-bottom:.3rem}
-  .login-sub{font-size:.8rem;color:#8a8a8a;margin-bottom:1.5rem}
-  .login-inp{width:100%;border:1.5px solid #EFE9E1;border-radius:8px;padding:.75rem 1rem;font-family:'Poppins',sans-serif;font-size:.9rem;color:#2C1810;outline:none;margin-bottom:.8rem;display:block;box-sizing:border-box;transition:border-color .2s}
-  .login-inp:focus{border-color:#C4673A}
-  .login-erro{font-size:.78rem;color:#cc4444;display:none;margin-bottom:.8rem}
-  .login-btn{width:100%;padding:.85rem;background:#C4673A;color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer}
-  .login-btn:disabled{opacity:.6}
-  .admin-topbar{background:#3D5A3E;padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-  .topbar-titulo{font-family:'Cormorant Garamond',serif;font-size:1rem;color:rgba(249,245,240,.9)}
-  .topbar-email{font-size:.72rem;color:rgba(249,245,240,.5)}
-  .btn-sair{font-size:.72rem;color:rgba(249,245,240,.6);background:none;border:none;cursor:pointer;margin-left:1rem}
-
+/* LOADER */
+.loader{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--creme2)}::-webkit-scrollbar-thumb{background:var(--cinza2);border-radius:3px}
 </style>
 </head>
 <body>
-<!-- TOPBAR -->
-<div class="admin-topbar">
-  <span class="topbar-titulo">Rafaela Ladvig · Gestão</span>
-  <div>
-    <span class="topbar-email" id="topbar-email"></span>
-    <button class="btn-sair" onclick="fazerLogout()">Sair</button>
+
+<!-- LOGIN -->
+<div id="tela-login">
+  <div class="login-card">
+    <p class="login-logo">Gestão Rafaela</p>
+    <p class="login-sub">Área privada · @eurafafinancas</p>
+    <div class="login-tabs">
+      <button class="login-tab ativo" onclick="alternarAuth('login')">Entrar</button>
+      <button class="login-tab" onclick="alternarAuth('cadastro')">Criar conta</button>
+    </div>
+    <div id="form-login">
+      <div class="campo"><label>E-mail</label><input type="email" id="l-email" placeholder="seu@email.com" autocomplete="username"></div>
+      <div class="campo"><label>Senha</label><input type="password" id="l-senha" placeholder="••••••••" autocomplete="current-password"></div>
+      <p class="msg-erro" id="l-erro"></p>
+      <button class="btn-acao" id="l-btn" onclick="fazerLogin()">Entrar</button>
+    </div>
+    <div id="form-cadastro" style="display:none">
+      <div class="campo"><label>Nome</label><input type="text" id="c-nome" placeholder="Seu nome completo"></div>
+      <div class="campo"><label>E-mail</label><input type="email" id="c-email" placeholder="seu@email.com" autocomplete="username"></div>
+      <div class="campo"><label>Senha</label><input type="password" id="c-senha" placeholder="Minimo 6 caracteres" autocomplete="new-password"></div>
+      <p class="msg-erro" id="c-erro"></p>
+      <button class="btn-acao" id="c-btn" onclick="fazerCadastro()">Criar conta</button>
+    </div>
   </div>
 </div>
-<div class="app">
 
-  <div class="header">
-    <div class="header-left">
-      <small>Rafaela Ladvig · Consultoria Financeira</small><h1>gestão & marketing</h1>
-      <p id="summary">carregando...</p>
+<!-- SHELL -->
+<div id="shell">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:.7rem">
+      <button class="btn-voltar" id="btn-voltar" onclick="irParaMenu()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="topbar-nome">Rafaela Ladvig <span>· <span id="topbar-secao">Painel</span></span></div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <span id="sync-status" style="font-size:12px;color:var(--text3)">⏳ sincronizando...</span>
+    <div class="topbar-dir">
+      <span class="topbar-user" id="topbar-user"></span>
+      <button class="btn-sair" onclick="fazerLogout()">Sair</button>
+    </div>
+  </div>
+  <div class="conteudo">
+
+    <!-- MENU -->
+    <div id="menu">
+      <h2 class="menu-titulo">Ola, <em>Rafaela</em> &#128075;</h2>
+      <p class="menu-sub">O que voce quer gerenciar hoje?</p>
+      <div class="menu-grid">
+        <button class="menu-card" onclick="abrirModulo('prospeccao')">
+          <div class="menu-icon" style="background:#fdf0ea;color:var(--terra)"><i class="ti ti-users"></i></div>
+          <div class="menu-card-titulo">Prospeccao</div>
+          <div class="menu-card-desc">Respostas do quiz e gerenciamento de perguntas</div>
+        </button>
+        <button class="menu-card" onclick="abrirModulo('conteudo')">
+          <div class="menu-icon" style="background:var(--verde-light);color:var(--musgo)"><i class="ti ti-layout-kanban"></i></div>
+          <div class="menu-card-titulo">Gestao de Conteudo</div>
+          <div class="menu-card-desc">Kanban, banco de ideias e analise de resultados</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- MODULO PROSPECCAO -->
+    <div class="modulo" id="modulo-prospeccao">
+      <div class="modulo-tag">Rafaela Ladvig · Consultoria Financeira</div>
+      <div class="modulo-titulo">prospeccao</div>
       <div class="tabs">
-      <button class="tab active" onclick="switchTab('kanban')"><i class="ti ti-layout-kanban"></i> Produção</button>
-      <button class="tab" onclick="switchTab('ideias')"><i class="ti ti-bulb"></i> Banco de ideias</button>
-      <button class="tab" onclick="switchTab('leads')"><i class="ti ti-users"></i> Leads</button>
-      <button class="tab" onclick="switchTab('dashboard')"><i class="ti ti-chart-bar"></i> Dashboard</button>
-    </div>
-    </div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-num" id="s-total">0</div>
-      <div class="stat-label">total do mês</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="s-fazer" style="color:var(--amber)">0</div>
-      <div class="stat-label">em desenvolvimento</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="s-prod" style="color:var(--blue)">0</div>
-      <div class="stat-label">conteúdo pronto</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="s-pronto" style="color:var(--green)">0</div>
-      <div class="stat-label">programados</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="s-postado" style="color:var(--rose)">0</div>
-      <div class="stat-label">postados</div>
-    </div>
-  </div>
-
-  <!-- KANBAN -->
-  <div id="view-kanban" class="view active">
-    <!-- META SEMANAL -->
-    <div class="meta-bar-wrap">
-      <span class="meta-bar-label">🎯 Meta mensal</span>
-      <div class="meta-bar-track"><div class="meta-bar-fill" id="meta-fill" style="width:0%"></div></div>
-      <span class="meta-bar-count" id="meta-count">0 / 0 posts</span>
-      <button class="meta-edit-btn" onclick="openMetaModal()"><i class="ti ti-pencil"></i> meta</button>
-    </div>
-    <div class="week-bar">
-      <div class="week-nav">
-        <button class="icon-btn" onclick="changeWeek(-1)" title="mês anterior"><i class="ti ti-chevron-left"></i></button>
-        <button class="icon-btn" onclick="changeWeek(1)" title="próximo mês"><i class="ti ti-chevron-right"></i></button>
+        <button class="tab-btn ativo" id="ptab-respostas" onclick="prospTab('respostas')">&#128203; Respostas</button>
+        <button class="tab-btn" id="ptab-perguntas" onclick="prospTab('perguntas')">&#10067; Perguntas</button>
       </div>
-      <span class="week-label" id="week-title">—</span>
-      <button class="today-btn" onclick="goNow()">hoje</button>
-    </div>
-    <div class="kanban">
-      <div class="col">
-        <div class="col-header">
-          <span class="col-title"><span class="dot dot-amber"></span> Desenvolvimento</span>
-          <span class="col-count" id="c-fazer">0</span>
-        </div>
-        <div id="col-fazer"></div>
-        <button class="add-btn" onclick="openCard('fazer')"><i class="ti ti-plus"></i> adicionar</button>
+      <div id="pview-respostas">
+        <div id="resp-loading" style="text-align:center;padding:2rem;color:var(--cinza)">Carregando...</div>
+        <div id="resp-lista"></div>
+        <div id="resp-vazio" style="display:none;text-align:center;padding:3rem;color:var(--cinza)">Nenhuma resposta ainda.</div>
       </div>
-      <div class="col">
-        <div class="col-header">
-          <span class="col-title"><span class="dot dot-blue"></span> Conteúdo pronto</span>
-          <span class="col-count" id="c-prod">0</span>
+      <div id="pview-perguntas" style="display:none">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+          <button class="btn btn-verde" onclick="abrirModalPerg(null)"><i class="ti ti-plus"></i> Nova pergunta</button>
         </div>
-        <div id="col-prod"></div>
-        <button class="add-btn" onclick="openCard('prod')"><i class="ti ti-plus"></i> adicionar</button>
-      </div>
-      <div class="col">
-        <div class="col-header">
-          <span class="col-title"><span class="dot dot-green"></span> Conteúdo programado</span>
-          <span class="col-count" id="c-pronto">0</span>
-        </div>
-        <div id="col-pronto"></div>
-        <button class="add-btn" onclick="openCard('pronto')"><i class="ti ti-plus"></i> adicionar</button>
-      </div>
-      <div class="col" style="background:var(--marrom-light);">
-        <div class="col-header">
-          <span class="col-title"><span class="dot dot-rose"></span> Postado</span>
-          <span class="col-count" id="c-postado">0</span>
-        </div>
-        <div id="col-postado"></div>
-        <button class="add-btn" onclick="openCard('postado')"><i class="ti ti-plus"></i> adicionar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- IDEIAS -->
-  <div id="view-ideias" class="view">
-    <div class="ideas-header">
-      <h2>banco de ideias <span id="idea-count" style="font-size:13px;font-weight:400;color:var(--text2)"></span></h2>
-      <button class="btn-add-idea" onclick="openIdeaForm()"><i class="ti ti-plus"></i> nova ideia</button>
-    </div>
-    <div class="ideas-filters">
-      <button class="filter-btn active" onclick="filterIdeas('all', this)">Todas</button>
-      <button class="filter-btn" onclick="filterIdeas('financas', this)">Finanças</button>
-      <button class="filter-btn" onclick="filterIdeas('cases', this)">Cases</button>
-      <button class="filter-btn" onclick="filterIdeas('dicas', this)">Dicas</button>
-      <button class="filter-btn" onclick="filterIdeas('motivacao', this)">Motivação</button>
-      <button class="filter-btn" onclick="filterIdeas('outro', this)">Outro</button>
-    </div>
-    <div class="ideas-grid" id="ideas-grid"></div>
-  </div>
-
-  <!-- LEADS -->
-  <div id="view-leads" class="view">
-    <div class="leads-wrap">
-      <div class="leads-header">
-        <h2>Pipeline de leads</h2>
-        <button class="btn-add-idea" onclick="openLeadModal()"><i class="ti ti-plus"></i> novo lead</button>
-      </div>
-      <div class="leads-stats">
-        <div class="lead-stat"><div class="lead-stat-num" id="ls-total">0</div><div class="lead-stat-label">total</div></div>
-        <div class="lead-stat"><div class="lead-stat-num" id="ls-conversa" style="color:var(--verde)">0</div><div class="lead-stat-label">em conversa</div></div>
-        <div class="lead-stat"><div class="lead-stat-num" id="ls-proposta" style="color:var(--terracota)">0</div><div class="lead-stat-label">proposta enviada</div></div>
-        <div class="lead-stat"><div class="lead-stat-num" id="ls-cliente" style="color:#3B6B3C">0</div><div class="lead-stat-label">clientes</div></div>
-        <div class="lead-stat"><div class="lead-stat-num" id="ls-taxa" style="color:var(--marrom)">0%</div><div class="lead-stat-label">taxa de conversão</div></div>
-      </div>
-      <div class="leads-pipeline">
-        <div class="lead-col">
-          <div class="lead-col-header"><span class="lead-col-title"><span class="dot" style="background:var(--bege)"></span> Novo</span><span class="lead-col-count" id="lc-novo">0</span></div>
-          <div id="lcol-novo"></div>
-          <button class="add-btn" onclick="openLeadModal('novo')"><i class="ti ti-plus"></i> adicionar</button>
-        </div>
-        <div class="lead-col">
-          <div class="lead-col-header"><span class="lead-col-title"><span class="dot" style="background:var(--terracota)"></span> Em conversa</span><span class="lead-col-count" id="lc-conversa">0</span></div>
-          <div id="lcol-conversa"></div>
-          <button class="add-btn" onclick="openLeadModal('conversa')"><i class="ti ti-plus"></i> adicionar</button>
-        </div>
-        <div class="lead-col">
-          <div class="lead-col-header"><span class="lead-col-title"><span class="dot" style="background:var(--verde)"></span> Proposta enviada</span><span class="lead-col-count" id="lc-proposta">0</span></div>
-          <div id="lcol-proposta"></div>
-          <button class="add-btn" onclick="openLeadModal('proposta')"><i class="ti ti-plus"></i> adicionar</button>
-        </div>
-        <div class="lead-col" style="background:var(--verde-light)">
-          <div class="lead-col-header"><span class="lead-col-title"><span class="dot" style="background:#3B6B3C"></span> Cliente</span><span class="lead-col-count" id="lc-cliente">0</span></div>
-          <div id="lcol-cliente"></div>
-          <button class="add-btn" onclick="openLeadModal('cliente')"><i class="ti ti-plus"></i> adicionar</button>
-        </div>
-        <div class="lead-col" style="background:#FAF0EE">
-          <div class="lead-col-header"><span class="lead-col-title"><span class="dot" style="background:#C0392B"></span> Perdido</span><span class="lead-col-count" id="lc-perdido">0</span></div>
-          <div id="lcol-perdido"></div>
-          <button class="add-btn" onclick="openLeadModal('perdido')"><i class="ti ti-plus"></i> adicionar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ===== MODAL CONTEÚDO ===== -->
-<div class="backdrop" id="modal-card">
-  <div class="modal">
-    <h3 id="card-modal-title">novo conteúdo</h3>
-
-    <!-- BLOCO BÁSICO -->
-    <div class="form-group">
-      <label>título / tema</label>
-      <input type="text" id="in-titulo" placeholder="ex: como calcular preço justo na manicure" />
-    </div>
-    <div class="form-group">
-      <label>estilo do conteúdo</label>
-      <select id="in-estilo" onchange="toggleEstiloOutro()">
-        <option value="">— selecione —</option>
-        <option value="lofi">Lo-fi</option>
-        <option value="broll">B-roll</option>
-        <option value="problema-solucao">Problema e solução</option>
-        <option value="outro">Outro</option>
-      </select>
-      <input type="text" id="in-estilo-outro" placeholder="descreva o estilo..." style="display:none;margin-top:8px" />
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>formato</label>
-        <select id="in-formato">
-          <option>Reels</option>
-          <option>Carrossel</option>
-          <option>Stories</option>
-          <option>Post estático</option>
-          <option>TikTok</option>
-          <option>Lives</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>data prevista</label>
-        <input type="date" id="in-data" />
+        <div id="perg-lista"></div>
+        <div id="perg-vazio" style="display:none;text-align:center;padding:3rem;color:var(--cinza)">Nenhuma pergunta cadastrada.</div>
       </div>
     </div>
 
-    <!-- DESENVOLVIMENTO -->
-    <div class="modal-section">
-      <div class="modal-section-title"><i class="ti ti-pencil" style="font-size:13px"></i> desenvolvimento</div>
-      <div class="form-group">
-        <label>roteiro / desenvolvimento do post</label>
-        <textarea id="in-obs" placeholder="gancho, estrutura do conteúdo, referências, call to action, hashtags..."></textarea>
+    <!-- MODULO CONTEUDO -->
+    <div class="modulo" id="modulo-conteudo">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:.5rem">
+        <div>
+          <div class="modulo-tag">Rafaela Ladvig · Consultoria Financeira</div>
+          <div class="modulo-titulo" style="margin-bottom:0">gestao de conteudo</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;padding-top:.5rem">
+          <span class="sync-status" id="sync-badge"><i class="ti ti-cloud"></i> carregando...</span>
+          <button class="btn btn-verde" onclick="abrirModalPost(null,'fazer')"><i class="ti ti-plus"></i> Novo conteudo</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label>legenda</label>
-        <textarea id="in-legenda" class="legenda" placeholder="Escreva aqui a legenda completa que vai no post..."></textarea>
+      <div class="tabs" style="margin-top:.8rem">
+        <button class="tab-btn ativo" id="ctab-kanban" onclick="conteudoTab('kanban')"><i class="ti ti-layout-kanban"></i> Producao</button>
+        <button class="tab-btn" id="ctab-ideias" onclick="conteudoTab('ideias')"><i class="ti ti-bulb"></i> Banco de ideias</button>
+        <button class="tab-btn" id="ctab-dash" onclick="conteudoTab('dash')"><i class="ti ti-chart-bar"></i> Analise</button>
       </div>
-      <div class="form-group">
-        <label>hashtags</label>
-        <input type="text" id="in-hashtags" placeholder="#financas #empreendedora #manicure..." />
+      <div class="stats-bar">
+        <div class="stat-box"><div class="stat-num" id="st-total">0</div><div class="stat-label">Total do mes</div></div>
+        <div class="stat-box"><div class="stat-num" id="st-fazer" style="color:#856404">0</div><div class="stat-label">Em desenvolvimento</div></div>
+        <div class="stat-box"><div class="stat-num" id="st-prod" style="color:#155724">0</div><div class="stat-label">Conteudo pronto</div></div>
+        <div class="stat-box"><div class="stat-num" id="st-pronto" style="color:#0c5460">0</div><div class="stat-label">Programados</div></div>
+        <div class="stat-box"><div class="stat-num" id="st-postado" style="color:#6f42c1">0</div><div class="stat-label">Postados</div></div>
       </div>
-    </div>
 
-    <!-- OBJETIVO (aparece em todas as fases) -->
-    <div class="modal-section" id="section-objetivo">
-      <div class="modal-section-title"><i class="ti ti-target" style="font-size:13px"></i> objetivo do post</div>
-      <div class="form-group">
-        <label>foco principal</label>
-        <select id="in-obj-foco">
-          <option value="">— selecione —</option>
-          <option value="seguidores">Ganhar seguidores</option>
-          <option value="alcance">Ampliar alcance</option>
-          <option value="engajamento">Engajamento geral</option>
-          <option value="vendas">Gerar vendas / leads</option>
-          <option value="autoridade">Construir autoridade</option>
-          <option value="salvar">Conteúdo para salvar</option>
-          <option value="compartilhar">Conteúdo para compartilhar</option>
-        </select>
+      <!-- KANBAN -->
+      <div id="cview-kanban">
+        <div id="kanban-nav-wrap"><div class="meta-bar-wrap">
+          <span style="font-size:.78rem;font-weight:500;color:var(--marrom)">&#127919; Meta mensal</span>
+          <div class="meta-bar-track"><div class="meta-bar-fill" id="meta-fill" style="width:0%"></div></div>
+          <span class="meta-label" id="meta-label">0 de 20 posts</span>
+          <button class="btn btn-ghost" style="padding:.3rem .5rem;font-size:.72rem" onclick="editarMeta()"><i class="ti ti-pencil"></i></button>
+        </div>
+        <div class="semana-nav">
+          <button class="nav-btn" onclick="navMes(-1)"><i class="ti ti-chevron-left"></i></button>
+          <button class="nav-btn" onclick="navMes(1)"><i class="ti ti-chevron-right"></i></button>
+          <span class="semana-titulo" id="semana-titulo">Mes atual</span>
+          <button class="btn btn-outline" style="padding:.3rem .7rem;font-size:.72rem" onclick="irHoje()">hoje</button>
+        </div>
+        </div><div class="kanban">
+          <div class="col">
+            <div class="col-header"><span class="col-titulo"><span class="dot" style="background:#e6a817"></span>Desenvolvimento</span><span class="col-count" id="cnt-fazer">0</span></div>
+            <div id="col-fazer"></div>
+            <button class="add-card-btn" onclick="abrirModalPost(null,'fazer')"><i class="ti ti-plus"></i> adicionar</button>
+          </div>
+          <div class="col">
+            <div class="col-header"><span class="col-titulo"><span class="dot" style="background:#2d8653"></span>Conteudo pronto</span><span class="col-count" id="cnt-prod">0</span></div>
+            <div id="col-prod"></div>
+            <button class="add-card-btn" onclick="abrirModalPost(null,'prod')"><i class="ti ti-plus"></i> adicionar</button>
+          </div>
+          <div class="col">
+            <div class="col-header"><span class="col-titulo"><span class="dot" style="background:#0891b2"></span>Programado</span><span class="col-count" id="cnt-pronto">0</span></div>
+            <div id="col-pronto"></div>
+            <button class="add-card-btn" onclick="abrirModalPost(null,'pronto')"><i class="ti ti-plus"></i> adicionar</button>
+          </div>
+          <div class="col">
+            <div class="col-header"><span class="col-titulo"><span class="dot" style="background:#7c3aed"></span>Postado</span><span class="col-count" id="cnt-postado">0</span></div>
+            <div id="col-postado"></div>
+            <button class="add-card-btn" onclick="abrirModalPost(null,'postado')"><i class="ti ti-plus"></i> adicionar</button>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- MÉTRICAS + METAS (só aparece quando status = postado) -->
-    <div class="modal-section" id="section-metricas" style="display:none">
-      <div class="modal-section-title"><i class="ti ti-chart-bar" style="font-size:13px"></i> metas e métricas</div>
-      <p class="metrica-hint">Defina as metas e preencha os resultados após publicar</p>
-      <div class="obj-grid" style="margin-bottom:14px">
-        <div class="form-group">
-          <label>meta visualizações</label>
-          <input type="number" id="o-views" placeholder="ex: 5000" min="0" />
+      <!-- IDEIAS -->
+      <div id="cview-ideias" style="display:none">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+          <button class="btn btn-verde" onclick="abrirModalIdeia(null)"><i class="ti ti-plus"></i> Nova ideia</button>
         </div>
-        <div class="form-group">
-          <label>meta curtidas</label>
-          <input type="number" id="o-curtidas" placeholder="ex: 200" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta comentários</label>
-          <input type="number" id="o-comentarios" placeholder="ex: 30" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta salvamentos</label>
-          <input type="number" id="o-saves" placeholder="ex: 100" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta compartilh.</label>
-          <input type="number" id="o-shares" placeholder="ex: 50" min="0" />
-        </div>
-        <div class="form-group">
-          <label>meta seguidores</label>
-          <input type="number" id="o-seguidores" placeholder="ex: 20" min="0" />
-        </div>
+        <div class="ideias-grid" id="ideias-grid"></div>
+        <div id="ideias-vazio" style="display:none;text-align:center;padding:3rem;color:var(--cinza)">Nenhuma ideia ainda.</div>
       </div>
-      <div class="modal-section-title"><i class="ti ti-chart-dots" style="font-size:13px"></i> resultados reais</div>
-      <div class="metricas-modal">
-        <div class="form-group">
-          <label>visualizações</label>
-          <input type="number" id="m-views" placeholder="0" min="0" />
+
+      <!-- ANALISE -->
+      <div id="cview-dash" style="display:none">
+        <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+          <button class="tab-btn ativo" onclick="setPeriodoDash(30,this)">30 dias</button>
+          <button class="tab-btn" onclick="setPeriodoDash(60,this)">60 dias</button>
+          <button class="tab-btn" onclick="setPeriodoDash(90,this)">90 dias</button>
         </div>
-        <div class="form-group">
-          <label>alcance</label>
-          <input type="number" id="m-alcance" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>curtidas</label>
-          <input type="number" id="m-curtidas" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>comentários</label>
-          <input type="number" id="m-comentarios" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>compartilhamentos</label>
-          <input type="number" id="m-shares" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>salvamentos</label>
-          <input type="number" id="m-saves" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>novos seguidores</label>
-          <input type="number" id="m-seguidores" placeholder="0" min="0" />
-        </div>
-        <div class="form-group">
-          <label>cliques no link</label>
-          <input type="number" id="m-cliques" placeholder="0" min="0" />
+        <div class="dash-grid" id="dash-nums"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+          <div class="card"><div style="font-size:.75rem;font-weight:600;color:var(--cinza);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem">Top visualizacoes</div><div id="dash-views"></div></div>
+          <div class="card"><div style="font-size:.75rem;font-weight:600;color:var(--cinza);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem">Top curtidas</div><div id="dash-curtidas"></div></div>
+          <div class="card"><div style="font-size:.75rem;font-weight:600;color:var(--cinza);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem">Top salvamentos</div><div id="dash-saves"></div></div>
+          <div class="card"><div style="font-size:.75rem;font-weight:600;color:var(--cinza);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem">Top seguidores gerados</div><div id="dash-segs"></div></div>
         </div>
       </div>
     </div>
 
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeCardModal()">cancelar</button>
-      <button class="btn-primary" onclick="saveCard()">salvar</button>
-    </div>
   </div>
 </div>
 
-  <!-- DASHBOARD -->
-  <div id="view-dashboard" class="view">
-    <div class="dash-wrap">
-      <div class="dash-period-row">
-        <h2><i class="ti ti-chart-bar" style="color:var(--purple)"></i> Dashboard</h2>
-        <div class="dash-period-btns">
-          <button class="dash-period-btn active" onclick="setDashPeriod(30,this)">30 dias</button>
-          <button class="dash-period-btn" onclick="setDashPeriod(60,this)">60 dias</button>
-          <button class="dash-period-btn" onclick="setDashPeriod(90,this)">90 dias</button>
-        </div>
-      </div>
-
-      <!-- Bloco 1: Números gerais -->
-      <div class="dash-block">
-        <div class="dash-block-title"><i class="ti ti-activity"></i> visão geral</div>
-        <div class="dash-nums" id="dash-nums"></div>
-      </div>
-
-      <!-- Bloco 2: Formatos e focos lado a lado -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="dash-block">
-          <div class="dash-block-title"><i class="ti ti-layout-grid"></i> formatos mais usados</div>
-          <div id="dash-fmt-rows"></div>
-        </div>
-        <div class="dash-block">
-          <div class="dash-block-title"><i class="ti ti-target"></i> foco dos posts</div>
-          <div id="dash-foco-rows"></div>
-        </div>
-      </div>
-
-      <!-- Bloco 3: Top 5 visualizações -->
-      <div class="dash-block" style="margin-top:14px">
-        <div class="dash-block-title"><i class="ti ti-eye"></i> top 5 — visualizações</div>
-        <div id="dash-top-views"></div>
-      </div>
-
-      <!-- Bloco 4: Top 5 curtidas e salvamentos -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
-        <div class="dash-block">
-          <div class="dash-block-title"><i class="ti ti-heart"></i> top 5 — curtidas</div>
-          <div id="dash-top-curtidas"></div>
-        </div>
-        <div class="dash-block">
-          <div class="dash-block-title"><i class="ti ti-bookmark"></i> top 5 — salvamentos</div>
-          <div id="dash-top-saves"></div>
-        </div>
-      </div>
-
-      <!-- Bloco 5: Top 5 compartilhamentos e seguidores -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
-        <div class="dash-block">
-          <div class="dash-block-title"><i class="ti ti-share"></i> top 5 — compartilhamentos</div>
-          <div id="dash-top-shares"></div>
-        </div>
-        <div class="dash-block">
-          <div class="dash-block-title"><i class="ti ti-users"></i> top 5 — seguidores gerados</div>
-          <div id="dash-top-seguidores"></div>
-        </div>
-      </div>
+<!-- MODAL POST -->
+<div class="backdrop" id="modal-post">
+  <div class="modal-box grande">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+      <h3 class="modal-titulo" id="post-modal-titulo" style="margin-bottom:0">Novo conteudo</h3>
+      <button class="btn-ghost" onclick="fecharModalPost()"><i class="ti ti-x"></i></button>
     </div>
-  </div>
-
-
-<div class="backdrop" id="modal-view">
-  <div class="modal" style="max-width:560px">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:1.25rem">
-      <div>
-        <div id="view-badges" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"></div>
-        <h3 id="view-titulo" style="margin-bottom:0;font-size:18px"></h3>
-      </div>
-      <div style="display:flex;gap:6px;flex-shrink:0">
-        <button class="btn-cancel" id="view-edit-btn" onclick="switchToEdit()"><i class="ti ti-pencil"></i> editar</button>
-        <button class="del-btn" onclick="closeViewModal()" style="font-size:18px;padding:4px 6px"><i class="ti ti-x"></i></button>
-      </div>
-    </div>
-
-    <div id="view-foco-row" style="display:none;margin-bottom:12px"></div>
-
-    <div id="view-obs-block" style="display:none">
-      <div class="modal-section-title" style="margin-bottom:8px"><i class="ti ti-pencil" style="font-size:13px"></i> roteiro / desenvolvimento</div>
-      <div id="view-obs" style="font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap;background:var(--surface2);border-radius:var(--radius);padding:12px;margin-bottom:14px"></div>
-    </div>
-
-    <div id="view-legenda-block" style="display:none">
-      <div class="modal-section-title" style="margin-bottom:8px"><i class="ti ti-align-left" style="font-size:13px"></i> legenda</div>
-      <div id="view-legenda" style="font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;background:var(--surface2);border-radius:var(--radius);padding:12px;margin-bottom:14px;border-left:3px solid var(--verde)"></div>
-    </div>
-
-    <div id="view-hashtags-block" style="display:none">
-      <div class="modal-section-title" style="margin-bottom:8px"><i class="ti ti-hash" style="font-size:13px"></i> hashtags</div>
-      <div id="view-hashtags" style="font-size:12px;color:var(--verde);line-height:1.8;background:var(--verde-light);border-radius:var(--radius);padding:10px 12px;margin-bottom:14px;cursor:pointer" title="clique para copiar" onclick="copyHashtags()"></div>
-    </div>
-
-    <div id="view-metricas-block" style="display:none">
-      <div class="modal-section-title" style="margin-bottom:8px"><i class="ti ti-chart-bar" style="font-size:13px"></i> métricas</div>
-      <div id="view-metricas-grid" class="comp-grid"></div>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px">
-      <div id="view-move-btns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-      <button class="del-btn" id="view-del-btn" style="font-size:13px;padding:4px 8px;display:flex;align-items:center;gap:4px"><i class="ti ti-trash"></i> excluir</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL LEAD — FORMULÁRIO ===== -->
-<div class="backdrop" id="modal-lead">
-  <div class="modal" style="max-width:500px">
-    <h3 id="lead-modal-title">novo lead</h3>
-
+    <input type="hidden" id="post-id">
+    <input type="hidden" id="post-status-val">
+    <div class="form-grupo"><label class="campo-label">Titulo *</label><input class="inp" id="post-titulo" placeholder="Titulo do conteudo"></div>
     <div class="form-row">
-      <div class="form-group">
-        <label>nome</label>
-        <input type="text" id="l-nome" placeholder="Nome completo" />
+      <div class="form-grupo"><label class="campo-label">Estilo</label>
+        <select class="inp" id="post-estilo"><option value="">selecione</option><option value="lofi">Lo-fi</option><option value="broll">B-roll</option><option value="problema-solucao">Problema e solucao</option><option value="outro">Outro</option></select>
       </div>
-      <div class="form-group">
-        <label>whatsapp</label>
-        <input type="text" id="l-whats" placeholder="(00) 00000-0000" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label>e-mail (opcional)</label>
-      <input type="text" id="l-email" placeholder="email@exemplo.com" />
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>serviço de interesse</label>
-        <select id="l-servico">
-          <option value="">— selecione —</option>
-          <option>Lucrei — Plano Pessoal</option>
-          <option>Lucrei — Plano Empreendedora</option>
-          <option>Consultoria financeira</option>
-          <option>Mentoria</option>
-          <option>Outro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>temperatura</label>
-        <select id="l-temp">
-          <option value="morno">Morno</option>
-          <option value="quente">Quente 🔥</option>
-          <option value="frio">Frio</option>
-        </select>
+      <div class="form-grupo"><label class="campo-label">Formato</label>
+        <select class="inp" id="post-formato"><option value="">selecione</option><option>Reels</option><option>Carrossel</option><option>Post estatico</option><option>Stories</option><option>Live</option><option>TikTok</option></select>
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>origem</label>
-        <select id="l-origem">
-          <option value="">— selecione —</option>
-          <option>Instagram — Reels</option>
-          <option>Instagram — Carrossel</option>
-          <option>Instagram — Stories</option>
-          <option>Instagram — Bio</option>
-          <option>TikTok</option>
-          <option>Indicação</option>
-          <option>WhatsApp</option>
-          <option>Outro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>próximo follow-up</label>
-        <input type="date" id="l-followup" />
+      <div class="form-grupo"><label class="campo-label">Data prevista</label><input class="inp" type="date" id="post-data"></div>
+      <div class="form-grupo"><label class="campo-label">Foco / Objetivo</label>
+        <select class="inp" id="post-foco"><option value="">selecione</option><option value="autoridade">Autoridade</option><option value="alcance">Alcance</option><option value="seguidores">Novos seguidores</option><option value="engajamento">Engajamento</option><option value="vendas">Vendas</option><option value="salvar">Salvamentos</option></select>
       </div>
     </div>
-    <div class="form-group">
-      <label>anotações</label>
-      <textarea id="l-notas" placeholder="Contexto, objeções, próximo passo..."></textarea>
+    <div class="form-grupo"><label class="campo-label">Roteiro / Desenvolvimento</label><textarea class="inp" id="post-obs" rows="4" placeholder="Roteiro, ideias, estrutura..."></textarea></div>
+    <div class="form-grupo"><label class="campo-label">Legenda</label><textarea class="inp" id="post-legenda" rows="3" placeholder="Legenda para publicacao..."></textarea></div>
+    <div class="form-grupo"><label class="campo-label">Hashtags</label><input class="inp" id="post-hashtags" placeholder="#financas #empreendedora"></div>
+    <div id="post-metricas-wrap" style="display:none">
+      <div class="modal-secao">Metricas do post</div>
+      <div class="metricas-grid">
+        <div class="metrica-box"><div class="metrica-label">Visualizacoes</div><input class="metrica-input" id="m-views" type="number" placeholder="0"></div>
+        <div class="metrica-box"><div class="metrica-label">Alcance</div><input class="metrica-input" id="m-alcance" type="number" placeholder="0"></div>
+        <div class="metrica-box"><div class="metrica-label">Curtidas</div><input class="metrica-input" id="m-curtidas" type="number" placeholder="0"></div>
+        <div class="metrica-box"><div class="metrica-label">Comentarios</div><input class="metrica-input" id="m-comentarios" type="number" placeholder="0"></div>
+        <div class="metrica-box"><div class="metrica-label">Salvamentos</div><input class="metrica-input" id="m-saves" type="number" placeholder="0"></div>
+        <div class="metrica-box"><div class="metrica-label">Compartilhamentos</div><input class="metrica-input" id="m-shares" type="number" placeholder="0"></div>
+        <div class="metrica-box"><div class="metrica-label">Novos seguidores</div><input class="metrica-input" id="m-segs" type="number" placeholder="0"></div>
+        <div class="metrica-box"><div class="metrica-label">Visitas ao perfil</div><input class="metrica-input" id="m-visitas" type="number" placeholder="0"></div>
+        <div class="metrica-box"><div class="metrica-label">Cliques no link</div><input class="metrica-input" id="m-cliques" type="number" placeholder="0"></div>
+      </div>
     </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeLeadModal()">cancelar</button>
-      <button class="btn-primary" onclick="saveLead()">salvar</button>
+    <div id="post-mover-wrap" style="display:none">
+      <div class="modal-secao">Mover para</div>
+      <div class="move-btns" id="post-mover-btns"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="post-del-btn" onclick="deletarPost()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
+      <button class="btn btn-outline" onclick="fecharModalPost()">Cancelar</button>
+      <button class="btn btn-verde" id="post-salvar-btn" onclick="salvarPost()">Salvar</button>
     </div>
   </div>
 </div>
 
-<!-- ===== MODAL LEAD — VISUALIZAÇÃO ===== -->
-<div class="backdrop" id="modal-lead-view">
-  <div class="modal" style="max-width:500px">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:1rem">
-      <div>
-        <div id="lv-temp-badge" style="margin-bottom:6px"></div>
-        <h3 id="lv-nome" style="margin-bottom:0"></h3>
-      </div>
-      <div style="display:flex;gap:6px;flex-shrink:0">
-        <button class="btn-cancel" onclick="switchToLeadEdit()" style="padding:6px 12px;font-size:12px"><i class="ti ti-pencil"></i> editar</button>
-        <button class="del-btn" onclick="closeLeadViewModal()" style="font-size:18px;padding:4px 6px"><i class="ti ti-x"></i></button>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-      <div class="lead-view-section"><div class="lead-view-label">whatsapp</div><div class="lead-view-value" id="lv-whats">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">e-mail</div><div class="lead-view-value" id="lv-email">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">serviço</div><div class="lead-view-value" id="lv-servico">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">origem</div><div class="lead-view-value" id="lv-origem">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">follow-up</div><div class="lead-view-value" id="lv-followup">—</div></div>
-      <div class="lead-view-section"><div class="lead-view-label">status</div><div class="lead-view-value" id="lv-status">—</div></div>
-    </div>
-
-    <div id="lv-notas-block" style="display:none;margin-bottom:14px">
-      <div class="lead-view-label" style="margin-bottom:6px">anotações</div>
-      <div id="lv-notas" style="font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap;background:var(--surface2);border-radius:var(--radius);padding:12px"></div>
-    </div>
-
-    <!-- Adicionar anotação rápida -->
-    <div class="modal-section">
-      <div class="modal-section-title"><i class="ti ti-message" style="font-size:12px"></i> adicionar anotação</div>
-      <textarea id="lv-nova-nota" placeholder="Registre o que conversou, objeções, próximo passo..." style="min-height:60px"></textarea>
-      <div style="display:flex;justify-content:flex-end;margin-top:6px">
-        <button class="btn-primary" onclick="addLeadNota()" style="font-size:12px;padding:6px 14px">registrar</button>
-      </div>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px">
-      <div id="lv-move-btns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-      <button class="del-btn" id="lv-del-btn" style="font-size:13px;display:flex;align-items:center;gap:4px"><i class="ti ti-trash"></i> excluir</button>
-    </div>
-  </div>
-</div>
-
-
-<div class="backdrop" id="modal-meta">
-  <div class="modal" style="max-width:320px">
-    <h3>meta mensal de posts</h3>
-    <div class="form-group">
-      <label>quantos posts por mês?</label>
-      <input type="number" id="meta-input" min="1" max="30" placeholder="ex: 5" />
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeMetaModal()">cancelar</button>
-      <button class="btn-primary" onclick="saveMeta()">salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL IDEIA ===== -->
+<!-- MODAL IDEIA -->
 <div class="backdrop" id="modal-ideia">
-  <div class="modal">
-    <h3>nova ideia</h3>
-    <div class="form-group">
-      <label>ideia / tema</label>
-      <input type="text" id="idea-in-titulo" placeholder="ex: série sobre precificação para manicures" />
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+      <h3 class="modal-titulo" id="ideia-modal-titulo" style="margin-bottom:0">Nova ideia</h3>
+      <button class="btn-ghost" onclick="fecharModalIdeia()"><i class="ti ti-x"></i></button>
     </div>
+    <input type="hidden" id="ideia-id">
+    <div class="form-grupo"><label class="campo-label">Ideia *</label><input class="inp" id="ideia-titulo" placeholder="Descreva a ideia..."></div>
+    <div class="form-grupo"><label class="campo-label">Categoria</label>
+      <select class="inp" id="ideia-cat"><option value="financas">Financas</option><option value="cases">Cases / Historias</option><option value="dicas">Dicas praticas</option><option value="motivacao">Motivacao</option><option value="outro">Outro</option></select>
+    </div>
+    <div class="form-grupo"><label class="campo-label">Observacoes</label><textarea class="inp" id="ideia-obs" rows="3" placeholder="Detalhes, referencias..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="ideia-del-btn" onclick="deletarIdeia()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
+      <button class="btn btn-outline" onclick="fecharModalIdeia()">Cancelar</button>
+      <button class="btn btn-verde" onclick="salvarIdeia()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PERGUNTA -->
+<div class="backdrop" id="modal-perg">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+      <h3 class="modal-titulo" id="perg-modal-titulo" style="margin-bottom:0">Nova pergunta</h3>
+      <button class="btn-ghost" onclick="fecharModalPerg()"><i class="ti ti-x"></i></button>
+    </div>
+    <input type="hidden" id="perg-id">
+    <div class="form-grupo"><label class="campo-label">Pergunta *</label><input class="inp" id="perg-titulo-inp" placeholder="Ex: Qual e o seu nome?"></div>
+    <div class="form-grupo"><label class="campo-label">Texto de apoio</label><input class="inp" id="perg-sub" placeholder="Complemento opcional"></div>
     <div class="form-row">
-      <div class="form-group">
-        <label>categoria</label>
-        <select id="idea-in-cat">
-          <option value="financas">Finanças</option>
-          <option value="cases">Cases</option>
-          <option value="dicas">Dicas</option>
-          <option value="motivacao">Motivação</option>
-          <option value="outro">Outro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>formato sugerido</label>
-        <select id="idea-in-fmt">
-          <option>Reels</option>
-          <option>Carrossel</option>
-          <option>Stories</option>
-          <option>Post estático</option>
-          <option>TikTok</option>
-        </select>
+      <div class="form-grupo"><label class="campo-label">ID do campo *</label><input class="inp" id="perg-campo-id" placeholder="Ex: nome"></div>
+      <div class="form-grupo"><label class="campo-label">Tipo</label>
+        <select class="inp" id="perg-tipo"><option value="text">Texto curto</option><option value="tel">Telefone</option><option value="textarea">Texto longo</option><option value="choice">Escolha unica</option><option value="choice-other">Escolha + outro</option><option value="multi">Multipla escolha</option></select>
       </div>
     </div>
-    <div class="form-group">
-      <label>anotações / referências</label>
-      <textarea id="idea-in-note" placeholder="o que inspirou, gancho, fontes, referências..."></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeIdeaModal()">cancelar</button>
-      <button class="btn-primary" onclick="saveIdea()">salvar ideia</button>
+    <div class="form-grupo"><label class="campo-label">Placeholder</label><input class="inp" id="perg-placeholder" placeholder="Texto de exemplo"></div>
+    <div class="form-grupo"><label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;cursor:pointer"><input type="checkbox" id="perg-obrig" checked> Pergunta obrigatoria</label></div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="perg-del-btn" onclick="deletarPergunta()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
+      <button class="btn btn-outline" onclick="fecharModalPerg()">Cancelar</button>
+      <button class="btn btn-verde" id="perg-salvar-btn" onclick="salvarPergunta()">Salvar</button>
     </div>
   </div>
 </div>
 
 <script>
-// ── Supabase ──────────────────────────────────────────────
-const SB_URL  = 'https://ceqvwrzyqjpxvekapqto.supabase.co';
-const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcXZ3cnp5cWpweHZla2FwcXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDU1MDUsImV4cCI6MjA5NzgyMTUwNX0.IJZlL7UT07KHHDRMpkkMShWIVQfQgcbZjSxWtpF3VvU';
-let _authToken = null;
-function getSBHdr() {
-  const tok = _authToken || SB_KEY;
-  return { 'Content-Type':'application/json', 'apikey': SB_KEY, 'Authorization':'Bearer '+tok };
+'use strict';
+const SB='https://ceqvwrzyqjpxvekapqto.supabase.co';
+const SBKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcXZ3cnp5cWpweHZla2FwcXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDU1MDUsImV4cCI6MjA5NzgyMTUwNX0.IJZlL7UT07KHHDRMpkkMShWIVQfQgcbZjSxWtpF3VvU';
+let TOKEN=null;
+
+function hdr(ex){return{'Content-Type':'application/json','apikey':SBKEY,'Authorization':'Bearer '+(TOKEN||SBKEY),...(ex||{})}}
+async function sbGet(t,q){const r=await fetch(`${SB}/rest/v1/${t}?${q||''}`,{headers:hdr()});if(!r.ok)throw new Error(await r.text());return r.json();}
+async function sbPost(t,b){const r=await fetch(`${SB}/rest/v1/${t}`,{method:'POST',headers:hdr({'Prefer':'return=minimal'}),body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
+async function sbPatch(t,q,b){const r=await fetch(`${SB}/rest/v1/${t}?${q}`,{method:'PATCH',headers:hdr({'Prefer':'return=minimal'}),body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());}
+async function sbDelete(t,q){const r=await fetch(`${SB}/rest/v1/${t}?${q}`,{method:'DELETE',headers:hdr()});if(!r.ok)throw new Error(await r.text());}
+
+// AUTH
+function alternarAuth(m){
+  const isL=m==='login';
+  document.getElementById('form-login').style.display=isL?'block':'none';
+  document.getElementById('form-cadastro').style.display=isL?'none':'block';
+  document.querySelectorAll('.login-tab').forEach((t,i)=>t.classList.toggle('ativo',isL?i===0:i===1));
+}
+async function fazerLogin(){
+  const email=document.getElementById('l-email').value.trim();
+  const senha=document.getElementById('l-senha').value;
+  const err=document.getElementById('l-erro');
+  const btn=document.getElementById('l-btn');
+  err.textContent='';
+  if(!email||!senha){err.textContent='Preencha e-mail e senha.';return;}
+  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
+  try{
+    const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SBKEY},body:JSON.stringify({email,password:senha})});
+    const d=await r.json();
+    if(!r.ok||!d.access_token)throw new Error(d.error_description||'Credenciais invalidas');
+    TOKEN=d.access_token;
+    iniciarSistema(d.user||{email});
+  }catch(e){err.textContent=e.message||'Erro de conexao.';}
+  btn.disabled=false;btn.textContent='Entrar';
+}
+async function fazerCadastro(){
+  const nome=document.getElementById('c-nome').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const senha=document.getElementById('c-senha').value;
+  const err=document.getElementById('c-erro');
+  const btn=document.getElementById('c-btn');
+  err.textContent='';err.style.color='var(--danger)';
+  if(!nome||!email||!senha){err.textContent='Preencha todos os campos.';return;}
+  if(senha.length<6){err.textContent='Senha deve ter ao menos 6 caracteres.';return;}
+  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
+  try{
+    const r=await fetch(`${SB}/auth/v1/signup`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SBKEY},body:JSON.stringify({email,password:senha,data:{nome}})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.msg||d.error_description||'Erro ao criar conta');
+    if(d.access_token){TOKEN=d.access_token;iniciarSistema(d.user||{email});}
+    else{err.style.color='var(--musgo)';err.textContent='Conta criada! Verifique seu e-mail para confirmar.';}
+  }catch(e){err.textContent=e.message||'Erro de conexao.';}
+  btn.disabled=false;btn.textContent='Criar conta';
+}
+async function fazerLogout(){
+  try{await fetch(`${SB}/auth/v1/logout`,{method:'POST',headers:hdr()});}catch(e){}
+  TOKEN=null;
+  document.getElementById('shell').classList.remove('visivel');
+  document.getElementById('tela-login').classList.remove('oculto');
+}
+function iniciarSistema(user){
+  document.getElementById('tela-login').classList.add('oculto');
+  document.getElementById('shell').classList.add('visivel');
+  document.getElementById('topbar-user').textContent=user.email||'';
+  irParaMenu();
+  carregarConteudo();
 }
 
-async function sbGet(table, params='') {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { headers: getSBHdr() });
-  if (!r.ok) throw new Error(await r.text());
-  return r.json();
+// NAVEGACAO
+function irParaMenu(){
+  document.getElementById('menu').classList.add('vis');
+  document.querySelectorAll('.modulo').forEach(m=>m.classList.remove('ativo'));
+  document.getElementById('btn-voltar').classList.remove('vis');
+  document.getElementById('topbar-secao').textContent='Painel';
 }
-async function sbUpsert(table, body) {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: { ...getSBHdr(), 'Prefer':'resolution=merge-duplicates' },
-    body: JSON.stringify(body)
+function abrirModulo(nome){
+  document.getElementById('menu').classList.remove('vis');
+  document.querySelectorAll('.modulo').forEach(m=>m.classList.remove('ativo'));
+  document.getElementById('modulo-'+nome).classList.add('ativo');
+  document.getElementById('btn-voltar').classList.add('vis');
+  const titulos={prospeccao:'Prospeccao',conteudo:'Gestao de Conteudo'};
+  document.getElementById('topbar-secao').textContent=titulos[nome]||nome;
+  if(nome==='prospeccao')prospTab('respostas');
+  if(nome==='conteudo')renderConteudo();
+}
+
+// PROSPECCAO
+async function prospTab(tab){
+  ['respostas','perguntas'].forEach(t=>{
+    document.getElementById('pview-'+t).style.display=t===tab?'block':'none';
+    document.getElementById('ptab-'+t).classList.toggle('ativo',t===tab);
   });
-  if (!r.ok) throw new Error(await r.text());
+  if(tab==='respostas')carregarRespostas();
+  if(tab==='perguntas')carregarPerguntas();
 }
-async function sbDelete(table, match) {
-  const params = Object.entries(match).map(([k,v])=>`${k}=eq.${v}`).join('&');
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { method:'DELETE', headers: getSBHdr() });
-  if (!r.ok) throw new Error(await r.text());
-}
-
-// ── Estado local (cache) ───────────────────────────────────
-let weekOffset = 0; // agora representa offset em MESES
-let editId = null;
-let editStatus = null;
-let addStatus = null;
-let activeFilter = 'all';
-let kanbanCache = {};   // { mesKey: { fazer:[], prod:[], pronto:[], postado:[] } }
-let ideasCache  = [];
-
-// ── Helpers de data (agora por MÊS) ─────────────────────────
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-
-function getMonday(offset) {
-  // Retorna o dia 1 do mês alvo (offset em meses)
-  const now = new Date();
-  const m = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-  m.setHours(0,0,0,0);
-  return m;
-}
-function weekKey(offset) {
-  const m = getMonday(offset);
-  return `${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}`;
-}
-function weekTitle(offset) {
-  const m = getMonday(offset);
-  const label = m.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
-  const capitalized = label.charAt(0).toUpperCase() + label.slice(1);
-  const tag = offset === 0 ? 'Mês atual' : offset === 1 ? 'Próximo mês' : offset === -1 ? 'Mês passado' : offset > 0 ? `Daqui ${offset} meses` : `${Math.abs(offset)} meses atrás`;
-  return `${tag}: ${capitalized}`;
-}
-function fmtDate(s) { if (!s) return ''; const [y,m,d] = s.split('-'); return `${d}/${m}`; }
-function fmtNum(n)  { if (!n && n !== 0) return '—'; return Number(n).toLocaleString('pt-BR'); }
-
-// ── Indicador de sync ──────────────────────────────────────
-function setSyncStatus(state) {
-  const el = document.getElementById('sync-status');
-  if (!el) return;
-  const map = { loading:'⏳ sincronizando...', ok:'☁️ salvo', error:'⚠️ erro ao salvar' };
-  el.textContent = map[state] || '';
-  el.style.color = state === 'error' ? '#e24b4a' : 'var(--text3)';
-}
-
-// ── Carregar dados do Supabase ─────────────────────────────
-async function loadAll() {
-  setSyncStatus('loading');
-  try {
-    // Conteúdos — migra chave antiga (semana, ex: 2026-06-22) para chave de mês (2026-06)
-    const rows = await sbGet('eurafa_conteudo', 'order=created_at.asc');
-    kanbanCache = {};
-    rows.forEach(r => {
-      const raw = r.semana || '';
-      // se vier no formato YYYY-MM-DD (semana antiga) ou já YYYY-MM (mês novo), extrai sempre YYYY-MM
-      const mk = raw.length >= 7 ? raw.slice(0,7) : raw;
-      if (!kanbanCache[mk]) kanbanCache[mk] = { fazer:[], prod:[], pronto:[], postado:[] };
-      if (!kanbanCache[mk][r.status]) kanbanCache[mk][r.status] = [];
-      kanbanCache[mk][r.status].push({
-        id: r.id,
-        titulo: r.titulo,
-        estilo: r.estilo,
-        estiloOutro: r.estilo_outro,
-        formato: r.formato,
-        data: r.data_prevista,
-        obs: r.obs,
-        legenda: r.legenda,
-        hashtags: r.hashtags,
-        objetivos: r.objetivos || {},
-        metricas: r.metricas || {},
-        _semanaOriginal: raw, // guardamos para regravar com a chave de mês depois
-      });
-    });
-    // Ideias
-    const ideias = await sbGet('eurafa_ideias', 'order=created_at.desc');
-    ideasCache = ideias.map(r => ({
-      id: r.id,
-      titulo: r.titulo,
-      categoria: r.categoria,
-      formato: r.formato,
-      note: r.note,
-      data: r.created_at ? r.created_at.split('T')[0] : '',
-    }));
-    // Leads
-    await loadLeads();
-    setSyncStatus('ok');
-
-    // Migração silenciosa: regrava no Supabase os registros que ainda estão com chave de SEMANA (formato antigo) usando a chave de MÊS
-    const toMigrate = [];
-    Object.entries(kanbanCache).forEach(([mk, week]) => {
-      ['fazer','prod','pronto','postado'].forEach(st => {
-        (week[st]||[]).forEach(c => {
-          if (c._semanaOriginal && c._semanaOriginal !== mk) toMigrate.push({card:c, status:st, mesKey:mk});
-        });
-      });
-    });
-    if (toMigrate.length) {
-      for (const {card, status, mesKey} of toMigrate) {
-        try {
-          await sbUpsert('eurafa_conteudo', {
-            id: card.id, semana: mesKey, status,
-            titulo: card.titulo, estilo: card.estilo || null, estilo_outro: card.estiloOutro || null,
-            formato: card.formato || null, data_prevista: card.data || null,
-            obs: card.obs || null, legenda: card.legenda || null, hashtags: card.hashtags || null,
-            objetivos: card.objetivos || {}, metricas: card.metricas || {},
-          });
-        } catch(e) { console.error('migração:', e); }
-      }
-    }
-  } catch(e) {
-    console.error(e);
-    setSyncStatus('error');
-  }
-}
-
-function getWeek(offset) {
-  const k = weekKey(offset);
-  return kanbanCache[k] || { fazer:[], prod:[], pronto:[], postado:[] };
-}
-
-async function upsertCard(card, status, offset) {
-  setSyncStatus('loading');
-  try {
-    await sbUpsert('eurafa_conteudo', {
-      id: card.id,
-      semana: weekKey(offset),
-      status,
-      titulo: card.titulo,
-      estilo: card.estilo || null,
-      estilo_outro: card.estiloOutro || null,
-      formato: card.formato || null,
-      data_prevista: card.data || null,
-      obs: card.obs || null,
-      legenda: card.legenda || null,
-      hashtags: card.hashtags || null,
-      objetivos: card.objetivos || {},
-      metricas: card.metricas || {},
-    });
-    setSyncStatus('ok');
-  } catch(e) { console.error(e); setSyncStatus('error'); }
-}
-
-async function deleteCard_sb(id) {
-  setSyncStatus('loading');
-  try { await sbDelete('eurafa_conteudo', {id}); setSyncStatus('ok'); }
-  catch(e) { console.error(e); setSyncStatus('error'); }
-}
-
-async function upsertIdea(idea) {
-  setSyncStatus('loading');
-  try {
-    await sbUpsert('eurafa_ideias', {
-      id: idea.id,
-      titulo: idea.titulo,
-      categoria: idea.categoria || null,
-      formato: idea.formato || null,
-      note: idea.note || null,
-    });
-    setSyncStatus('ok');
-  } catch(e) { console.error(e); setSyncStatus('error'); }
-}
-
-async function deleteIdea_sb(id) {
-  setSyncStatus('loading');
-  try { await sbDelete('eurafa_ideias', {id}); setSyncStatus('ok'); }
-  catch(e) { console.error(e); setSyncStatus('error'); }
-}
-
-// ── Render ─────────────────────────────────────────────────
-function render() {
-  const cards = getWeek(weekOffset);
-  document.getElementById('week-title').textContent = weekTitle(weekOffset);
-
-  const statuses = ['fazer','prod','pronto','postado'];
-  const colIds   = { fazer:'col-fazer', prod:'col-prod', pronto:'col-pronto', postado:'col-postado' };
-  const countIds = { fazer:'c-fazer',   prod:'c-prod',   pronto:'c-pronto',   postado:'c-postado' };
-
-  statuses.forEach(st => {
-    const list = cards[st] || [];
-    document.getElementById(countIds[st]).textContent = list.length;
-    const col = document.getElementById(colIds[st]);
-    col.innerHTML = list.length
-      ? list.map(c => st === 'postado' ? cardPostatoHTML(c) : cardHTML(c, st)).join('')
-      : '<div class="empty-col"><i class="ti ti-inbox"></i>vazio</div>';
-  });
-
-  const f=(cards.fazer||[]).length, p=(cards.prod||[]).length, pr=(cards.pronto||[]).length, po=(cards.postado||[]).length;
-  document.getElementById('s-total').textContent   = f+p+pr+po;
-  document.getElementById('s-fazer').textContent   = f;
-  document.getElementById('s-prod').textContent    = p;
-  document.getElementById('s-pronto').textContent  = pr;
-  document.getElementById('s-postado').textContent = po;
-  document.getElementById('summary').textContent   = `${po} postados · ${pr} programados · ${p} prontos · ${f} em desenvolvimento`;
-  renderMetaBar(po);
-}
-
-// ── Meta semanal ───────────────────────────────────────────
-function getMetaSemanal() { return parseInt(localStorage.getItem('eurafa_meta_semanal') || '0'); }
-function openMetaModal() {
-  document.getElementById('meta-input').value = getMetaSemanal() || '';
-  document.getElementById('modal-meta').classList.add('open');
-  setTimeout(() => document.getElementById('meta-input').focus(), 100);
-}
-function closeMetaModal() { document.getElementById('modal-meta').classList.remove('open'); }
-function saveMeta() {
-  const v = parseInt(document.getElementById('meta-input').value);
-  if (v > 0) localStorage.setItem('eurafa_meta_semanal', v);
-  closeMetaModal();
-  const cards = getWeek(weekOffset);
-  renderMetaBar((cards.postado||[]).length);
-}
-function renderMetaBar(postados) {
-  const meta = getMetaSemanal();
-  const fill = document.getElementById('meta-fill');
-  const count = document.getElementById('meta-count');
-  if (!meta) { count.textContent = `${postados} posts este mês · defina sua meta`; fill.style.width='0%'; fill.classList.remove('hit'); return; }
-  const pct = Math.min(100, Math.round((postados/meta)*100));
-  fill.style.width = pct+'%';
-  fill.classList.toggle('hit', postados >= meta);
-  count.textContent = `${postados} de ${meta} posts (${pct}%)`;
-}
-
-// ── Dashboard ──────────────────────────────────────────────
-let dashPeriod = 30;
-function setDashPeriod(days, btn) {
-  dashPeriod = days;
-  document.querySelectorAll('.dash-period-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderDashboard(days);
-}
-
-function getPostadosNoPeriodo(days) {
-  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days);
-  const postados = [];
-  Object.entries(kanbanCache).forEach(([mesKey, week]) => {
-    // mesKey vem como "YYYY-MM" — usamos o último dia do mês para comparação justa
-    const [y,m] = mesKey.split('-').map(Number);
-    if (!y || !m) return;
-    const ultimoDiaMes = new Date(y, m, 0); // dia 0 do mês seguinte = último dia do mês atual
-    if (ultimoDiaMes >= cutoff) {
-      (week.postado || []).forEach(c => postados.push({...c, mesKey}));
-    }
-  });
-  return postados;
-}
-
-function renderDashboard(days) {
-  const posts = getPostadosNoPeriodo(days);
-
-  // ── Números gerais ─────────────────────────────────────
-  const totalViews     = posts.reduce((s,c) => s + (Number((c.metricas||{}).views)||0), 0);
-  const totalCurtidas  = posts.reduce((s,c) => s + (Number((c.metricas||{}).curtidas)||0), 0);
-  const totalSaves     = posts.reduce((s,c) => s + (Number((c.metricas||{}).saves)||0), 0);
-  const totalShares    = posts.reduce((s,c) => s + (Number((c.metricas||{}).shares)||0), 0);
-  const totalSeguids   = posts.reduce((s,c) => s + (Number((c.metricas||{}).seguidores)||0), 0);
-  const mediaViews     = posts.length ? Math.round(totalViews / posts.length) : 0;
-
-  const nums = [
-    { val: posts.length,           label: 'posts publicados',     color: 'var(--purple)' },
-    { val: fmtNum(totalViews),     label: 'visualizações totais', color: 'var(--rose)' },
-    { val: fmtNum(mediaViews),     label: 'média por post',       color: 'var(--blue)' },
-    { val: fmtNum(totalCurtidas),  label: 'curtidas totais',      color: 'var(--pink)' },
-    { val: fmtNum(totalSaves),     label: 'salvamentos totais',   color: 'var(--teal)' },
-    { val: '+'+fmtNum(totalSeguids),label: 'novos seguidores',    color: 'var(--green)' },
-  ];
-  document.getElementById('dash-nums').innerHTML = nums.map(d =>
-    `<div class="dash-num-item">
-      <div class="dash-num-val" style="color:${d.color}">${d.val}</div>
-      <div class="dash-num-label">${d.label}</div>
-    </div>`).join('');
-
-  // ── Formatos ───────────────────────────────────────────
-  const fmtCount = {};
-  posts.forEach(c => { const f = c.formato||'Reels'; fmtCount[f] = (fmtCount[f]||0)+1; });
-  const maxFmt = Math.max(1, ...Object.values(fmtCount));
-  const fmtRows = Object.entries(fmtCount).sort((a,b)=>b[1]-a[1]);
-  document.getElementById('dash-fmt-rows').innerHTML = fmtRows.length
-    ? fmtRows.map(([f,n]) => `
-      <div class="dash-rank-row">
-        <span class="dash-rank-label"><span class="dash-fmt-pill">${f}</span></span>
-        <div class="dash-rank-bar-wrap"><div class="dash-rank-bar"><div class="dash-rank-fill" style="width:${Math.round(n/maxFmt*100)}%"></div></div></div>
-        <span class="dash-rank-val">${n}</span>
-      </div>`).join('')
-    : '<div class="dash-empty">nenhum post ainda</div>';
-
-  // ── Focos ──────────────────────────────────────────────
-  const focoCount = {};
-  posts.forEach(c => { const f = (c.objetivos||{}).foco; if(f) focoCount[f] = (focoCount[f]||0)+1; });
-  const maxFoco = Math.max(1, ...Object.values(focoCount));
-  const focoRows = Object.entries(focoCount).sort((a,b)=>b[1]-a[1]);
-  document.getElementById('dash-foco-rows').innerHTML = focoRows.length
-    ? focoRows.map(([f,n]) => `
-      <div class="dash-rank-row">
-        <span class="dash-rank-label" style="font-size:12px">${focoLabels[f]||f}</span>
-        <div class="dash-rank-bar-wrap"><div class="dash-rank-bar"><div class="dash-rank-fill" style="width:${Math.round(n/maxFoco*100)}%;background:var(--rose)"></div></div></div>
-        <span class="dash-rank-val">${n}</span>
-      </div>`).join('')
-    : '<div class="dash-empty">sem dados de foco</div>';
-
-  // ── Top 5 helper ───────────────────────────────────────
-  const rankEmoji = ['🥇','🥈','🥉','4º','5º'];
-  const rankClass = ['gold','silver','bronze','',''];
-  function renderTop5(metrica) {
-    const sorted = posts
-      .filter(c => (c.metricas||{})[metrica])
-      .sort((a,b) => Number(b.metricas[metrica]) - Number(a.metricas[metrica]))
-      .slice(0,5);
-    if (!sorted.length) return '<div class="dash-empty">sem dados ainda</div>';
-    return sorted.map((c,i) => `
-      <div class="dash-top-item">
-        <div class="dash-top-rank ${rankClass[i]}">${rankEmoji[i]}</div>
-        <div class="dash-top-body">
-          <div class="dash-top-title">${c.titulo}</div>
-          <div class="dash-top-meta">
-            <span>${c.formato||'—'}</span>
-            ${c.data ? `<span>${fmtDate(c.data)}</span>` : ''}
-            <span class="dash-top-highlight">${fmtNum(c.metricas[metrica])}</span>
+async function carregarRespostas(){
+  const lista=document.getElementById('resp-lista');
+  const loading=document.getElementById('resp-loading');
+  const vazio=document.getElementById('resp-vazio');
+  loading.style.display='block';lista.innerHTML='';vazio.style.display='none';
+  try{
+    const rows=await sbGet('prospeccao','order=created_at.desc');
+    loading.style.display='none';
+    if(!rows.length){vazio.style.display='block';return;}
+    lista.innerHTML=rows.map(r=>{
+      const wa=(r.whatsapp||'').replace(/\D/g,'');
+      const dores=Array.isArray(r.maior_dor)?r.maior_dor.join(', '):(r.maior_dor||'');
+      const dt=new Date(r.created_at).toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      return `<div class="resp-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.6rem;margin-bottom:.5rem">
+          <div><div class="resp-nome">${r.nome||'&mdash;'}</div><div class="resp-data">${dt}</div></div>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+            ${wa?`<a href="https://wa.me/55${wa}" target="_blank" class="btn btn-verde" style="font-size:.72rem;padding:.35rem .7rem;text-decoration:none;border-radius:6px"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>`:''}
+            <button class="btn btn-outline" style="font-size:.72rem;padding:.35rem .7rem;color:var(--danger);border-color:var(--danger)" onclick="deletarResposta('${r.id}')"><i class="ti ti-trash"></i></button>
           </div>
         </div>
-      </div>`).join('');
-  }
-
-  document.getElementById('dash-top-views').innerHTML      = renderTop5('views');
-  document.getElementById('dash-top-curtidas').innerHTML   = renderTop5('curtidas');
-  document.getElementById('dash-top-saves').innerHTML      = renderTop5('saves');
-  document.getElementById('dash-top-shares').innerHTML     = renderTop5('shares');
-  document.getElementById('dash-top-seguidores').innerHTML = renderTop5('seguidores');
-}
-
-const focoLabels = { seguidores:'Seguidores', alcance:'Alcance', engajamento:'Engajamento', vendas:'Vendas / leads', autoridade:'Autoridade', salvar:'Para salvar', compartilhar:'Para compartilhar' };
-const estiloLabels = { lofi:'Lo-fi', broll:'B-roll', 'problema-solucao':'Problema e solução', outro:'Outro' };
-
-function toggleEstiloOutro() {
-  const sel = document.getElementById('in-estilo').value;
-  const inp = document.getElementById('in-estilo-outro');
-  inp.style.display = sel === 'outro' ? 'block' : 'none';
-  if (sel !== 'outro') inp.value = '';
-}
-const metaKeys = ['views','curtidas','comentarios','saves','shares','seguidores'];
-const metaLabels = { views:'views', curtidas:'curtidas', comentarios:'coment.', saves:'salv.', shares:'compart.', seguidores:'seguid.' };
-
-function cardHTML(c, st) {
-  const prev = st === 'prod' ? 'fazer' : st === 'pronto' ? 'prod' : null;
-  const next = st === 'fazer' ? 'prod' : st === 'prod' ? 'pronto' : st === 'pronto' ? 'postado' : null;
-  const nextL = { prod:'pronto →', pronto:'programado →', postado:'postado ✓ →' };
-  const prevL = { fazer:'← desenvolvimento', prod:'← conteúdo pronto' };
-  const obj = c.objetivos || {};
-  const estiloLabel = c.estilo === 'outro' && c.estiloOutro ? c.estiloOutro : (estiloLabels[c.estilo]||'');
-  return `<div class="card" onclick="openView('${st}','${c.id}')" style="cursor:pointer">
-    <div class="card-top">
-      <span class="card-format">${c.formato||'Reels'}</span>
-      <button class="card-edit-btn" onclick="event.stopPropagation();openCard('${st}','${c.id}')" title="editar"><i class="ti ti-pencil"></i></button>
-    </div>
-    <div class="card-title">${c.titulo}</div>
-    ${c.estilo ? `<div><span class="estilo-badge"><i class="ti ti-palette" style="font-size:10px"></i> ${estiloLabel}</span></div>` : ''}
-    ${obj.foco ? `<div style="margin-bottom:4px"><span class="obj-badge obj-badge-main"><i class="ti ti-target" style="font-size:10px"></i> ${focoLabels[obj.foco]||obj.foco}</span></div>` : ''}
-    ${c.legenda ? `<div class="card-legenda-preview" style="margin-top:5px">${c.legenda.length > 60 ? c.legenda.slice(0,60)+'...' : c.legenda}</div>` : ''}
-    <div class="card-footer" style="margin-top:6px">
-      <span class="card-date">${c.data ? '<i class="ti ti-calendar" style="font-size:11px"></i> '+fmtDate(c.data) : ''}</span>
-      <div class="card-actions">
-        ${prev ? `<button class="move-btn" onclick="event.stopPropagation();moveCard('${c.id}','${st}','${prev}')">${prevL[prev]}</button>` : ''}
-        ${next ? `<button class="move-btn fwd" onclick="event.stopPropagation();moveCard('${c.id}','${st}','${next}')">${nextL[next]}</button>` : ''}
-        <button class="del-btn" onclick="event.stopPropagation();delCard('${c.id}','${st}')" title="excluir"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function cardPostatoHTML(c) {
-  const m = c.metricas || {};
-  const obj = c.objetivos || {};
-  const hasMetrics = m.views || m.alcance || m.curtidas || m.comentarios || m.shares || m.saves || m.seguidores || m.cliques;
-  const compKeys = [
-    { k:'views', mk:'views', label:'visualiz.' },
-    { k:'curtidas', mk:'curtidas', label:'curtidas' },
-    { k:'comentarios', mk:'comentarios', label:'coment.' },
-    { k:'saves', mk:'saves', label:'salv.' },
-    { k:'shares', mk:'shares', label:'compart.' },
-    { k:'seguidores', mk:'seguidores', label:'seguid.' },
-  ];
-  const compItems = compKeys.filter(x => m[x.k] || obj[x.mk]);
-  const estiloLabel = c.estilo === 'outro' && c.estiloOutro ? c.estiloOutro : (estiloLabels[c.estilo]||'');
-  return `<div class="card-postado" onclick="openView('postado','${c.id}')" style="cursor:pointer">
-    <div class="card-postado-header">
-      <div>
-        <div class="card-postado-format">${c.formato||'Reels'} ${c.data ? '· '+fmtDate(c.data) : ''}</div>
-        <div class="card-postado-title">${c.titulo}</div>
-        ${c.estilo ? `<span class="estilo-badge" style="margin-top:3px"><i class="ti ti-palette" style="font-size:10px"></i> ${estiloLabel}</span>` : ''}
-        ${obj.foco ? `<div style="margin-top:3px"><span class="obj-badge obj-badge-main"><i class="ti ti-target" style="font-size:10px"></i> ${focoLabels[obj.foco]||obj.foco}</span></div>` : ''}
-      </div>
-      <div style="display:flex;gap:4px;flex-shrink:0">
-        <button class="card-edit-btn" onclick="event.stopPropagation();openCard('postado','${c.id}')" title="editar"><i class="ti ti-pencil"></i></button>
-        <button class="del-btn" onclick="event.stopPropagation();delCard('${c.id}','postado')" title="excluir"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>
-    ${m.views ? `<div style="margin:4px 0 6px;font-size:18px;font-weight:700;color:var(--rose)">${fmtNum(m.views)} <span style="font-size:11px;font-weight:400;color:var(--text3)">visualizações</span>${obj.views ? `<span style="font-size:11px;color:var(--text3)"> · meta ${fmtNum(obj.views)}</span>` : ''}</div>` : ''}
-    ${compItems.length ? `<div class="comp-grid">
-      ${compItems.map(x => {
-        const real = m[x.k] ? Number(m[x.k]) : null;
-        const meta = obj[x.mk] ? Number(obj[x.mk]) : null;
-        const hit = real !== null && meta !== null ? real >= meta : null;
-        return `<div class="comp-item">
-          <div class="comp-label">${x.label}</div>
-          <div class="comp-row">
-            <span class="comp-real ${hit === true ? 'comp-hit' : hit === false ? 'comp-miss' : ''}">${real !== null ? fmtNum(real) : '—'}</span>
-            ${meta !== null ? `<span class="comp-meta">meta ${fmtNum(meta)} ${hit === true ? '✓' : hit === false ? '✗' : ''}</span>` : ''}
-          </div>
-        </div>`;
-      }).join('')}
-    </div>` : !hasMetrics ? `<button class="add-btn" onclick="event.stopPropagation();openCard('postado','${c.id}')" style="margin-top:6px;font-size:11px"><i class="ti ti-chart-bar"></i> adicionar métricas</button>` : ''}
-    <div style="margin-top:6px">
-      <button class="move-btn" onclick="event.stopPropagation();moveCard('${c.id}','postado','pronto')" style="font-size:11px">← mover para programado</button>
-    </div>
-  </div>`;
-}
-
-function changeWeek(d) { weekOffset += d; render(); }
-function goNow() { weekOffset = 0; render(); }
-
-// ── Visualização do card ───────────────────────────────────
-let viewingId = null;
-let viewingStatus = null;
-
-function openView(st, id) {
-  const cards = getWeek(weekOffset);
-  const c = (cards[st]||[]).find(x => x.id === id);
-  if (!c) return;
-  viewingId = id; viewingStatus = st;
-
-  const obj = c.objetivos || {};
-  const m   = c.metricas  || {};
-  const estiloLabel = c.estilo === 'outro' && c.estiloOutro ? c.estiloOutro : (estiloLabels[c.estilo]||'');
-
-  const badges = [];
-  if (c.formato) badges.push(`<span style="font-size:12px;background:var(--surface2);padding:2px 8px;border-radius:6px;color:var(--text2)">${c.formato}</span>`);
-  if (c.estilo)  badges.push(`<span class="estilo-badge">${estiloLabel}</span>`);
-  if (c.data)    badges.push(`<span style="font-size:12px;color:var(--text3)"><i class="ti ti-calendar" style="font-size:11px"></i> ${fmtDate(c.data)}</span>`);
-  document.getElementById('view-badges').innerHTML = badges.join('');
-  document.getElementById('view-titulo').textContent = c.titulo;
-
-  const focoRow = document.getElementById('view-foco-row');
-  if (obj.foco) {
-    focoRow.style.display = 'block';
-    focoRow.innerHTML = `<span class="obj-badge obj-badge-main"><i class="ti ti-target" style="font-size:10px"></i> ${focoLabels[obj.foco]||obj.foco}</span>`;
-  } else { focoRow.style.display = 'none'; }
-
-  const obsBlock = document.getElementById('view-obs-block');
-  if (c.obs) { obsBlock.style.display='block'; document.getElementById('view-obs').textContent = c.obs; }
-  else obsBlock.style.display = 'none';
-
-  const legBlock = document.getElementById('view-legenda-block');
-  if (c.legenda) { legBlock.style.display='block'; document.getElementById('view-legenda').textContent = c.legenda; }
-  else legBlock.style.display = 'none';
-
-  const hashBlock = document.getElementById('view-hashtags-block');
-  if (c.hashtags) { hashBlock.style.display='block'; document.getElementById('view-hashtags').textContent = c.hashtags; }
-  else hashBlock.style.display = 'none';
-
-  const metBlock = document.getElementById('view-metricas-block');
-  const compKeys = [
-    { k:'views', mk:'views', label:'Visualizações' },
-    { k:'alcance', mk:null, label:'Alcance' },
-    { k:'curtidas', mk:'curtidas', label:'Curtidas' },
-    { k:'comentarios', mk:'comentarios', label:'Comentários' },
-    { k:'shares', mk:'shares', label:'Compartilh.' },
-    { k:'saves', mk:'saves', label:'Salvamentos' },
-    { k:'seguidores', mk:'seguidores', label:'Seguidores' },
-    { k:'cliques', mk:null, label:'Cliques no link' },
-  ];
-  const compItems = compKeys.filter(x => m[x.k] || (x.mk && obj[x.mk]));
-  if (st === 'postado' && compItems.length) {
-    metBlock.style.display = 'block';
-    document.getElementById('view-metricas-grid').innerHTML = compItems.map(x => {
-      const real = m[x.k] ? Number(m[x.k]) : null;
-      const meta = x.mk && obj[x.mk] ? Number(obj[x.mk]) : null;
-      const hit  = real !== null && meta !== null ? real >= meta : null;
-      return `<div class="comp-item">
-        <div class="comp-label">${x.label}</div>
-        <div class="comp-row">
-          <span class="comp-real ${hit===true?'comp-hit':hit===false?'comp-miss':''}">${real!==null?fmtNum(real):'—'}</span>
-          ${meta!==null?`<span class="comp-meta">meta ${fmtNum(meta)} ${hit===true?'✓':hit===false?'✗':''}</span>`:''}
+        <div class="resp-grid">
+          ${r.profissao?`<div class="resp-item"><span>Profissao: </span>${r.profissao}</div>`:''}
+          ${r.faturamento?`<div class="resp-item"><span>Faturamento: </span>${r.faturamento}</div>`:''}
+          ${r.tempo?`<div class="resp-item"><span>Tempo no negocio: </span>${r.tempo}</div>`:''}
+          ${r.investimento?`<div class="resp-item"><span>Investimento: </span>${r.investimento}</div>`:''}
+          ${r.instagram?`<div class="resp-item"><span>Instagram: </span>${r.instagram}</div>`:''}
         </div>
+        ${dores?`<div class="resp-dor"><span style="color:var(--cinza)">Maiores dores: </span>${dores}</div>`:''}
+        ${r.mensagem?`<div class="resp-msg">"${r.mensagem}"</div>`:''}
       </div>`;
     }).join('');
-  } else { metBlock.style.display = 'none'; }
+  }catch(e){loading.textContent='Erro: '+e.message;}
+}
+async function deletarResposta(id){if(!confirm('Excluir esta resposta?'))return;await sbDelete('prospeccao',`id=eq.${id}`);carregarRespostas();}
 
-  const colNames = { fazer:'Desenvolvimento', prod:'Conteúdo pronto', pronto:'Conteúdo programado', postado:'Postado' };
-  const prev = st==='prod'?'fazer': st==='pronto'?'prod': st==='postado'?'pronto':null;
-  const next = st==='fazer'?'prod': st==='prod'?'pronto': st==='pronto'?'postado':null;
-  let moveBtns = '';
-  if (prev) moveBtns += `<button class="move-btn" onclick="moveCard('${id}','${st}','${prev}');closeViewModal()">← ${colNames[prev]}</button>`;
-  if (next) moveBtns += `<button class="move-btn fwd" onclick="moveCard('${id}','${st}','${next}');closeViewModal()">${colNames[next]} →</button>`;
-  document.getElementById('view-move-btns').innerHTML = moveBtns;
-  document.getElementById('view-del-btn').onclick = () => { closeViewModal(); delCard(id, st); };
+let pergCache=[];
+async function carregarPerguntas(){
+  const lista=document.getElementById('perg-lista');
+  const vazio=document.getElementById('perg-vazio');
+  lista.innerHTML='<div style="color:var(--cinza);padding:1rem">Carregando...</div>';
+  vazio.style.display='none';
+  try{
+    pergCache=await sbGet('perguntas','order=ordem.asc');
+    if(!pergCache.length){lista.innerHTML='';vazio.style.display='block';return;}
+    lista.innerHTML=pergCache.map(p=>`
+      <div class="perg-item">
+        <span class="perg-ordem">${p.ordem||'&mdash;'}</span>
+        <div class="perg-body">
+          <div class="perg-titulo-text">${p.titulo}</div>
+          <div class="perg-meta">${p.tipo}${p.obrigatoria?' · obrigatoria':' · opcional'}</div>
+        </div>
+        <div class="perg-acoes">
+          <button class="btn btn-outline" style="padding:.3rem .6rem;font-size:.72rem" onclick="abrirModalPerg('${p.id}')"><i class="ti ti-pencil"></i></button>
+          <button class="btn-danger" onclick="deletarPerguntaDireto('${p.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>`).join('');
+  }catch(e){lista.innerHTML='<div style="color:red;padding:1rem">Erro: '+e.message+'</div>';}
+}
+function abrirModalPerg(id){
+  const p=id?pergCache.find(x=>x.id===id):null;
+  document.getElementById('perg-id').value=p?.id||'';
+  document.getElementById('perg-titulo-inp').value=p?.titulo||'';
+  document.getElementById('perg-sub').value=p?.subtitulo||'';
+  document.getElementById('perg-campo-id').value=p?.campo_id||'';
+  document.getElementById('perg-tipo').value=p?.tipo||'text';
+  document.getElementById('perg-placeholder').value=p?.placeholder||'';
+  document.getElementById('perg-obrig').checked=p?.obrigatoria!==false;
+  document.getElementById('perg-modal-titulo').textContent=id?'Editar pergunta':'Nova pergunta';
+  document.getElementById('perg-del-btn').style.display=id?'inline-flex':'none';
+  document.getElementById('modal-perg').classList.add('aberto');
+}
+function fecharModalPerg(){document.getElementById('modal-perg').classList.remove('aberto');}
+async function salvarPergunta(){
+  const titulo=document.getElementById('perg-titulo-inp').value.trim();
+  const campo_id=document.getElementById('perg-campo-id').value.trim();
+  if(!titulo||!campo_id){alert('Preencha o titulo e o ID do campo.');return;}
+  const id=document.getElementById('perg-id').value;
+  const btn=document.getElementById('perg-salvar-btn');
+  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
+  const payload={titulo,campo_id,subtitulo:document.getElementById('perg-sub').value.trim()||null,tipo:document.getElementById('perg-tipo').value,placeholder:document.getElementById('perg-placeholder').value.trim()||null,obrigatoria:document.getElementById('perg-obrig').checked,ordem:id?(pergCache.find(p=>p.id===id)?.ordem||1):pergCache.length+1,ativa:true,opcoes:[]};
+  try{
+    if(id){await sbPatch('perguntas',`id=eq.${id}`,payload);}
+    else{payload.id=crypto.randomUUID();await sbPost('perguntas',payload);}
+    fecharModalPerg();carregarPerguntas();
+  }catch(e){alert('Erro ao salvar: '+e.message);}
+  btn.disabled=false;btn.textContent='Salvar';
+}
+async function deletarPergunta(){
+  const id=document.getElementById('perg-id').value;
+  if(!id||!confirm('Excluir esta pergunta?'))return;
+  await sbDelete('perguntas',`id=eq.${id}`);fecharModalPerg();carregarPerguntas();
+}
+async function deletarPerguntaDireto(id){if(!confirm('Excluir?'))return;await sbDelete('perguntas',`id=eq.${id}`);carregarPerguntas();}
 
-  document.getElementById('modal-view').classList.add('open');
+// GESTAO DE CONTEUDO
+let posts=[];
+let ideias=[];
+let mesOffset=0;
+let metaMes=20;
+let dashPeriodo=30;
+
+function getMesAtual(){const d=new Date();d.setMonth(d.getMonth()+mesOffset);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
+function getMesTitulo(){
+  const d=new Date();d.setMonth(d.getMonth()+mesOffset);
+  const m=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const tag=mesOffset===0?'Mes atual':mesOffset===1?'Proximo mes':mesOffset===-1?'Mes passado':mesOffset>0?`Daqui ${mesOffset} meses`:`${Math.abs(mesOffset)} meses atras`;
+  return `${tag}: ${m[d.getMonth()]} de ${d.getFullYear()}`;
 }
 
-function closeViewModal() {
-  document.getElementById('modal-view').classList.remove('open');
-  viewingId = null; viewingStatus = null;
+async function carregarConteudo(){
+  setSyncStatus('sincronizando...');
+  try{
+    const raw=await sbGet('eurafa_conteudo','order=data_prevista.asc');
+    posts=raw.map(p=>({...p,metricas:typeof p.metricas==='string'?JSON.parse(p.metricas||'{}'):(p.metricas||{}),objetivos:typeof p.objetivos==='string'?JSON.parse(p.objetivos||'{}'):(p.objetivos||{})}));
+    setSyncStatus('salvo');
+  }catch(e){setSyncStatus('erro');console.error(e);}
 }
-
-function switchToEdit() {
-  const id = viewingId, st = viewingStatus;
-  closeViewModal();
-  setTimeout(() => openCard(st, id), 50);
+function setSyncStatus(s){
+  const m={'sincronizando...':'sincronizando...','salvo':'salvo','erro':'erro ao salvar'};
+  const el=document.getElementById('sync-badge');
+  if(el)el.innerHTML=`<i class="ti ti-cloud"></i> ${m[s]||s}`;
 }
-
-function openCard(st, id) {
-  editId = id || null; editStatus = st; addStatus = st;
-  const cards = getWeek(weekOffset);
-  const ex = id ? (cards[st]||[]).find(c => c.id === id) : null;
-  const m = ex && ex.metricas ? ex.metricas : {};
-
-  document.getElementById('card-modal-title').textContent = id ? 'editar conteúdo' : 'novo conteúdo';
-  document.getElementById('in-titulo').value = ex ? ex.titulo : '';
-  const estiloVal = ex ? (ex.estilo||'') : '';
-  const estiloOutro = ex ? (ex.estiloOutro||'') : '';
-  document.getElementById('in-estilo').value = estiloVal;
-  document.getElementById('in-estilo-outro').style.display = estiloVal === 'outro' ? 'block' : 'none';
-  document.getElementById('in-estilo-outro').value = estiloOutro;
-  document.getElementById('in-formato').value = ex ? ex.formato : 'Reels';
-  document.getElementById('in-data').value = ex ? (ex.data||'') : '';
-  document.getElementById('in-obs').value = ex ? (ex.obs||'') : '';
-  document.getElementById('in-legenda').value = ex ? (ex.legenda||'') : '';
-  document.getElementById('in-hashtags').value = ex ? (ex.hashtags||'') : '';
-
-  const obj = ex && ex.objetivos ? ex.objetivos : {};
-  document.getElementById('in-obj-foco').value = obj.foco || '';
-  ['views','curtidas','comentarios','saves','shares','seguidores'].forEach(k => {
-    const el = document.getElementById('o-'+k);
-    if (el) el.value = obj[k] || '';
-  });
-
-  const secMetricas = document.getElementById('section-metricas');
-  secMetricas.style.display = st === 'postado' ? 'block' : 'none';
-  if (st === 'postado') {
-    ['views','alcance','curtidas','comentarios','shares','saves','seguidores','cliques'].forEach(k => {
-      const el = document.getElementById('m-'+k);
-      if (el) el.value = m[k] || '';
-    });
-  }
-
-  document.getElementById('modal-card').classList.add('open');
-  setTimeout(() => document.getElementById('in-titulo').focus(), 100);
-}
-
-function closeCardModal() {
-  document.getElementById('modal-card').classList.remove('open');
-  editId = null; editStatus = null; addStatus = null;
-}
-
-async function saveCard() {
-  const titulo = document.getElementById('in-titulo').value.trim();
-  if (!titulo) { document.getElementById('in-titulo').focus(); return; }
-  const st = editStatus || addStatus || 'fazer';
-  const wk = weekKey(weekOffset);
-
-  const item = {
-    id: editId || uid(),
-    titulo,
-    estilo: document.getElementById('in-estilo').value,
-    estiloOutro: document.getElementById('in-estilo').value === 'outro' ? document.getElementById('in-estilo-outro').value.trim() : '',
-    formato: document.getElementById('in-formato').value,
-    data: document.getElementById('in-data').value,
-    obs: document.getElementById('in-obs').value,
-    legenda: document.getElementById('in-legenda').value,
-    hashtags: document.getElementById('in-hashtags').value,
-    objetivos: {
-      foco: document.getElementById('in-obj-foco').value || null,
-      views: document.getElementById('o-views').value || null,
-      curtidas: document.getElementById('o-curtidas').value || null,
-      comentarios: document.getElementById('o-comentarios').value || null,
-      saves: document.getElementById('o-saves').value || null,
-      shares: document.getElementById('o-shares').value || null,
-      seguidores: document.getElementById('o-seguidores').value || null,
-    },
-    metricas: st === 'postado' ? {
-      views: document.getElementById('m-views').value || null,
-      alcance: document.getElementById('m-alcance').value || null,
-      curtidas: document.getElementById('m-curtidas').value || null,
-      comentarios: document.getElementById('m-comentarios').value || null,
-      shares: document.getElementById('m-shares').value || null,
-      saves: document.getElementById('m-saves').value || null,
-      seguidores: document.getElementById('m-seguidores').value || null,
-      cliques: document.getElementById('m-cliques').value || null,
-    } : {},
-  };
-
-  // Atualiza cache local
-  if (!kanbanCache[wk]) kanbanCache[wk] = { fazer:[], prod:[], pronto:[], postado:[] };
-  const list = kanbanCache[wk][st] || [];
-  if (editId) {
-    const idx = list.findIndex(c => c.id === editId);
-    if (idx >= 0) list[idx] = { ...list[idx], ...item };
-  } else {
-    list.push(item);
-    kanbanCache[wk][st] = list;
-  }
-
-  closeCardModal();
-  render();
-  await upsertCard(item, st, weekOffset);
-}
-
-async function delCard(id, st) {
-  if (!confirm('Excluir este conteúdo?')) return;
-  const wk = weekKey(weekOffset);
-  if (kanbanCache[wk]) kanbanCache[wk][st] = (kanbanCache[wk][st]||[]).filter(c => c.id !== id);
-  render();
-  await deleteCard_sb(id);
-}
-
-async function moveCard(id, from, to) {
-  const wk = weekKey(weekOffset);
-  const week = kanbanCache[wk] || { fazer:[], prod:[], pronto:[], postado:[] };
-  const card = (week[from]||[]).find(c => c.id === id);
-  if (!card) return;
-  week[from] = (week[from]||[]).filter(c => c.id !== id);
-  if (!week[to]) week[to] = [];
-  week[to].push(card);
-  kanbanCache[wk] = week;
-  render();
-  await upsertCard(card, to, weekOffset);
-}
-
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['kanban','ideias','leads','dashboard'].indexOf(tab)===i));
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-'+tab).classList.add('active');
-  if (tab === 'ideias') renderIdeas();
-  if (tab === 'leads') renderLeads();
-  if (tab === 'dashboard') renderDashboard(dashPeriod);
-}
-
-function filterIdeas(cat, btn) {
-  activeFilter = cat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderIdeas();
-}
-
-const catLabels = { financas:'Finanças', cases:'Cases', dicas:'Dicas', motivacao:'Motivação', outro:'Outro' };
-
-function renderIdeas() {
-  let ideas = ideasCache;
-  document.getElementById('idea-count').textContent = ideas.length > 0 ? `(${ideas.length})` : '';
-  if (activeFilter !== 'all') ideas = ideas.filter(i => i.categoria === activeFilter);
-  const grid = document.getElementById('ideas-grid');
-  if (!ideas.length) {
-    grid.innerHTML = '<div class="empty-ideas"><i class="ti ti-bulb"></i>nenhuma ideia ainda.<br>Anote tudo que vier à cabeça!</div>';
-    return;
-  }
-  grid.innerHTML = ideas.map(i => `<div class="idea-card">
-    <span class="idea-tag tag-${i.categoria}">${catLabels[i.categoria]||i.categoria}</span>
-    <div class="idea-title">${i.titulo}</div>
-    <div class="idea-note">${i.formato||''}${i.note ? ' · '+i.note : ''}</div>
-    <div class="idea-footer">
-      <span class="idea-date">${fmtDate(i.data)}</span>
-      <div style="display:flex;gap:4px">
-        <button class="idea-use" onclick="useIdea('${i.id}')">usar →</button>
-        <button class="del-btn" onclick="delIdea('${i.id}')" title="excluir"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>
-  </div>`).join('');
-}
-
-async function saveIdea() {
-  const titulo = document.getElementById('idea-in-titulo').value.trim();
-  if (!titulo) { document.getElementById('idea-in-titulo').focus(); return; }
-  const idea = {
-    id: uid(),
-    titulo,
-    categoria: document.getElementById('idea-in-cat').value,
-    formato: document.getElementById('idea-in-fmt').value,
-    note: document.getElementById('idea-in-note').value,
-    data: new Date().toISOString().split('T')[0],
-  };
-  ideasCache.unshift(idea);
-  closeIdeaModal();
-  renderIdeas();
-  await upsertIdea(idea);
-}
-
-async function delIdea(id) {
-  if (!confirm('Excluir esta ideia?')) return;
-  ideasCache = ideasCache.filter(i => i.id !== id);
-  renderIdeas();
-  await deleteIdea_sb(id);
-}
-
-function openIdeaForm() {
-  document.getElementById('idea-in-titulo').value = '';
-  document.getElementById('idea-in-note').value = '';
-  document.getElementById('modal-ideia').classList.add('open');
-  setTimeout(() => document.getElementById('idea-in-titulo').focus(), 100);
-}
-function closeIdeaModal() { document.getElementById('modal-ideia').classList.remove('open'); }
-
-function useIdea(id) {
-  const idea = ideasCache.find(i => i.id === id);
-  if (!idea) return;
-  switchTab('kanban');
-  setTimeout(() => {
-    editId = null; editStatus = 'fazer'; addStatus = 'fazer';
-    document.getElementById('card-modal-title').textContent = 'novo conteúdo';
-    document.getElementById('in-titulo').value = idea.titulo;
-    document.getElementById('in-estilo').value = '';
-    document.getElementById('in-formato').value = idea.formato || 'Reels';
-    document.getElementById('in-data').value = '';
-    document.getElementById('in-obs').value = idea.note || '';
-    document.getElementById('in-legenda').value = '';
-    document.getElementById('in-hashtags').value = '';
-    document.getElementById('in-obj-foco').value = '';
-    ['views','curtidas','comentarios','saves','shares','seguidores'].forEach(k => { const el = document.getElementById('o-'+k); if (el) el.value = ''; });
-    document.getElementById('section-metricas').style.display = 'none';
-    document.getElementById('modal-card').classList.add('open');
-    setTimeout(() => document.getElementById('in-titulo').focus(), 150);
-  }, 100);
-}
-
-function copyHashtags() {
-  const txt = document.getElementById('view-hashtags').textContent;
-  navigator.clipboard.writeText(txt).then(() => {
-    const el = document.getElementById('view-hashtags');
-    el.style.background = 'var(--green-light)'; el.style.color = 'var(--green)';
-    setTimeout(() => { el.style.background=''; el.style.color=''; }, 1200);
+function renderConteudo(){
+  const semana=getMesAtual();
+  document.getElementById('semana-titulo').textContent=getMesTitulo();
+  const doMes=posts.filter(p=>(p.semana||p.data_prevista?.slice(0,7))===semana);
+  const cnt=s=>doMes.filter(p=>p.status===s).length;
+  document.getElementById('st-total').textContent=doMes.length;
+  document.getElementById('st-fazer').textContent=cnt('fazer');
+  document.getElementById('st-prod').textContent=cnt('prod');
+  document.getElementById('st-pronto').textContent=cnt('pronto');
+  document.getElementById('st-postado').textContent=cnt('postado');
+  const postados=cnt('postado');
+  const pct=Math.min(100,Math.round(postados/metaMes*100));
+  document.getElementById('meta-fill').style.width=pct+'%';
+  document.getElementById('meta-label').textContent=`${postados} de ${metaMes} posts (${pct}%)`;
+  ['fazer','prod','pronto','postado'].forEach(st=>{
+    const col=document.getElementById('col-'+st);
+    const items=doMes.filter(p=>p.status===st);
+    document.getElementById('cnt-'+st).textContent=items.length;
+    if(!items.length){col.innerHTML='<div class="col-vazio">vazio</div>';return;}
+    col.innerHTML=items.map(p=>{
+      const fd=p.data_prevista?new Date(p.data_prevista+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}):'';
+      return `<div class="post-card" onclick="abrirModalPost('${p.id}')">
+        <div class="post-titulo">${p.titulo}</div>
+        <div class="post-tags">${p.estilo?`<span class="tag">${p.estilo}</span>`:''} ${p.formato?`<span class="tag">${p.formato}</span>`:''}</div>
+        ${fd?`<div class="post-data"><i class="ti ti-calendar" style="font-size:.65rem"></i> ${fd}</div>`:''}
+      </div>`;
+    }).join('');
   });
 }
-
-document.getElementById('modal-card').addEventListener('click', e => { if (e.target.id === 'modal-card') closeCardModal(); });
-document.getElementById('modal-ideia').addEventListener('click', e => { if (e.target.id === 'modal-ideia') closeIdeaModal(); });
-document.getElementById('modal-view').addEventListener('click', e => { if (e.target.id === 'modal-view') closeViewModal(); });
-document.getElementById('modal-meta').addEventListener('click', e => { if (e.target.id === 'modal-meta') closeMetaModal(); });
-document.getElementById('modal-lead').addEventListener('click', e => { if (e.target.id === 'modal-lead') closeLeadModal(); });
-document.getElementById('modal-lead-view').addEventListener('click', e => { if (e.target.id === 'modal-lead-view') closeLeadViewModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCardModal(); closeIdeaModal(); closeViewModal(); closeMetaModal(); closeLeadModal(); closeLeadViewModal(); } });
-
-// Inicializa carregando do Supabase
-// aguarda login para carregar
-let _gestaoLoaded = false;
-async function initGestao() {
-  if (_gestaoLoaded) { render(); return; }
-  _gestaoLoaded = true;
-  await loadAll();
-  render();
+function navMes(d){mesOffset+=d;renderConteudo();}
+function irHoje(){mesOffset=0;renderConteudo();}
+function conteudoTab(tab){
+  ['kanban','ideias','dash'].forEach(t=>{
+    document.getElementById('cview-'+t).style.display=t===tab?'block':'none';
+    document.getElementById('ctab-'+t).classList.toggle('ativo',t===tab);
+  });
+  document.getElementById('kanban-nav-wrap').style.display=tab==='kanban'?'block':'none';
+  if(tab==='ideias')renderIdeias();
+  if(tab==='dash')renderDash();
 }
 
-// ══ LOGIN ══════════════════════════════════
-async function fazerLogin() {
-  const email = document.getElementById('l-email').value.trim();
-  const senha = document.getElementById('l-senha').value;
-  const erro = document.getElementById('l-erro');
-  const btn = document.getElementById('l-btn');
-  erro.style.display = 'none';
-  if (!email || !senha) { erro.textContent='Preencha e-mail e senha.'; erro.style.display='block'; return; }
-  btn.disabled=true; btn.textContent='Entrando...';
-  try {
-    const r = await fetch(`${SB_URL}/auth/v1/token?grant_type=password`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SB_KEY},
-      body:JSON.stringify({email,password:senha})
+// MODAL POST
+function abrirModalPost(id,statusDefault){
+  const p=id?posts.find(x=>x.id===id):null;
+  const status=p?.status||statusDefault||'fazer';
+  document.getElementById('post-id').value=p?.id||'';
+  document.getElementById('post-status-val').value=status;
+  document.getElementById('post-titulo').value=p?.titulo||'';
+  document.getElementById('post-estilo').value=p?.estilo||'';
+  document.getElementById('post-formato').value=p?.formato||'';
+  document.getElementById('post-data').value=p?.data_prevista||'';
+  document.getElementById('post-foco').value=p?.objetivos?.foco||'';
+  document.getElementById('post-obs').value=p?.obs||'';
+  document.getElementById('post-legenda').value=p?.legenda||'';
+  document.getElementById('post-hashtags').value=p?.hashtags||'';
+  document.getElementById('post-modal-titulo').textContent=id?'Editar conteudo':'Novo conteudo';
+  document.getElementById('post-del-btn').style.display=id?'inline-flex':'none';
+  const mostrarMet=status==='postado';
+  document.getElementById('post-metricas-wrap').style.display=mostrarMet?'block':'none';
+  if(mostrarMet){
+    const m=p?.metricas||{};
+    [{k:'views',v:'views'},{k:'alcance',v:'alcance'},{k:'curtidas',v:'curtidas'},{k:'comentarios',v:'comentarios'},{k:'saves',v:'saves'},{k:'shares',v:'shares'},{k:'segs',v:'seguidores'},{k:'visitas',v:'visitas'},{k:'cliques',v:'cliques'}].forEach(({k,v})=>{
+      const el=document.getElementById('m-'+k);if(el)el.value=m[v]||'';
     });
-    const d = await r.json();
-    if (!r.ok || !d.access_token) {
-      erro.textContent='E-mail ou senha incorretos.'; erro.style.display='block';
-      btn.disabled=false; btn.textContent='Entrar'; return;
-    }
-    _authToken = d.access_token;
-    document.getElementById('topbar-email').textContent = email;
-    document.getElementById('login-overlay').classList.add('hidden');
-    btn.disabled=false; btn.textContent='Entrar';
-    initGestao();
-  } catch(e) {
-    erro.textContent='Erro de conexão: '+e.message; erro.style.display='block';
-    btn.disabled=false; btn.textContent='Entrar';
   }
+  const nomes={fazer:'Desenvolvimento',prod:'Conteudo pronto',pronto:'Programado',postado:'Postado'};
+  const prox={fazer:'prod',prod:'pronto',pronto:'postado'};
+  const ant={prod:'fazer',pronto:'prod',postado:'pronto'};
+  const mw=document.getElementById('post-mover-wrap');
+  const mb=document.getElementById('post-mover-btns');
+  if(id){
+    mw.style.display='block';
+    mb.innerHTML=(ant[status]?`<button class="btn-mover" onclick="moverPost('${id}','${ant[status]}')">&#8592; ${nomes[ant[status]]}</button>`:'')+(prox[status]?`<button class="btn-mover" onclick="moverPost('${id}','${prox[status]}')">${nomes[prox[status]]} &#8594;</button>`:'');
+  }else{mw.style.display='none';}
+  document.getElementById('modal-post').classList.add('aberto');
+}
+function fecharModalPost(){document.getElementById('modal-post').classList.remove('aberto');}
+async function salvarPost(){
+  const titulo=document.getElementById('post-titulo').value.trim();
+  if(!titulo){alert('Preencha o titulo.');return;}
+  const btn=document.getElementById('post-salvar-btn');
+  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
+  const id=document.getElementById('post-id').value;
+  const status=document.getElementById('post-status-val').value;
+  const metricas={};
+  if(status==='postado'){
+    [{k:'views',v:'views'},{k:'alcance',v:'alcance'},{k:'curtidas',v:'curtidas'},{k:'comentarios',v:'comentarios'},{k:'saves',v:'saves'},{k:'shares',v:'shares'},{k:'segs',v:'seguidores'},{k:'visitas',v:'visitas'},{k:'cliques',v:'cliques'}].forEach(({k,v})=>{
+      const el=document.getElementById('m-'+k);metricas[v]=el?.value||null;
+    });
+  }
+  const dataVal=document.getElementById('post-data').value;
+  const semana=dataVal?dataVal.slice(0,7):getMesAtual();
+  const payload={titulo,status,semana,estilo:document.getElementById('post-estilo').value||null,formato:document.getElementById('post-formato').value||null,data_prevista:dataVal||null,obs:document.getElementById('post-obs').value.trim()||null,legenda:document.getElementById('post-legenda').value.trim()||null,hashtags:document.getElementById('post-hashtags').value.trim()||null,objetivos:{foco:document.getElementById('post-foco').value||null},metricas};
+  try{
+    if(id){await sbPatch('eurafa_conteudo',`id=eq.${id}`,payload);const idx=posts.findIndex(p=>p.id===id);if(idx>=0)posts[idx]={...posts[idx],...payload};}
+    else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('eurafa_conteudo',payload);posts.push(payload);}
+    setSyncStatus('salvo');fecharModalPost();renderConteudo();
+  }catch(e){alert('Erro ao salvar: '+e.message);setSyncStatus('erro');}
+  btn.disabled=false;btn.textContent='Salvar';
+}
+async function moverPost(id,novoStatus){
+  const idx=posts.findIndex(p=>p.id===id);
+  if(idx<0)return;
+  posts[idx].status=novoStatus;fecharModalPost();renderConteudo();
+  try{await sbPatch('eurafa_conteudo',`id=eq.${id}`,{status:novoStatus});setSyncStatus('salvo');}
+  catch(e){setSyncStatus('erro');}
+}
+async function deletarPost(){
+  const id=document.getElementById('post-id').value;
+  if(!id||!confirm('Excluir este conteudo?'))return;
+  posts=posts.filter(p=>p.id!==id);fecharModalPost();renderConteudo();
+  try{await sbDelete('eurafa_conteudo',`id=eq.${id}`);setSyncStatus('salvo');}catch(e){setSyncStatus('erro');}
+}
+function editarMeta(){const n=prompt('Meta de posts no mes:',metaMes);if(n&&!isNaN(parseInt(n))){metaMes=parseInt(n);renderConteudo();}}
+
+// BANCO DE IDEIAS
+async function renderIdeias(){
+  const grid=document.getElementById('ideias-grid');
+  const vazio=document.getElementById('ideias-vazio');
+  grid.innerHTML='<div style="color:var(--cinza);padding:1rem">Carregando...</div>';
+  try{
+    ideias=await sbGet('eurafa_ideias','order=created_at.desc');
+    if(!ideias.length){grid.innerHTML='';vazio.style.display='block';return;}
+    vazio.style.display='none';
+    const cats={financas:'Financas',cases:'Cases',dicas:'Dicas',motivacao:'Motivacao',outro:'Outro'};
+    grid.innerHTML=ideias.map(i=>`<div class="ideia-card" onclick="abrirModalIdeia('${i.id}')"><div class="ideia-cat">${cats[i.categoria]||i.categoria||'Geral'}</div><div class="ideia-titulo">${i.titulo}</div>${i.obs?`<div class="ideia-obs">${i.obs.slice(0,100)}${i.obs.length>100?'...':''}</div>`:''}</div>`).join('');
+  }catch(e){grid.innerHTML='<div style="color:red">Erro: '+e.message+'</div>';}
+}
+function abrirModalIdeia(id){
+  const i=id?ideias.find(x=>x.id===id):null;
+  document.getElementById('ideia-id').value=i?.id||'';
+  document.getElementById('ideia-titulo').value=i?.titulo||'';
+  document.getElementById('ideia-cat').value=i?.categoria||'financas';
+  document.getElementById('ideia-obs').value=i?.obs||'';
+  document.getElementById('ideia-modal-titulo').textContent=id?'Editar ideia':'Nova ideia';
+  document.getElementById('ideia-del-btn').style.display=id?'inline-flex':'none';
+  document.getElementById('modal-ideia').classList.add('aberto');
+}
+function fecharModalIdeia(){document.getElementById('modal-ideia').classList.remove('aberto');}
+async function salvarIdeia(){
+  const titulo=document.getElementById('ideia-titulo').value.trim();
+  if(!titulo){alert('Preencha a ideia.');return;}
+  const id=document.getElementById('ideia-id').value;
+  const payload={titulo,categoria:document.getElementById('ideia-cat').value,obs:document.getElementById('ideia-obs').value.trim()||null};
+  try{
+    if(id){await sbPatch('eurafa_ideias',`id=eq.${id}`,payload);}
+    else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('eurafa_ideias',payload);}
+    fecharModalIdeia();renderIdeias();
+  }catch(e){alert('Erro: '+e.message);}
+}
+async function deletarIdeia(){
+  const id=document.getElementById('ideia-id').value;
+  if(!id||!confirm('Excluir?'))return;
+  await sbDelete('eurafa_ideias',`id=eq.${id}`);fecharModalIdeia();renderIdeias();
 }
 
-async function fazerLogout() {
-  if (!confirm('Sair do sistema?')) return;
-  try { await fetch(`${SB_URL}/auth/v1/logout`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+_authToken}}); } catch(e) {}
-  _authToken = null;
-  _gestaoLoaded = false;
-  document.getElementById('login-overlay').classList.remove('hidden');
-  document.getElementById('topbar-email').textContent = '';
+// ANALISE
+function setPeriodoDash(d,btn){
+  dashPeriodo=d;
+  document.querySelectorAll('#cview-dash .tab-btn').forEach(b=>b.classList.remove('ativo'));
+  btn.classList.add('ativo');renderDash();
+}
+function renderDash(){
+  const hoje=new Date();
+  const corte=new Date(hoje.getTime()-dashPeriodo*24*60*60*1000);
+  const f=posts.filter(p=>p.status==='postado'&&p.data_prevista&&new Date(p.data_prevista+'T12:00:00')>=corte);
+  const num=(arr,campo)=>arr.reduce((s,p)=>s+parseFloat(p.metricas?.[campo]||0),0);
+  const tots={views:num(f,'views'),alcance:num(f,'alcance'),curtidas:num(f,'curtidas'),saves:num(f,'saves'),shares:num(f,'shares'),segs:num(f,'seguidores')};
+  document.getElementById('dash-nums').innerHTML=[
+    ['Visualizacoes',tots.views],['Alcance',tots.alcance],['Curtidas',tots.curtidas],
+    ['Salvamentos',tots.saves],['Compartilhamentos',tots.shares],['Novos seguidores',tots.segs]
+  ].map(([l,v])=>`<div class="dash-stat"><div class="dash-stat-num">${Math.round(v).toLocaleString('pt-BR')}</div><div class="dash-stat-label">${l}</div></div>`).join('');
+  function rank(campo,el){
+    const s=[...f].sort((a,b)=>(b.metricas?.[campo]||0)-(a.metricas?.[campo]||0)).slice(0,5);
+    document.getElementById(el).innerHTML=s.length?s.map((p,i)=>`<div class="ranking-item"><span class="ranking-pos">#${i+1}</span><span class="ranking-titulo">${p.titulo}</span><span class="ranking-val">${(p.metricas?.[campo]||0).toLocaleString('pt-BR')}</span></div>`).join(''):'<p style="color:var(--cinza);font-size:.8rem">Sem dados</p>';
+  }
+  rank('views','dash-views');rank('curtidas','dash-curtidas');rank('saves','dash-saves');rank('seguidores','dash-segs');
 }
 
-// Iniciar com login
-document.getElementById('l-senha').addEventListener('keydown', e => { if(e.key==='Enter') fazerLogin(); });
-document.getElementById('l-email').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('l-senha').focus(); });
+// INIT
+document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
+document.getElementById('l-email').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('l-senha').focus();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){['modal-post','modal-ideia','modal-perg'].forEach(id=>document.getElementById(id).classList.remove('aberto'));}});
+['modal-post','modal-ideia','modal-perg'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)document.getElementById(id).classList.remove('aberto');});});
 
+// NAO ESQUECER: adicionar div kanban-nav-wrap ao HTML
+document.getElementById('kanban-nav-wrap').style.display='block';
 </script>
-
-<div id="login-overlay">
-  <div class="login-box">
-    <p class="login-titulo">Área restrita</p>
-    <p class="login-sub">Entre com seu e-mail e senha</p>
-    <input class="login-inp" type="email" id="l-email" placeholder="seu@email.com" autocomplete="username">
-    <input class="login-inp" type="password" id="l-senha" placeholder="Senha" autocomplete="current-password">
-    <p class="login-erro" id="l-erro"></p>
-    <button class="login-btn" id="l-btn" onclick="fazerLogin()">Entrar</button>
-  </div>
-</div>
 </body>
 </html>
