@@ -1063,24 +1063,28 @@
 // ── Supabase ──────────────────────────────────────────────
 const SB_URL  = 'https://ceqvwrzyqjpxvekapqto.supabase.co';
 const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcXZ3cnp5cWpweHZla2FwcXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDU1MDUsImV4cCI6MjA5NzgyMTUwNX0.IJZlL7UT07KHHDRMpkkMShWIVQfQgcbZjSxWtpF3VvU';
-const SB_HDR  = { 'Content-Type':'application/json', 'apikey': SB_KEY, 'Authorization':'Bearer '+SB_KEY };
+
+function getSBHdr() {
+  const tok = (typeof _authToken !== 'undefined' && _authToken) ? _authToken : SB_KEY;
+  return { 'Content-Type':'application/json', 'apikey': SB_KEY, 'Authorization':'Bearer '+tok };
+}
 
 async function sbGet(table, params='') {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { headers: SB_HDR });
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { headers: getSBHdr() });
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
 async function sbUpsert(table, body) {
   const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
     method: 'POST',
-    headers: { ...SB_HDR, 'Prefer':'resolution=merge-duplicates' },
+    headers: { ...getSBHdr(), 'Prefer':'resolution=merge-duplicates' },
     body: JSON.stringify(body)
   });
   if (!r.ok) throw new Error(await r.text());
 }
 async function sbDelete(table, match) {
   const params = Object.entries(match).map(([k,v])=>`${k}=eq.${v}`).join('&');
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { method:'DELETE', headers: SB_HDR });
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { method:'DELETE', headers: getSBHdr() });
   if (!r.ok) throw new Error(await r.text());
 }
 
@@ -1824,14 +1828,12 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCardM
 loadAll().then(() => render());
 
 // ══ CONFIG ══════════════════════════════
-const SUPABASE_URL = 'https://ceqvwrzyqjpxvekapqto.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcXZ3cnp5cWpweHZla2FwcXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDU1MDUsImV4cCI6MjA5NzgyMTUwNX0.IJZlL7UT07KHHDRMpkkMShWIVQfQgcbZjSxWtpF3VvU';
-// SB_URL e SB_KEY definidos abaixo
+// SUPABASE_URL e SB_URL já definidos acima
+const SUPABASE_ANON_KEY = SB_KEY;
 let _authToken = null;
 
 async function getSbHdr() {
-  const tok = _authToken || SB_KEY;
-  return {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+tok};
+  return getSBHdr();
 }
 
 // ══ AUTH ═════════════════════════════════
