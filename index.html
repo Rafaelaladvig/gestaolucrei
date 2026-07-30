@@ -183,6 +183,29 @@ select.inp{cursor:pointer}
 /* LOADER */
 .loader{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* EDITOR DE OPÇÕES */
+.modal-editor-opt{position:fixed;inset:0;background:rgba(44,24,16,.5);backdrop-filter:blur(3px);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-editor-opt.aberto{display:flex}
+.opt-lista{display:flex;flex-direction:column;gap:6px;margin:12px 0;max-height:280px;overflow-y:auto}
+.opt-row{display:flex;gap:6px;align-items:center}
+.opt-row input{flex:1;border:1.5px solid var(--creme2);border-radius:6px;padding:.5rem .7rem;font-family:'Poppins',sans-serif;font-size:.85rem;color:var(--marrom);outline:none}
+.opt-row input:focus{border-color:var(--terra)}
+.btn-rm-opt{width:28px;height:28px;border:1px solid var(--creme2);background:none;border-radius:6px;cursor:pointer;color:var(--danger);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btn-add-opt{width:100%;padding:.5rem;border:1.5px dashed var(--creme2);background:none;border-radius:6px;cursor:pointer;font-size:.75rem;color:var(--cinza2);font-family:'Poppins',sans-serif;transition:all .2s}
+.btn-add-opt:hover{border-color:var(--musgo);color:var(--musgo)}
+/* FOTOS DE INSPIRAÇÃO */
+.fotos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.5rem}
+.foto-thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--creme2);border:1.5px solid var(--creme2)}
+.foto-thumb img{width:100%;height:100%;object-fit:cover}
+.foto-thumb .rm-foto{position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(204,68,68,.85);border:none;border-radius:50%;cursor:pointer;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
+.foto-add-btn{aspect-ratio:1;border-radius:8px;border:1.5px dashed var(--creme2);background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--cinza2);font-size:.68rem;transition:all .2s;font-family:'Poppins',sans-serif}
+.foto-add-btn:hover{border-color:var(--musgo);color:var(--musgo)}
+.select-com-edit{display:flex;gap:4px;align-items:center}
+.select-com-edit select{flex:1}
+.btn-edit-opts{width:30px;height:36px;border:1.5px solid var(--creme2);background:none;border-radius:6px;cursor:pointer;color:var(--cinza2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.btn-edit-opts:hover{border-color:var(--musgo);color:var(--musgo)}
+
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--creme2)}::-webkit-scrollbar-thumb{background:var(--cinza2);border-radius:3px}
 </style>
 </head>
@@ -373,16 +396,25 @@ select.inp{cursor:pointer}
     <div class="form-grupo"><label class="campo-label">Titulo *</label><input class="inp" id="post-titulo" placeholder="Titulo do conteudo"></div>
     <div class="form-row">
       <div class="form-grupo"><label class="campo-label">Estilo</label>
-        <select class="inp" id="post-estilo"><option value="">selecione</option><option value="lofi">Lo-fi</option><option value="broll">B-roll</option><option value="problema-solucao">Problema e solucao</option><option value="outro">Outro</option></select>
+        <div class="select-com-edit">
+          <select class="inp" id="post-estilo"><option value="">selecione</option><option value="lofi">Lo-fi</option><option value="broll">B-roll</option><option value="problema-solucao">Problema e solucao</option><option value="outro">Outro</option></select>
+          <button class="btn-edit-opts" title="Editar opcoes" onclick="abrirEditorOpts('estilo')"><i class="ti ti-settings" style="font-size:.9rem"></i></button>
+        </div>
       </div>
       <div class="form-grupo"><label class="campo-label">Formato</label>
-        <select class="inp" id="post-formato"><option value="">selecione</option><option>Reels</option><option>Carrossel</option><option>Post estatico</option><option>Stories</option><option>Live</option><option>TikTok</option></select>
+        <div class="select-com-edit">
+          <select class="inp" id="post-formato"><option value="">selecione</option><option>Reels</option><option>Carrossel</option><option>Post estatico</option><option>Stories</option><option>Live</option><option>TikTok</option></select>
+          <button class="btn-edit-opts" title="Editar opcoes" onclick="abrirEditorOpts('formato')"><i class="ti ti-settings" style="font-size:.9rem"></i></button>
+        </div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-grupo"><label class="campo-label">Data prevista</label><input class="inp" type="date" id="post-data"></div>
       <div class="form-grupo"><label class="campo-label">Foco / Objetivo</label>
-        <select class="inp" id="post-foco"><option value="">selecione</option><option value="autoridade">Autoridade</option><option value="alcance">Alcance</option><option value="seguidores">Novos seguidores</option><option value="engajamento">Engajamento</option><option value="vendas">Vendas</option><option value="salvar">Salvamentos</option></select>
+        <div class="select-com-edit">
+          <select class="inp" id="post-foco"><option value="">selecione</option><option value="autoridade">Autoridade</option><option value="alcance">Alcance</option><option value="seguidores">Novos seguidores</option><option value="engajamento">Engajamento</option><option value="vendas">Vendas</option><option value="salvar">Salvamentos</option></select>
+          <button class="btn-edit-opts" title="Editar opcoes" onclick="abrirEditorOpts('foco')"><i class="ti ti-settings" style="font-size:.9rem"></i></button>
+        </div>
       </div>
     </div>
     <div class="form-grupo"><label class="campo-label">Roteiro / Desenvolvimento</label><textarea class="inp" id="post-obs" rows="4" placeholder="Roteiro, ideias, estrutura..."></textarea></div>
@@ -416,7 +448,7 @@ select.inp{cursor:pointer}
 
 <!-- MODAL IDEIA -->
 <div class="backdrop" id="modal-ideia">
-  <div class="modal-box">
+  <div class="modal-box grande">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
       <h3 class="modal-titulo" id="ideia-modal-titulo" style="margin-bottom:0">Nova ideia</h3>
       <button class="btn-ghost" onclick="fecharModalIdeia()"><i class="ti ti-x"></i></button>
@@ -426,7 +458,17 @@ select.inp{cursor:pointer}
     <div class="form-grupo"><label class="campo-label">Categoria</label>
       <select class="inp" id="ideia-cat"><option value="financas">Financas</option><option value="cases">Cases / Historias</option><option value="dicas">Dicas praticas</option><option value="motivacao">Motivacao</option><option value="outro">Outro</option></select>
     </div>
-    <div class="form-grupo"><label class="campo-label">Observacoes</label><textarea class="inp" id="ideia-obs" rows="3" placeholder="Detalhes, referencias..."></textarea></div>
+    <div class="form-grupo"><label class="campo-label">Observacoes</label><textarea class="inp" id="ideia-obs" rows="3" placeholder="Detalhes, referencias, links..."></textarea></div>
+    <div class="form-grupo">
+      <label class="campo-label">Fotos de inspiracao</label>
+      <div class="fotos-grid" id="ideia-fotos-grid">
+        <button class="foto-add-btn" onclick="document.getElementById('ideia-foto-input').click()">
+          <i class="ti ti-camera" style="font-size:1.2rem"></i>
+          <span>Adicionar foto</span>
+        </button>
+      </div>
+      <input type="file" id="ideia-foto-input" accept="image/*" multiple style="display:none" onchange="adicionarFotosIdeia(this)">
+    </div>
     <div class="modal-footer">
       <button class="btn-danger" id="ideia-del-btn" onclick="deletarIdeia()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
       <button class="btn btn-outline" onclick="fecharModalIdeia()">Cancelar</button>
@@ -457,6 +499,23 @@ select.inp{cursor:pointer}
       <button class="btn-danger" id="perg-del-btn" onclick="deletarPergunta()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
       <button class="btn btn-outline" onclick="fecharModalPerg()">Cancelar</button>
       <button class="btn btn-verde" id="perg-salvar-btn" onclick="salvarPergunta()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITOR DE OPCOES -->
+<div class="modal-editor-opt" id="modal-editor-opt">
+  <div class="modal-box" style="max-width:380px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <h3 class="modal-titulo" id="editor-opt-titulo" style="margin-bottom:0">Editar opcoes</h3>
+      <button class="btn-ghost" onclick="fecharEditorOpts()"><i class="ti ti-x"></i></button>
+    </div>
+    <p style="font-size:.75rem;color:var(--cinza);margin-bottom:.8rem">Adicione, edite ou remova opcoes. A alteracao so vale para novos lancamentos.</p>
+    <div class="opt-lista" id="opt-lista"></div>
+    <button class="btn-add-opt" onclick="addOptRow()"><i class="ti ti-plus"></i> adicionar opcao</button>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fecharEditorOpts()">Cancelar</button>
+      <button class="btn btn-verde" onclick="salvarEditorOpts()">Salvar</button>
     </div>
   </div>
 </div>
@@ -826,7 +885,10 @@ function abrirModalIdeia(id){
   document.getElementById('ideia-del-btn').style.display=id?'inline-flex':'none';
   document.getElementById('modal-ideia').classList.add('aberto');
 }
-function fecharModalIdeia(){document.getElementById('modal-ideia').classList.remove('aberto');}
+function fecharModalIdeia(){
+  document.getElementById('modal-ideia').classList.remove('aberto');
+  _ideia_fotos = [];
+}
 async function salvarIdeia(){
   const titulo=document.getElementById('ideia-titulo').value.trim();
   if(!titulo){alert('Preencha a ideia.');return;}
@@ -866,6 +928,212 @@ function renderDash(){
   }
   rank('views','dash-views');rank('curtidas','dash-curtidas');rank('saves','dash-saves');rank('seguidores','dash-segs');
 }
+
+
+// ══ OPCOES EDITAVEIS ════════════════════════════════════
+const OPTS_KEY = 'gestao_opcoes_v1';
+const OPTS_DEFAULT = {
+  estilo: [
+    {val:'lofi',label:'Lo-fi'},
+    {val:'broll',label:'B-roll'},
+    {val:'problema-solucao',label:'Problema e solucao'},
+    {val:'outro',label:'Outro'}
+  ],
+  formato: [
+    {val:'Reels',label:'Reels'},
+    {val:'Carrossel',label:'Carrossel'},
+    {val:'Post estatico',label:'Post estatico'},
+    {val:'Stories',label:'Stories'},
+    {val:'Live',label:'Live'},
+    {val:'TikTok',label:'TikTok'}
+  ],
+  foco: [
+    {val:'autoridade',label:'Autoridade'},
+    {val:'alcance',label:'Alcance'},
+    {val:'seguidores',label:'Novos seguidores'},
+    {val:'engajamento',label:'Engajamento'},
+    {val:'vendas',label:'Vendas'},
+    {val:'salvar',label:'Salvamentos'}
+  ]
+};
+
+function getOpts(tipo) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(OPTS_KEY)||'{}');
+    return saved[tipo] || OPTS_DEFAULT[tipo] || [];
+  } catch { return OPTS_DEFAULT[tipo] || []; }
+}
+function saveOpts(tipo, arr) {
+  try {
+    const all = JSON.parse(localStorage.getItem(OPTS_KEY)||'{}');
+    all[tipo] = arr;
+    localStorage.setItem(OPTS_KEY, JSON.stringify(all));
+  } catch(e) {}
+}
+function popularSelect(id, tipo, valorAtual) {
+  const sel = document.getElementById(id);
+  if (!sel) return;
+  const opts = getOpts(tipo);
+  sel.innerHTML = '<option value="">selecione</option>' +
+    opts.map(o => `<option value="${o.val}"${o.val===valorAtual?' selected':''}>${o.label}</option>`).join('');
+}
+
+// Abrir editor de opções
+let _editingOptTipo = null;
+function abrirEditorOpts(tipo) {
+  _editingOptTipo = tipo;
+  const titulos = {estilo:'Estilos de conteudo',formato:'Formatos',foco:'Focos / Objetivos'};
+  document.getElementById('editor-opt-titulo').textContent = titulos[tipo]||tipo;
+  renderOptLista(getOpts(tipo));
+  document.getElementById('modal-editor-opt').classList.add('aberto');
+}
+function fecharEditorOpts() {
+  document.getElementById('modal-editor-opt').classList.remove('aberto');
+  _editingOptTipo = null;
+}
+function renderOptLista(opts) {
+  const lista = document.getElementById('opt-lista');
+  lista.innerHTML = opts.map((o,i) => `
+    <div class="opt-row">
+      <input value="${o.label}" placeholder="Nome da opcao" onchange="updateOptLabel(${i},this.value)">
+      <button class="btn-rm-opt" onclick="removeOptRow(${i})"><i class="ti ti-x" style="font-size:.75rem"></i></button>
+    </div>`).join('');
+}
+function updateOptLabel(i, val) {
+  const opts = getOpts(_editingOptTipo);
+  if (opts[i]) opts[i].label = val;
+}
+function removeOptRow(i) {
+  const opts = getOpts(_editingOptTipo);
+  opts.splice(i, 1);
+  saveOpts(_editingOptTipo, opts);
+  renderOptLista(opts);
+}
+function addOptRow() {
+  const opts = getOpts(_editingOptTipo);
+  opts.push({val: 'novo-'+Date.now(), label: ''});
+  renderOptLista(opts);
+}
+function salvarEditorOpts() {
+  const rows = document.querySelectorAll('#opt-lista .opt-row input');
+  const opts = Array.from(rows)
+    .map((inp,i) => ({val: inp.value.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') || ('opt'+i), label: inp.value.trim()}))
+    .filter(o => o.label);
+  saveOpts(_editingOptTipo, opts);
+  // Atualizar o select correspondente no modal aberto
+  const selectId = _editingOptTipo === 'estilo' ? 'post-estilo' : _editingOptTipo === 'formato' ? 'post-formato' : 'post-foco';
+  const currentVal = document.getElementById(selectId)?.value;
+  popularSelect(selectId, _editingOptTipo, currentVal);
+  fecharEditorOpts();
+}
+
+// Chamar popularSelect ao abrir o modal de post
+const _origAbrirModalPost = abrirModalPost;
+function abrirModalPost(id, statusDefault) {
+  _origAbrirModalPost(id, statusDefault);
+  // Após abrir, popular com opções customizadas
+  setTimeout(() => {
+    const p = id ? posts.find(x=>x.id===id) : null;
+    popularSelect('post-estilo','estilo', p?.estilo||'');
+    popularSelect('post-formato','formato', p?.formato||'');
+    popularSelect('post-foco','foco', p?.objetivos?.foco||'');
+  }, 10);
+}
+
+// ══ FOTOS DE INSPIRACAO ══════════════════════════════════
+let _ideia_fotos = []; // array de base64
+
+function adicionarFotosIdeia(input) {
+  const files = Array.from(input.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      _ideia_fotos.push(e.target.result);
+      renderFotosIdeia();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderFotosIdeia() {
+  const grid = document.getElementById('ideia-fotos-grid');
+  if (!grid) return;
+  const thumbs = _ideia_fotos.map((src, i) => `
+    <div class="foto-thumb">
+      <img src="${src}" alt="inspiracao">
+      <button class="rm-foto" onclick="removerFotoIdeia(${i})"><i class="ti ti-x" style="font-size:8px"></i></button>
+    </div>`).join('');
+  grid.innerHTML = thumbs + `
+    <button class="foto-add-btn" onclick="document.getElementById('ideia-foto-input').click()">
+      <i class="ti ti-camera" style="font-size:1.2rem"></i>
+      <span>Adicionar</span>
+    </button>`;
+}
+
+function removerFotoIdeia(i) {
+  _ideia_fotos.splice(i, 1);
+  renderFotosIdeia();
+}
+
+// Sobrescrever abrirModalIdeia para lidar com fotos
+const _origAbrirModalIdeia = abrirModalIdeia;
+function abrirModalIdeia(id) {
+  _origAbrirModalIdeia(id);
+  const i = id ? ideias.find(x=>x.id===id) : null;
+  _ideia_fotos = Array.isArray(i?.fotos) ? [...i.fotos] : [];
+  renderFotosIdeia();
+}
+
+// Sobrescrever salvarIdeia para incluir fotos
+const _origSalvarIdeia = salvarIdeia;
+async function salvarIdeia() {
+  const titulo = document.getElementById('ideia-titulo').value.trim();
+  if (!titulo) { alert('Preencha a ideia.'); return; }
+  const id = document.getElementById('ideia-id').value;
+  const payload = {
+    titulo,
+    categoria: document.getElementById('ideia-cat').value,
+    obs: document.getElementById('ideia-obs').value.trim()||null,
+    fotos: _ideia_fotos.length ? _ideia_fotos : null,
+  };
+  try {
+    if (id) { await sbPatch('eurafa_ideias',`id=eq.${id}`,payload); }
+    else { payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5); await sbPost('eurafa_ideias',payload); }
+    fecharModalIdeia();
+    renderIdeias();
+  } catch(e) { alert('Erro: '+e.message); }
+}
+
+// Sobrescrever renderIdeias para mostrar thumb de fotos
+const _origRenderIdeias = renderIdeias;
+async function renderIdeias() {
+  const grid = document.getElementById('ideias-grid');
+  const vazio = document.getElementById('ideias-vazio');
+  grid.innerHTML = '<div style="color:var(--cinza);padding:1rem">Carregando...</div>';
+  try {
+    ideias = await sbGet('eurafa_ideias','order=created_at.desc');
+    if (!ideias.length) { grid.innerHTML=''; vazio.style.display='block'; return; }
+    vazio.style.display = 'none';
+    const cats = {financas:'Financas',cases:'Cases',dicas:'Dicas',motivacao:'Motivacao',outro:'Outro'};
+    grid.innerHTML = ideias.map(i => {
+      const fotos = Array.isArray(i.fotos) ? i.fotos : [];
+      const thumb = fotos.length ? `<div style="height:100px;border-radius:6px;overflow:hidden;margin-bottom:.5rem;background:var(--creme2)"><img src="${fotos[0]}" style="width:100%;height:100%;object-fit:cover"></div>` : '';
+      const count = fotos.length > 1 ? `<span style="font-size:.65rem;color:var(--cinza2)"><i class="ti ti-camera" style="font-size:.65rem"></i> ${fotos.length} fotos</span>` : '';
+      return `<div class="ideia-card" onclick="abrirModalIdeia('${i.id}')">
+        ${thumb}
+        <div class="ideia-cat">${cats[i.categoria]||i.categoria||'Geral'} ${count}</div>
+        <div class="ideia-titulo">${i.titulo}</div>
+        ${i.obs?`<div class="ideia-obs">${i.obs.slice(0,100)}${i.obs.length>100?'...':''}</div>`:''}
+      </div>`;
+    }).join('');
+  } catch(e) { grid.innerHTML = '<div style="color:red">Erro: '+e.message+'</div>'; }
+}
+
+// Fechar modal editor ao clicar fora
+document.getElementById('modal-editor-opt').addEventListener('click', e => {
+  if (e.target.id === 'modal-editor-opt') fecharEditorOpts();
+});
 
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
