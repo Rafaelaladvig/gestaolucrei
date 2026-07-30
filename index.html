@@ -2051,7 +2051,7 @@ async function salvarPergunta() {
         method:'PATCH', headers:{...hdr,'Prefer':'return=minimal'}, body:JSON.stringify(payload)
       });
     } else {
-      payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+      payload.id = crypto.randomUUID();
       r=await fetch(`${SUPABASE_URL}/rest/v1/perguntas`,{
         method:'POST', headers:{...hdr,'Prefer':'return=minimal'}, body:JSON.stringify(payload)
       });
