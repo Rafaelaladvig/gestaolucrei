@@ -1515,6 +1515,9 @@
                 <input class="editor-input" id="pg-txt-cor-hex" value="#F9F5F0" oninput="syncColorHex('pg-txt-cor','pg-txt-cor-hex')">
               </div>
             </div>
+            <!-- Campos ocultos necessários pelo JS -->
+            <input type="hidden" id="pg-btn-cor" value="#ffffff">
+            <input type="hidden" id="pg-btn-cor-hex" value="#ffffff26">
 
             <div class="editor-field">
               <label class="editor-label">Fonte</label>
@@ -2287,9 +2290,9 @@ async function loadQuestions() {
 
 function showQuestion(idx) {
   const q = questions[idx];
-  document.getElementById('q-counter').textContent = `Pergunta ${idx + 1} de ${questions.length}`;
-  document.getElementById('q-title').textContent = q.title;
-  document.getElementById('q-sub').textContent = q.sub || '';
+  {const _eqcounter=document.getElementById('q-counter');if(_eqcounter)_eqcounter.textContent=`Pergunta ${idx + 1} de ${questions.length}`;}
+  {const _eqtitle=document.getElementById('q-title');if(_eqtitle)_eqtitle.textContent=q.title;}
+  {const _eqsub=document.getElementById('q-sub');if(_eqsub)_eqsub.textContent=q.sub || '';}
 
   const field = document.getElementById('q-field');
   field.innerHTML = '';
@@ -2412,8 +2415,8 @@ function showQuestion(idx) {
   }
 
   const pct = (idx / questions.length) * 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
-  document.getElementById('btn-back').style.visibility = idx === 0 ? 'hidden' : 'visible';
+  { const _pb = document.getElementById('progress-bar'); if(_pb) _pb.style.width = pct + '%'; }
+  {const _ebtnback=document.getElementById('btn-back');if(_ebtnback)_ebtnback.style.visibility=idx === 0 ? 'hidden' : 'visible';}
   updateNextBtn();
 }
 
@@ -2431,7 +2434,7 @@ function updateNextBtn() {
   } else if (q.type === 'textarea') {
     valid = true;
   }
-  document.getElementById('btn-next').disabled = !valid;
+  { const _bn = document.getElementById('btn-next'); if(_bn) _bn.disabled = !valid; }
 }
 
 function goNext() {
@@ -2440,7 +2443,7 @@ function goNext() {
     const inp = document.getElementById('q-current-input');
     if (inp) answers[q.field] = inp.value.trim();
   }
-  if (document.getElementById('btn-next').disabled) return;
+  { const _bnc = document.getElementById('btn-next'); if(_bnc && _bnc.disabled) return; }
 
   if (current < questions.length - 1) {
     current++;
@@ -2455,8 +2458,8 @@ function goBack() {
 }
 
 async function submitAnswers() {
-  document.getElementById('btn-next').disabled = true;
-  document.getElementById('btn-next').innerHTML = '<span class="loader"></span>';
+  { const _bn2 = document.getElementById('btn-next'); if(_bn2) _bn2.disabled = true; }
+  { const _bn3 = document.getElementById('btn-next'); if(_bn3) _bn3.innerHTML = '<span class="loader"></span>'; }
 
   const flat = {
     nome: answers.nome || null,
@@ -2477,19 +2480,18 @@ async function submitAnswers() {
     if (error) {
       console.error('Erro ao salvar:', error);
       alert('Ops, algo deu errado ao enviar. Tenta novamente em instantes 💛');
-      document.getElementById('btn-next').disabled = false;
-      document.getElementById('btn-next').innerHTML = 'Continuar';
+      { const _bn4 = document.getElementById('btn-next'); if(_bn4) { _bn4.disabled = false; _bn4.innerHTML = 'Continuar'; } }
       return;
     }
   } catch (err) {
     console.error('Erro de conexão:', err);
     alert('Ops, sem conexão no momento. Tenta novamente 💛');
-    document.getElementById('btn-next').disabled = false;
-    document.getElementById('btn-next').innerHTML = 'Continuar';
+    {const _ebtnnext=document.getElementById('btn-next');if(_ebtnnext)_ebtnnext.disabled=false;}
+    {const _ebtnnext=document.getElementById('btn-next');if(_ebtnnext)_ebtnnext.innerHTML='Continuar';}
     return;
   }
 
-  document.getElementById('progress-bar').style.width = '100%';
+  { const _pb2 = document.getElementById('progress-bar'); if(_pb2) _pb2.style.width = '100%'; }
   transitionTo('screen-done');
 }
 
@@ -4255,7 +4257,7 @@ function renderPaginaEditor() {
     document.getElementById('pagina-foto-img').style.display = 'block';
     document.getElementById('pagina-foto-placeholder').style.display = 'none';
     paginaFotoB64 = paginaConfig.foto_url;
-    document.getElementById('prev-avatar').innerHTML = `<img src="${paginaConfig.foto_url}" alt="foto">`;
+    const pa = document.getElementById('prev-avatar'); if(pa) pa.innerHTML = `<img src="${paginaConfig.foto_url}" alt="foto">`;
   }
 
   // Restaurar estilos salvos
@@ -4527,7 +4529,7 @@ function confirmCropPagina(){
   paginaFotoB64=dataURL;
   const img=document.getElementById('pagina-foto-img'); img.src=dataURL; img.style.display='block';
   document.getElementById('pagina-foto-placeholder').style.display='none';
-  document.getElementById('prev-avatar').innerHTML=`<img src="${dataURL}" alt="foto">`;
+  const pav = document.getElementById('prev-avatar'); if(pav) pav.innerHTML=`<img src="${dataURL}" alt="foto">`;
   document.getElementById('crop-overlay-pagina').classList.add('hidden');
 }
 
