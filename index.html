@@ -683,7 +683,12 @@ function setSyncStatus(s){
 function renderConteudo(){
   const semana=getMesAtual();
   document.getElementById('semana-titulo').textContent=getMesTitulo();
-  const doMes=posts.filter(p=>(p.semana||p.data_prevista?.slice(0,7))===semana);
+  const doMes=posts.filter(p=>{
+    const mes=p.semana||p.data_prevista?.slice(0,7);
+    // Se não tem data/semana, mostra no mês atual
+    if(!mes) return mesOffset===0;
+    return mes===semana;
+  });
   const cnt=s=>doMes.filter(p=>p.status===s).length;
   document.getElementById('st-total').textContent=doMes.length;
   document.getElementById('st-fazer').textContent=cnt('fazer');
@@ -774,9 +779,12 @@ async function salvarPost(){
   const semana=dataVal?dataVal.slice(0,7):getMesAtual();
   const payload={titulo,status,semana,estilo:document.getElementById('post-estilo').value||null,formato:document.getElementById('post-formato').value||null,data_prevista:dataVal||null,obs:document.getElementById('post-obs').value.trim()||null,legenda:document.getElementById('post-legenda').value.trim()||null,hashtags:document.getElementById('post-hashtags').value.trim()||null,objetivos:{foco:document.getElementById('post-foco').value||null},metricas};
   try{
-    if(id){await sbPatch('eurafa_conteudo',`id=eq.${id}`,payload);const idx=posts.findIndex(p=>p.id===id);if(idx>=0)posts[idx]={...posts[idx],...payload};}
-    else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('eurafa_conteudo',payload);posts.push(payload);}
-    setSyncStatus('salvo');fecharModalPost();renderConteudo();
+    if(id){await sbPatch('eurafa_conteudo',`id=eq.${id}`,payload);}
+    else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('eurafa_conteudo',payload);}
+    setSyncStatus('salvo');
+    fecharModalPost();
+    await carregarConteudo();
+    renderConteudo();
   }catch(e){alert('Erro ao salvar: '+e.message);setSyncStatus('erro');}
   btn.disabled=false;btn.textContent='Salvar';
 }
