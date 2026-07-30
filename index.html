@@ -1824,8 +1824,15 @@ document.getElementById('modal-lead').addEventListener('click', e => { if (e.tar
 document.getElementById('modal-lead-view').addEventListener('click', e => { if (e.target.id === 'modal-lead-view') closeLeadViewModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCardModal(); closeIdeaModal(); closeViewModal(); closeMetaModal(); closeLeadModal(); closeLeadViewModal(); } });
 
-// Inicializa carregando do Supabase
-loadAll().then(() => render());
+// NÃO chamar loadAll() aqui — só após login via openModule('conteudo')
+
+let _gestaoLoaded = false;
+async function initGestao() {
+  if (_gestaoLoaded) { render(); return; }
+  _gestaoLoaded = true;
+  await loadAll();
+  render();
+}
 
 // ══ CONFIG ══════════════════════════════
 // SUPABASE_URL e SB_URL já definidos acima
