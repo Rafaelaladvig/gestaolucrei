@@ -68,7 +68,7 @@ html,body{height:100%;font-family:'Poppins',sans-serif;background:var(--creme);c
 
 /* MODULOS */
 .modulo{display:none;padding:1.5rem 1.5rem 4rem;max-width:1200px;margin:0 auto}
-.modulo.ativo{display:block;min-height:200px}
+.modulo.ativo{display:block}
 .modulo-tag{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--cinza);margin-bottom:.2rem}
 .modulo-titulo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--musgo);margin-bottom:1.2rem}
 
@@ -449,9 +449,6 @@ select.inp{cursor:pointer}
       </div>
     </div>
 
-  </div>
-</div>
-
     <!-- MODULO LEADS -->
     <div class="modulo" id="modulo-leads">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:.8rem">
@@ -602,6 +599,9 @@ select.inp{cursor:pointer}
         </div>
       </div>
     </div>
+
+  </div><!-- /conteudo -->
+</div><!-- /shell -->
 
 <!-- MODAL LEAD FORM -->
 <div class="backdrop" id="modal-lead">
@@ -899,6 +899,8 @@ function irParaMenu(){
   document.querySelectorAll('.modulo').forEach(m=>m.classList.remove('ativo'));
   document.getElementById('btn-voltar').classList.remove('vis');
   document.getElementById('topbar-secao').textContent='Painel';
+  const cont = document.querySelector('.conteudo');
+  if(cont) cont.scrollTop = 0;
 }
 function abrirModulo(nome){
   document.getElementById('menu').classList.remove('vis');
@@ -906,7 +908,8 @@ function abrirModulo(nome){
   document.getElementById('modulo-'+nome).classList.add('ativo');
   document.getElementById('btn-voltar').classList.add('vis');
   // Scroll para o topo ao trocar de módulo
-  document.querySelector('.conteudo').scrollTop = 0;
+  const cont = document.querySelector('.conteudo');
+  if(cont) { cont.scrollTop = 0; cont.scrollLeft = 0; }
   const titulos={prospeccao:'Prospeccao',conteudo:'Gestao de Conteudo',leads:'Gestao de Leads',pagina:'Minha Pagina'};
   document.getElementById('topbar-secao').textContent=titulos[nome]||nome;
   if(nome==='prospeccao')prospTab('respostas');
