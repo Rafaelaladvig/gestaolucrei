@@ -185,6 +185,72 @@ select.inp{cursor:pointer}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 
+
+/* ══ AGENDA ══════════════════════════════════════════════ */
+.agenda-toolbar{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.agenda-nav-titulo{font-size:.95rem;font-weight:600;color:var(--marrom);min-width:160px}
+.agenda-view-btns{display:flex;gap:4px;margin-left:auto}
+.agenda-view-btn{padding:.35rem .8rem;border-radius:20px;border:1.5px solid var(--creme2);background:none;font-family:'Poppins',sans-serif;font-size:.75rem;cursor:pointer;color:var(--cinza2);transition:all .2s}
+.agenda-view-btn.ativo{background:var(--musgo);color:var(--branco);border-color:var(--musgo)}
+
+/* Legenda categorias */
+.cat-legenda{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.cat-leg-item{display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--cinza)}
+.cat-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* Visão MÊS */
+.cal-mes{width:100%}
+.cal-mes-header{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.cal-mes-dia-nome{text-align:center;font-size:.65rem;font-weight:700;color:var(--cinza2);text-transform:uppercase;letter-spacing:.06em;padding:.4rem 0}
+.cal-mes-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dia{min-height:90px;background:var(--branco);border:1.5px solid var(--creme2);border-radius:8px;padding:.4rem;cursor:pointer;transition:border-color .2s;display:flex;flex-direction:column}
+.cal-dia:hover{border-color:var(--musgo)}
+.cal-dia.hoje{border-color:var(--musgo);background:var(--verde-light)}
+.cal-dia.outro-mes{opacity:.35;cursor:default}
+.cal-dia.outro-mes:hover{border-color:var(--creme2)}
+.cal-dia-num{font-size:.72rem;font-weight:700;color:var(--marrom2);margin-bottom:.3rem;flex-shrink:0}
+.cal-dia.hoje .cal-dia-num{color:var(--musgo)}
+.cal-evento-chip{font-size:.62rem;padding:.1rem .4rem;border-radius:4px;margin-bottom:2px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;font-weight:500;line-height:1.4;flex-shrink:0}
+.cal-evento-chip:hover{opacity:.85}
+.cal-mais{font-size:.6rem;color:var(--cinza2);margin-top:auto}
+
+/* Visão SEMANA */
+.cal-semana-wrap{display:grid;grid-template-columns:52px repeat(7,1fr);border:1.5px solid var(--creme2);border-radius:10px;overflow:hidden;background:var(--branco)}
+.cal-sem-header{display:contents}
+.cal-sem-corner{background:var(--creme);border-bottom:1.5px solid var(--creme2);border-right:1.5px solid var(--creme2)}
+.cal-sem-dia-header{background:var(--creme);border-bottom:1.5px solid var(--creme2);border-right:1.5px solid var(--creme2);padding:.5rem .3rem;text-align:center}
+.cal-sem-dia-header:last-child{border-right:none}
+.cal-sem-dia-nome{font-size:.65rem;font-weight:700;color:var(--cinza2);text-transform:uppercase;display:block}
+.cal-sem-dia-num{font-size:1rem;font-weight:700;color:var(--marrom);display:block;line-height:1.2}
+.cal-sem-dia-num.hoje-num{background:var(--musgo);color:#fff;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem}
+.cal-hora-col{border-right:1.5px solid var(--creme2)}
+.cal-hora-label{height:52px;display:flex;align-items:flex-start;justify-content:flex-end;padding:.3rem .4rem 0;font-size:.6rem;color:var(--cinza2);font-weight:500;border-bottom:1px solid var(--creme2)}
+.cal-hora-label:last-child{border-bottom:none}
+.cal-dia-col{position:relative;border-right:1.5px solid var(--creme2)}
+.cal-dia-col:last-child{border-right:none}
+.cal-hora-slot{height:52px;border-bottom:1px solid var(--creme2);cursor:pointer;transition:background .15s;position:relative}
+.cal-hora-slot:hover{background:var(--verde-light)}
+.cal-hora-slot:last-child{border-bottom:none}
+.cal-sem-evento{position:absolute;left:2px;right:2px;border-radius:5px;padding:.2rem .4rem;font-size:.62rem;color:#fff;overflow:hidden;cursor:pointer;z-index:2;font-weight:600;line-height:1.3;transition:opacity .2s}
+.cal-sem-evento:hover{opacity:.85}
+.cal-linha-agora{position:absolute;left:0;right:0;height:2px;z-index:3;pointer-events:none}
+.cal-linha-agora::before{content:'';position:absolute;left:-4px;top:-4px;width:10px;height:10px;border-radius:50%}
+
+/* Modal evento */
+.cat-picker{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+.cat-pick-btn{padding:.3rem .8rem;border-radius:20px;border:2px solid transparent;font-size:.75rem;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:all .2s;opacity:.65}
+.cat-pick-btn.selecionado{opacity:1;border-color:rgba(0,0,0,.2)}
+
+/* Editor de categorias */
+.cat-editor-lista{display:flex;flex-direction:column;gap:.5rem;margin:10px 0;max-height:260px;overflow-y:auto}
+.cat-editor-row{display:flex;align-items:center;gap:.5rem}
+.cat-editor-row input[type=text]{flex:1;border:1.5px solid var(--creme2);border-radius:6px;padding:.45rem .7rem;font-family:'Poppins',sans-serif;font-size:.83rem;color:var(--marrom);outline:none}
+.cat-editor-row input[type=text]:focus{border-color:var(--terra)}
+.cat-cor-btn{width:32px;height:32px;border-radius:50%;border:2px solid rgba(0,0,0,.15);cursor:pointer;flex-shrink:0;position:relative;overflow:hidden}
+.cat-cor-btn input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;border:none;padding:0}
+.btn-add-cat{width:100%;padding:.45rem;border:1.5px dashed var(--creme2);background:none;border-radius:6px;cursor:pointer;font-size:.75rem;color:var(--cinza2);font-family:'Poppins',sans-serif;margin-top:4px;transition:all .2s}
+.btn-add-cat:hover{border-color:var(--musgo);color:var(--musgo)}
+
 /* LEADS */
 .pipeline{display:grid;grid-template-columns:repeat(5,minmax(160px,1fr));gap:.7rem;align-items:start;min-width:0}
 @media(max-width:1000px){.pipeline{grid-template-columns:repeat(3,1fr)}}
@@ -334,6 +400,11 @@ select.inp{cursor:pointer}
           <div class="menu-icon" style="background:#f0f4ff;color:#3a4a8a"><i class="ti ti-link"></i></div>
           <div class="menu-card-titulo">Minha Pagina</div>
           <div class="menu-card-desc">Editor da sua pagina publica de links</div>
+        </button>
+        <button class="menu-card" onclick="abrirModulo('agenda')">
+          <div class="menu-icon" style="background:#f3eef8;color:#7c3aed"><i class="ti ti-calendar"></i></div>
+          <div class="menu-card-titulo">Agenda</div>
+          <div class="menu-card-desc">Compromissos pessoais e profissionais com visao mensal e semanal</div>
         </button>
       </div>
     </div>
@@ -602,6 +673,101 @@ select.inp{cursor:pointer}
 
   </div><!-- /conteudo -->
 </div><!-- /shell -->
+
+    <!-- MODULO AGENDA -->
+    <div class="modulo" id="modulo-agenda">
+      <div class="modulo-tag">Rafaela Ladvig · Consultoria Financeira</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:.8rem">
+        <div class="modulo-titulo" style="margin-bottom:0">agenda</div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .8rem" onclick="abrirEditorCats()">
+            <i class="ti ti-palette"></i> Categorias
+          </button>
+          <button class="btn btn-verde" onclick="abrirModalEvento(null)">
+            <i class="ti ti-plus"></i> Novo evento
+          </button>
+        </div>
+      </div>
+
+      <!-- Legenda -->
+      <div class="cat-legenda" id="agenda-legenda"></div>
+
+      <!-- Toolbar de navegação -->
+      <div class="agenda-toolbar">
+        <button class="nav-btn" onclick="agendaNav(-1)"><i class="ti ti-chevron-left"></i></button>
+        <button class="nav-btn" onclick="agendaNav(1)"><i class="ti ti-chevron-right"></i></button>
+        <span class="agenda-nav-titulo" id="agenda-nav-titulo">—</span>
+        <button class="btn btn-outline" style="font-size:.72rem;padding:.3rem .7rem" onclick="agendaHoje()">hoje</button>
+        <div class="agenda-view-btns">
+          <button class="agenda-view-btn ativo" id="abtn-mes" onclick="agendaSetView('mes')">Mês</button>
+          <button class="agenda-view-btn" id="abtn-semana" onclick="agendaSetView('semana')">Semana</button>
+        </div>
+      </div>
+
+      <!-- Visão Mês -->
+      <div id="agenda-view-mes">
+        <div class="cal-mes-header">
+          <div class="cal-mes-dia-nome">Dom</div>
+          <div class="cal-mes-dia-nome">Seg</div>
+          <div class="cal-mes-dia-nome">Ter</div>
+          <div class="cal-mes-dia-nome">Qua</div>
+          <div class="cal-mes-dia-nome">Qui</div>
+          <div class="cal-mes-dia-nome">Sex</div>
+          <div class="cal-mes-dia-nome">Sáb</div>
+        </div>
+        <div class="cal-mes-grid" id="cal-mes-grid"></div>
+      </div>
+
+      <!-- Visão Semana -->
+      <div id="agenda-view-semana" style="display:none;overflow-x:auto">
+        <div class="cal-semana-wrap" id="cal-semana-wrap"></div>
+      </div>
+    </div>
+
+<!-- MODAL EVENTO -->
+<div class="backdrop" id="modal-evento">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+      <h3 class="modal-titulo" id="evento-modal-titulo" style="margin-bottom:0">Novo evento</h3>
+      <button class="btn-ghost" onclick="fecharModalEvento()"><i class="ti ti-x"></i></button>
+    </div>
+    <input type="hidden" id="ev-id">
+    <div class="form-grupo"><label class="campo-label">Título *</label><input class="inp" id="ev-titulo" placeholder="Ex: Reunião com cliente"></div>
+    <div class="form-grupo">
+      <label class="campo-label">Categoria</label>
+      <div class="cat-picker" id="ev-cat-picker"></div>
+      <input type="hidden" id="ev-cat">
+    </div>
+    <div class="form-grupo"><label class="campo-label">Data *</label><input class="inp" type="date" id="ev-data"></div>
+    <div class="form-row">
+      <div class="form-grupo"><label class="campo-label">Hora início</label><input class="inp" type="time" id="ev-inicio" min="06:00" max="21:00"></div>
+      <div class="form-grupo"><label class="campo-label">Hora fim</label><input class="inp" type="time" id="ev-fim" min="06:00" max="21:00"></div>
+    </div>
+    <div class="form-grupo"><label class="campo-label">Descrição</label><textarea class="inp" id="ev-descricao" rows="2" placeholder="Detalhes opcionais..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="ev-del-btn" onclick="deletarEvento()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
+      <button class="btn btn-outline" onclick="fecharModalEvento()">Cancelar</button>
+      <button class="btn btn-verde" id="ev-salvar-btn" onclick="salvarEvento()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITOR DE CATEGORIAS -->
+<div class="backdrop" id="modal-cats">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+      <h3 class="modal-titulo" style="margin-bottom:0">Categorias</h3>
+      <button class="btn-ghost" onclick="fecharEditorCats()"><i class="ti ti-x"></i></button>
+    </div>
+    <p style="font-size:.75rem;color:var(--cinza);margin-bottom:.8rem">Personalize nome e cor de cada categoria.</p>
+    <div class="cat-editor-lista" id="cat-editor-lista"></div>
+    <button class="btn-add-cat" onclick="addCatRow()"><i class="ti ti-plus"></i> Nova categoria</button>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fecharEditorCats()">Cancelar</button>
+      <button class="btn btn-verde" onclick="salvarCats()">Salvar</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL LEAD FORM -->
 <div class="backdrop" id="modal-lead">
@@ -910,12 +1076,13 @@ function abrirModulo(nome){
   // Scroll para o topo ao trocar de módulo
   const cont = document.querySelector('.conteudo');
   if(cont) { cont.scrollTop = 0; cont.scrollLeft = 0; }
-  const titulos={prospeccao:'Prospeccao',conteudo:'Gestao de Conteudo',leads:'Gestao de Leads',pagina:'Minha Pagina'};
+  const titulos={prospeccao:'Prospeccao',conteudo:'Gestao de Conteudo',leads:'Gestao de Leads',pagina:'Minha Pagina',agenda:'Agenda'};
   document.getElementById('topbar-secao').textContent=titulos[nome]||nome;
   if(nome==='prospeccao')prospTab('respostas');
   if(nome==='conteudo')renderConteudo();
   if(nome==='leads')carregarLeads();
   if(nome==='pagina')carregarPagina();
+  if(nome==='agenda')carregarAgenda();
 }
 
 // PROSPECCAO
@@ -1788,8 +1955,8 @@ async function salvarPagina() {
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
 document.getElementById('l-email').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('l-senha').focus();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det'].forEach(id=>document.getElementById(id).classList.remove('aberto'));}});
-['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)document.getElementById(id).classList.remove('aberto');});});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats'].forEach(id=>document.getElementById(id).classList.remove('aberto'));}});
+['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)document.getElementById(id).classList.remove('aberto');});});
 
 // NAO ESQUECER: adicionar div kanban-nav-wrap ao HTML
 document.getElementById('kanban-nav-wrap').style.display='block';
