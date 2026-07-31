@@ -1953,6 +1953,226 @@ async function salvarPagina() {
   btn.innerHTML='<i class="ti ti-cloud-upload"></i> Salvar e publicar';
 }
 
+// ══ AGENDA ══════════════════════════════════════════════
+const CATS_KEY='agenda_cats_v1';
+const CATS_DEFAULT=[
+  {id:'pessoal',nome:'Pessoal',cor:'#7c3aed'},
+  {id:'profissional',nome:'Profissional',cor:'#0891b2'},
+  {id:'saude',nome:'Saúde',cor:'#16a34a'},
+  {id:'financeiro',nome:'Financeiro',cor:'#d97706'},
+  {id:'geral',nome:'Geral',cor:'#6b7280'},
+];
+function getCats(){try{const s=localStorage.getItem(CATS_KEY);return s?JSON.parse(s):[...CATS_DEFAULT];}catch{return[...CATS_DEFAULT];}}
+function saveCatsLocal(cats){localStorage.setItem(CATS_KEY,JSON.stringify(cats));}
+function getCatById(id){return getCats().find(c=>c.id===id)||{nome:'Geral',cor:'#6b7280'};}
+
+let eventos=[];
+let agendaView='mes';
+let agendaAno=new Date().getFullYear();
+let agendaMes=new Date().getMonth();
+let agendaSemanaOffset=0;
+const HORAS_AG=[6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
+const DIAS_SEM=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const MESES_AG=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+async function carregarAgenda(){
+  try{eventos=await sbGet('eurafa_agenda','order=data.asc,hora_inicio.asc');}
+  catch(e){console.error('agenda:',e);eventos=[];}
+  renderAgenda();
+}
+function renderAgenda(){renderLegendaAg();renderNavTitulo();if(agendaView==='mes')renderMes();else renderSemana();}
+
+function renderLegendaAg(){
+  const el=document.getElementById('agenda-legenda');if(!el)return;
+  const cats=getCats();
+  el.innerHTML=cats.map(c=>`<div class="cat-leg-item"><span class="cat-leg-dot" style="background:${c.cor}"></span>${c.nome}</div>`).join('')+
+    `<button class="btn btn-ghost" style="font-size:.7rem;padding:.2rem .5rem;margin-left:auto" onclick="abrirEditorCats()"><i class="ti ti-pencil"></i> editar</button>`;
+}
+function renderNavTitulo(){
+  const el=document.getElementById('agenda-nav-titulo');if(!el)return;
+  if(agendaView==='mes'){el.textContent=`${MESES_AG[agendaMes]} de ${agendaAno}`;}
+  else{const seg=getSegAg();const dom=new Date(seg);dom.setDate(dom.getDate()+6);
+    const fmt=d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+    el.textContent=`${fmt(seg)} — ${fmt(dom)}`;}
+}
+function agendaNav(dir){
+  if(agendaView==='mes'){agendaMes+=dir;if(agendaMes>11){agendaMes=0;agendaAno++;}if(agendaMes<0){agendaMes=11;agendaAno--;}}
+  else{agendaSemanaOffset+=dir;}
+  renderAgenda();
+}
+function agendaHoje(){const h=new Date();agendaAno=h.getFullYear();agendaMes=h.getMonth();agendaSemanaOffset=0;renderAgenda();}
+function agendaSetView(v){
+  agendaView=v;
+  document.getElementById('agenda-view-mes').style.display=v==='mes'?'block':'none';
+  document.getElementById('agenda-view-semana').style.display=v==='semana'?'block':'none';
+  document.getElementById('abtn-mes').classList.toggle('ativo',v==='mes');
+  document.getElementById('abtn-semana').classList.toggle('ativo',v==='semana');
+  renderAgenda();
+}
+function toDateStr(d){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+
+// VISÃO MÊS
+function renderMes(){
+  const grid=document.getElementById('cal-mes-grid');if(!grid)return;
+  const hoje=new Date();const hojeStr=toDateStr(hoje);
+  const prim=new Date(agendaAno,agendaMes,1);
+  const ult=new Date(agendaAno,agendaMes+1,0);
+  const ini=new Date(prim);ini.setDate(1-prim.getDay());
+  const fim=new Date(ult);fim.setDate(ult.getDate()+(6-ult.getDay()));
+  const cells=[];const cur=new Date(ini);
+  while(cur<=fim){cells.push(new Date(cur));cur.setDate(cur.getDate()+1);}
+  grid.innerHTML=cells.map(dia=>{
+    const ds=toDateStr(dia);
+    const doMes=dia.getMonth()===agendaMes;
+    const isHoje=ds===hojeStr;
+    const evs=eventos.filter(e=>e.data===ds);
+    const mostrar=evs.slice(0,3);
+    const resto=evs.length-mostrar.length;
+    const chips=mostrar.map(e=>{
+      const cat=getCatById(e.categoria);
+      return`<div class="cal-evento-chip" style="background:${cat.cor}" onclick="event.stopPropagation();abrirModalEvento('${e.id}')" title="${e.titulo}">${e.titulo}</div>`;
+    }).join('');
+    const mais=resto>0?`<div class="cal-mais">+${resto} mais</div>`:'';
+    return`<div class="cal-dia${isHoje?' hoje':''}${!doMes?' outro-mes':''}" onclick="${doMes?`abrirModalEvento(null,'${ds}')`:''}">`+
+      `<div class="cal-dia-num">${dia.getDate()}</div>${chips}${mais}</div>`;
+  }).join('');
+}
+
+// VISÃO SEMANA
+function getSegAg(){
+  const hoje=new Date();const dow=hoje.getDay();
+  const seg=new Date(hoje);seg.setDate(hoje.getDate()-(dow===0?6:dow-1)+agendaSemanaOffset*7);seg.setHours(0,0,0,0);return seg;
+}
+function renderSemana(){
+  const wrap=document.getElementById('cal-semana-wrap');if(!wrap)return;
+  const hoje=new Date();const hojeStr=toDateStr(hoje);
+  const seg=getSegAg();
+  const dias=Array.from({length:7},(_,i)=>{const d=new Date(seg);d.setDate(seg.getDate()+i);return d;});
+  wrap.style.display='grid';
+  wrap.style.gridTemplateColumns='52px repeat(7,1fr)';
+  // Header
+  let html=`<div class="cal-sem-corner"></div>`;
+  dias.forEach(d=>{
+    const isHoje=toDateStr(d)===hojeStr;
+    html+=`<div class="cal-sem-dia-header"><span class="cal-sem-dia-nome">${DIAS_SEM[d.getDay()]}</span><span class="cal-sem-dia-num${isHoje?' hoje-num':''}">${d.getDate()}</span></div>`;
+  });
+  // Slots de hora
+  HORAS_AG.forEach(h=>{
+    html+=`<div class="cal-hora-col"><div class="cal-hora-label">${String(h).padStart(2,'0')}:00</div></div>`;
+    dias.forEach(d=>{
+      const ds=toDateStr(d);
+      html+=`<div class="cal-dia-col"><div class="cal-hora-slot" onclick="abrirModalEvento(null,'${ds}','${String(h).padStart(2,'0')}:00')"></div></div>`;
+    });
+  });
+  wrap.innerHTML=html;
+  // Posicionar eventos
+  dias.forEach((d,di)=>{
+    const ds=toDateStr(d);
+    eventos.filter(e=>e.data===ds&&e.hora_inicio).forEach(e=>{
+      const [hI,mI]=(e.hora_inicio||'06:00').split(':').map(Number);
+      const [hF,mF]=(e.hora_fim||(String(Math.min(21,hI+1)).padStart(2,'0')+':00')).split(':').map(Number);
+      const hIc=Math.max(6,Math.min(21,hI));
+      const dur=Math.max(0.5,hF+mF/60-hI-mI/60);
+      const topPx=(mI/60)*52;
+      const hPx=dur*52-2;
+      const cat=getCatById(e.categoria);
+      const slots=wrap.querySelectorAll('.cal-dia-col');
+      const slotIdx=di*HORAS_AG.length+(hIc-6);
+      const slot=slots[slotIdx];
+      if(slot){
+        const ev=document.createElement('div');
+        ev.className='cal-sem-evento';
+        ev.style.cssText=`background:${cat.cor};top:${topPx}px;height:${hPx}px`;
+        ev.innerHTML=`<div>${e.titulo}</div>${e.hora_inicio?`<div style="opacity:.75;font-weight:400;font-size:.58rem">${e.hora_inicio.slice(0,5)}${e.hora_fim?' - '+e.hora_fim.slice(0,5):''}</div>`:''}`;
+        ev.onclick=ev2=>{ev2.stopPropagation();abrirModalEvento(e.id);};
+        slot.style.position='relative';slot.appendChild(ev);
+      }
+    });
+  });
+}
+
+// MODAL EVENTO
+function abrirModalEvento(id,dataDefault,horaDefault){
+  const e=id?eventos.find(x=>x.id===id):null;
+  document.getElementById('ev-id').value=e?.id||'';
+  document.getElementById('ev-titulo').value=e?.titulo||'';
+  document.getElementById('ev-data').value=e?.data||dataDefault||toDateStr(new Date());
+  document.getElementById('ev-inicio').value=e?.hora_inicio?.slice(0,5)||horaDefault||'';
+  document.getElementById('ev-fim').value=e?.hora_fim?.slice(0,5)||'';
+  document.getElementById('ev-descricao').value=e?.descricao||'';
+  document.getElementById('ev-del-btn').style.display=id?'inline-flex':'none';
+  document.getElementById('evento-modal-titulo').textContent=id?'Editar evento':'Novo evento';
+  const cats=getCats();const catAtual=e?.categoria||(cats[0]?.id||'geral');
+  document.getElementById('ev-cat').value=catAtual;
+  document.getElementById('ev-cat-picker').innerHTML=cats.map(c=>`<button class="cat-pick-btn${c.id===catAtual?' selecionado':''}" style="background:${c.cor};color:#fff" onclick="selecionarCat('${c.id}',this)">${c.nome}</button>`).join('');
+  document.getElementById('modal-evento').classList.add('aberto');
+  setTimeout(()=>document.getElementById('ev-titulo').focus(),100);
+}
+function fecharModalEvento(){document.getElementById('modal-evento').classList.remove('aberto');}
+function selecionarCat(id,btn){
+  document.getElementById('ev-cat').value=id;
+  document.querySelectorAll('.cat-pick-btn').forEach(b=>b.classList.remove('selecionado'));
+  btn.classList.add('selecionado');
+}
+async function salvarEvento(){
+  const titulo=document.getElementById('ev-titulo').value.trim();
+  const data=document.getElementById('ev-data').value;
+  if(!titulo||!data){alert('Preencha título e data.');return;}
+  const btn=document.getElementById('ev-salvar-btn');
+  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
+  const id=document.getElementById('ev-id').value;
+  const payload={titulo,categoria:document.getElementById('ev-cat').value||'geral',data,
+    hora_inicio:document.getElementById('ev-inicio').value||null,
+    hora_fim:document.getElementById('ev-fim').value||null,
+    descricao:document.getElementById('ev-descricao').value.trim()||null};
+  try{
+    if(id){await sbPatch('eurafa_agenda',`id=eq.${id}`,payload);}
+    else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('eurafa_agenda',payload);}
+    fecharModalEvento();await carregarAgenda();
+  }catch(e){alert('Erro: '+e.message);}
+  btn.disabled=false;btn.textContent='Salvar';
+}
+async function deletarEvento(){
+  const id=document.getElementById('ev-id').value;
+  if(!id||!confirm('Excluir este evento?'))return;
+  await sbDelete('eurafa_agenda',`id=eq.${id}`);
+  fecharModalEvento();await carregarAgenda();
+}
+
+// EDITOR DE CATEGORIAS
+function abrirEditorCats(){
+  renderCatEditorLista(getCats());
+  document.getElementById('modal-cats').classList.add('aberto');
+}
+function fecharEditorCats(){document.getElementById('modal-cats').classList.remove('aberto');}
+function renderCatEditorLista(cats){
+  document.getElementById('cat-editor-lista').innerHTML=cats.map((c,i)=>`
+    <div class="cat-editor-row">
+      <div class="cat-cor-btn" style="background:${c.cor}"><input type="color" value="${c.cor}" oninput="this.parentElement.style.background=this.value"></div>
+      <input type="text" value="${c.nome}" placeholder="Nome da categoria">
+      <button class="btn btn-danger" style="padding:.3rem .5rem" onclick="this.closest('.cat-editor-row').remove()"><i class="ti ti-x"></i></button>
+    </div>`).join('');
+}
+function addCatRow(){
+  const lista=document.getElementById('cat-editor-lista');
+  const div=document.createElement('div');div.className='cat-editor-row';
+  const cor='#'+Math.floor(Math.random()*0xAAAAAA+0x555555).toString(16).padStart(6,'0');
+  div.innerHTML=`<div class="cat-cor-btn" style="background:${cor}"><input type="color" value="${cor}" oninput="this.parentElement.style.background=this.value"></div><input type="text" placeholder="Nome da categoria"><button class="btn btn-danger" style="padding:.3rem .5rem" onclick="this.closest('.cat-editor-row').remove()"><i class="ti ti-x"></i></button>`;
+  lista.appendChild(div);div.querySelector('input[type=text]').focus();
+}
+function salvarCats(){
+  const rows=document.querySelectorAll('#cat-editor-lista .cat-editor-row');
+  const cats=Array.from(rows).map((row,i)=>{
+    const nome=row.querySelector('input[type=text]').value.trim();
+    const cor=row.querySelector('input[type=color]').value;
+    if(!nome)return null;
+    const id=nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')||'cat'+i;
+    return{id,nome,cor};
+  }).filter(Boolean);
+  if(!cats.length){alert('Adicione pelo menos uma categoria.');return;}
+  saveCatsLocal(cats);fecharEditorCats();renderAgenda();
+}
+
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
 document.getElementById('l-email').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('l-senha').focus();});
