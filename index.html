@@ -905,6 +905,8 @@ function abrirModulo(nome){
   document.querySelectorAll('.modulo').forEach(m=>m.classList.remove('ativo'));
   document.getElementById('modulo-'+nome).classList.add('ativo');
   document.getElementById('btn-voltar').classList.add('vis');
+  // Scroll para o topo ao trocar de módulo
+  document.querySelector('.conteudo').scrollTop = 0;
   const titulos={prospeccao:'Prospeccao',conteudo:'Gestao de Conteudo',leads:'Gestao de Leads',pagina:'Minha Pagina'};
   document.getElementById('topbar-secao').textContent=titulos[nome]||nome;
   if(nome==='prospeccao')prospTab('respostas');
