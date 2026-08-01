@@ -678,14 +678,9 @@ select.inp{cursor:pointer}
       <div class="modulo-tag">Rafaela Ladvig · Consultoria Financeira</div>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:.8rem">
         <div class="modulo-titulo" style="margin-bottom:0">agenda</div>
-        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
-          <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .8rem" onclick="abrirEditorCats()">
-            <i class="ti ti-palette"></i> Categorias
-          </button>
-          <button class="btn btn-verde" onclick="abrirModalEvento(null)">
-            <i class="ti ti-plus"></i> Novo evento
-          </button>
-        </div>
+        <button class="btn btn-verde" onclick="abrirModalEvento(null)">
+          <i class="ti ti-plus"></i> Novo evento
+        </button>
       </div>
 
       <!-- Legenda -->
@@ -1987,7 +1982,7 @@ function renderLegendaAg(){
   const el=document.getElementById('agenda-legenda');if(!el)return;
   const cats=getCats();
   el.innerHTML=cats.map(c=>`<div class="cat-leg-item"><span class="cat-leg-dot" style="background:${c.cor}"></span>${c.nome}</div>`).join('')+
-    `<button class="btn btn-ghost" style="font-size:.7rem;padding:.2rem .5rem;margin-left:auto" onclick="abrirEditorCats()"><i class="ti ti-pencil"></i> editar</button>`;
+    `<button class="btn btn-ghost" style="font-size:.9rem;padding:.3rem .5rem;margin-left:auto;color:var(--cinza2)" onclick="abrirEditorCats()" title="Configurar categorias"><i class="ti ti-settings-2"></i></button>`;
 }
 function renderNavTitulo(){
   const el=document.getElementById('agenda-nav-titulo');if(!el)return;
