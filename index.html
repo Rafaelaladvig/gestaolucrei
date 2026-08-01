@@ -187,6 +187,57 @@ select.inp{cursor:pointer}
 
 
 
+
+/* ══ CONSULTORIA ══════════════════════════════════════════ */
+.cons-lista{display:flex;flex-direction:column;gap:.7rem}
+.cons-card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:12px;padding:1rem 1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:1rem}
+.cons-card:hover{border-color:var(--musgo);box-shadow:0 3px 12px rgba(61,90,62,.1)}
+.cons-avatar{width:42px;height:42px;border-radius:50%;background:var(--musgo);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;flex-shrink:0}
+.cons-info{flex:1;min-width:0}
+.cons-nome{font-size:.92rem;font-weight:600;color:var(--marrom)}
+.cons-sub{font-size:.72rem;color:var(--cinza);margin-top:1px}
+.cons-fase-badge{font-size:.65rem;padding:.2rem .6rem;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+.fase-diagnostico{background:#fff3cd;color:#856404}
+.fase-planejamento{background:#cff4fc;color:#0c5460}
+.fase-crescimento{background:#d1e7dd;color:#155724}
+.cons-status-inativa{opacity:.5}
+
+/* Ficha da cliente */
+.ficha-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem}
+.ficha-avatar-grande{width:56px;height:56px;border-radius:50%;background:var(--musgo);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.4rem;flex-shrink:0}
+.ficha-tabs{display:flex;gap:4px;margin-bottom:1.2rem;flex-wrap:wrap}
+.ficha-tab{padding:.5rem 1.2rem;border-radius:20px;border:1.5px solid var(--creme2);background:none;font-family:'Poppins',sans-serif;font-size:.78rem;cursor:pointer;color:var(--cinza2);transition:all .2s;font-weight:500;position:relative}
+.ficha-tab.ativo{background:var(--musgo);color:var(--branco);border-color:var(--musgo)}
+.ficha-tab .fase-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+
+/* Blocos */
+.bloco-lista{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1rem}
+.bloco{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem;transition:border-color .2s}
+.bloco:hover{border-color:var(--creme3)}
+.bloco-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
+.bloco-tipo-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
+.tipo-anotacao .bloco-tipo-icon{background:#fdf0ea;color:var(--terra)}
+.tipo-pergunta .bloco-tipo-icon{background:#f0f4ff;color:#3a4a8a}
+.tipo-tarefa .bloco-tipo-icon{background:var(--verde-light);color:var(--musgo)}
+.bloco-conteudo{font-size:.85rem;color:var(--marrom);line-height:1.6;white-space:pre-wrap}
+.bloco-resposta-wrap{margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--creme2)}
+.bloco-resposta-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza);margin-bottom:.3rem}
+.bloco-resposta-text{font-size:.83rem;color:var(--marrom2);font-style:italic}
+.bloco-resposta-vazia{font-size:.78rem;color:var(--cinza2);font-style:italic}
+.bloco-tarefa-row{display:flex;align-items:flex-start;gap:.7rem}
+.bloco-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--creme2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;margin-top:1px}
+.bloco-check.feito{background:var(--musgo);border-color:var(--musgo);color:#fff}
+.bloco-acoes{display:flex;gap:.3rem;margin-left:auto}
+.btn-bloco-del{background:none;border:none;cursor:pointer;color:var(--cinza2);padding:.2rem .3rem;border-radius:4px;font-size:.8rem;transition:color .2s}
+.btn-bloco-del:hover{color:var(--danger)}
+.btn-bloco-edit{background:none;border:none;cursor:pointer;color:var(--cinza2);padding:.2rem .3rem;border-radius:4px;font-size:.8rem;transition:color .2s}
+.btn-bloco-edit:hover{color:var(--musgo)}
+.add-bloco-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+
+/* Acesso da cliente */
+.acesso-box{background:var(--creme);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem;margin-top:1rem}
+.acesso-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza);margin-bottom:.6rem}
+
 /* ══ AGENDA ══════════════════════════════════════════════ */
 .agenda-toolbar{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
 .agenda-nav-titulo{font-size:.95rem;font-weight:600;color:var(--marrom);min-width:160px}
@@ -406,6 +457,11 @@ select.inp{cursor:pointer}
           <div class="menu-icon" style="background:#f3eef8;color:#7c3aed"><i class="ti ti-calendar"></i></div>
           <div class="menu-card-titulo">Agenda</div>
           <div class="menu-card-desc">Compromissos pessoais e profissionais com visao mensal e semanal</div>
+        </button>
+        <button class="menu-card" onclick="abrirModulo('consultoria')">
+          <div class="menu-icon" style="background:#eef4ee;color:#3D5A3E"><i class="ti ti-briefcase"></i></div>
+          <div class="menu-card-titulo">Consultoria</div>
+          <div class="menu-card-desc">Fichas das clientes com fases, anotacoes, perguntas e tarefas</div>
         </button>
       </div>
     </div>
@@ -718,6 +774,84 @@ select.inp{cursor:pointer}
       </div>
     </div>
 
+    <!-- MODULO CONSULTORIA -->
+    <div class="modulo" id="modulo-consultoria">
+
+      <!-- LISTA DE CLIENTES -->
+      <div id="cons-view-lista">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem">
+          <div>
+            <div class="modulo-tag">Rafaela Ladvig · Consultoria Financeira</div>
+            <div class="modulo-titulo" style="margin-bottom:0">consultoria</div>
+          </div>
+          <button class="btn btn-verde" onclick="abrirModalNovaCliente()">
+            <i class="ti ti-plus"></i> Nova cliente
+          </button>
+        </div>
+
+        <!-- Filtros de status -->
+        <div class="tabs" style="margin-bottom:1rem">
+          <button class="tab-btn ativo" id="cf-ativas" onclick="filtrarClientes('ativa',this)">Ativas</button>
+          <button class="tab-btn" id="cf-concluidas" onclick="filtrarClientes('concluida',this)">Concluídas</button>
+          <button class="tab-btn" id="cf-todas" onclick="filtrarClientes('todas',this)">Todas</button>
+        </div>
+
+        <div class="cons-lista" id="cons-lista">
+          <div style="text-align:center;padding:3rem;color:var(--cinza)">Carregando...</div>
+        </div>
+      </div>
+
+      <!-- FICHA DA CLIENTE -->
+      <div id="cons-view-ficha" style="display:none">
+        <div class="ficha-header">
+          <div style="display:flex;align-items:center;gap:1rem">
+            <div class="ficha-avatar-grande" id="ficha-avatar">R</div>
+            <div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--marrom)" id="ficha-nome">—</div>
+              <div style="font-size:.75rem;color:var(--cinza);margin-top:2px" id="ficha-sub">—</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .8rem" onclick="abrirModalEditarCliente()">
+              <i class="ti ti-pencil"></i> Editar
+            </button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .8rem" onclick="abrirModalAcesso()">
+              <i class="ti ti-key"></i> Acesso
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabs de fase -->
+        <div class="ficha-tabs">
+          <button class="ficha-tab ativo" id="ftab-diagnostico" onclick="fichaTab('diagnostico')">
+            <span class="fase-dot" style="background:#856404"></span>Diagnóstico
+          </button>
+          <button class="ficha-tab" id="ftab-planejamento" onclick="fichaTab('planejamento')">
+            <span class="fase-dot" style="background:#0c5460"></span>Planejamento
+          </button>
+          <button class="ficha-tab" id="ftab-crescimento" onclick="fichaTab('crescimento')">
+            <span class="fase-dot" style="background:#155724"></span>Crescimento
+          </button>
+        </div>
+
+        <!-- Conteúdo da fase ativa -->
+        <div id="ficha-fase-conteudo">
+          <div class="bloco-lista" id="ficha-blocos"></div>
+          <div class="add-bloco-btns">
+            <button class="btn btn-outline" style="font-size:.75rem" onclick="addBloco('anotacao')">
+              <i class="ti ti-notes"></i> Anotação
+            </button>
+            <button class="btn btn-outline" style="font-size:.75rem" onclick="addBloco('pergunta')">
+              <i class="ti ti-help" style="color:#3a4a8a"></i> Pergunta
+            </button>
+            <button class="btn btn-outline" style="font-size:.75rem" onclick="addBloco('tarefa')">
+              <i class="ti ti-checkbox" style="color:var(--musgo)"></i> Tarefa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /conteudo -->
 </div><!-- /shell -->
 
@@ -762,6 +896,89 @@ select.inp{cursor:pointer}
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="fecharEditorCats()">Cancelar</button>
       <button class="btn btn-verde" onclick="salvarCats()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOVA/EDITAR CLIENTE -->
+<div class="backdrop" id="modal-cliente">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+      <h3 class="modal-titulo" id="cliente-modal-titulo" style="margin-bottom:0">Nova cliente</h3>
+      <button class="btn-ghost" onclick="fecharModalCliente()"><i class="ti ti-x"></i></button>
+    </div>
+    <input type="hidden" id="cli-id">
+    <div class="form-grupo"><label class="campo-label">Nome *</label><input class="inp" id="cli-nome" placeholder="Nome da cliente"></div>
+    <div class="form-grupo"><label class="campo-label">E-mail *</label><input class="inp" id="cli-email" type="email" placeholder="email@exemplo.com"></div>
+    <div class="form-row">
+      <div class="form-grupo"><label class="campo-label">WhatsApp</label><input class="inp" id="cli-whatsapp" placeholder="(67) 99999-9999"></div>
+      <div class="form-grupo"><label class="campo-label">Instagram</label><input class="inp" id="cli-instagram" placeholder="@perfil"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-grupo"><label class="campo-label">Fase atual</label>
+        <select class="inp" id="cli-fase">
+          <option value="diagnostico">Diagnóstico</option>
+          <option value="planejamento">Planejamento</option>
+          <option value="crescimento">Crescimento</option>
+        </select>
+      </div>
+      <div class="form-grupo"><label class="campo-label">Status</label>
+        <select class="inp" id="cli-status">
+          <option value="ativa">Ativa</option>
+          <option value="concluida">Concluída</option>
+          <option value="pausada">Pausada</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="cli-del-btn" onclick="deletarCliente()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
+      <button class="btn btn-outline" onclick="fecharModalCliente()">Cancelar</button>
+      <button class="btn btn-verde" id="cli-salvar-btn" onclick="salvarCliente()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BLOCO (anotação/pergunta/tarefa) -->
+<div class="backdrop" id="modal-bloco">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+      <h3 class="modal-titulo" id="bloco-modal-titulo" style="margin-bottom:0">Adicionar anotação</h3>
+      <button class="btn-ghost" onclick="fecharModalBloco()"><i class="ti ti-x"></i></button>
+    </div>
+    <input type="hidden" id="bloco-id">
+    <input type="hidden" id="bloco-tipo">
+    <div class="form-grupo">
+      <label class="campo-label" id="bloco-label">Anotação *</label>
+      <textarea class="inp" id="bloco-conteudo" rows="4" placeholder="Digite aqui..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fecharModalBloco()">Cancelar</button>
+      <button class="btn btn-verde" id="bloco-salvar-btn" onclick="salvarBloco()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ACESSO DA CLIENTE -->
+<div class="backdrop" id="modal-acesso">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <h3 class="modal-titulo" style="margin-bottom:0">Acesso da cliente</h3>
+      <button class="btn-ghost" onclick="fecharModalAcesso()"><i class="ti ti-x"></i></button>
+    </div>
+    <p style="font-size:.78rem;color:var(--cinza);margin-bottom:1rem">Crie um login para a cliente acessar a própria ficha. Ela verá apenas os dados dela.</p>
+    <div id="acesso-existente" style="display:none">
+      <div class="acesso-box" style="margin-bottom:1rem">
+        <div class="acesso-label">Login existente</div>
+        <div style="font-size:.83rem;color:var(--marrom)" id="acesso-email-atual"></div>
+        <div style="font-size:.72rem;color:var(--cinza);margin-top:3px">A cliente já tem acesso configurado</div>
+      </div>
+    </div>
+    <div class="form-grupo"><label class="campo-label">E-mail de acesso</label><input class="inp" id="acesso-email" type="email" placeholder="email da cliente"></div>
+    <div class="form-grupo"><label class="campo-label">Senha</label><input class="inp" id="acesso-senha" type="password" placeholder="Mínimo 6 caracteres"></div>
+    <p class="msg-erro" id="acesso-erro" style="min-height:1em"></p>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fecharModalAcesso()">Cancelar</button>
+      <button class="btn btn-verde" id="acesso-btn" onclick="criarAcessoCliente()">Criar acesso</button>
     </div>
   </div>
 </div>
@@ -1073,13 +1290,14 @@ function abrirModulo(nome){
   // Scroll para o topo ao trocar de módulo
   const cont = document.querySelector('.conteudo');
   if(cont) { cont.scrollTop = 0; cont.scrollLeft = 0; }
-  const titulos={prospeccao:'Prospeccao',conteudo:'Gestao de Conteudo',leads:'Gestao de Leads',pagina:'Minha Pagina',agenda:'Agenda'};
+  const titulos={prospeccao:'Prospeccao',conteudo:'Gestao de Conteudo',leads:'Gestao de Leads',pagina:'Minha Pagina',agenda:'Agenda',consultoria:'Consultoria'};
   document.getElementById('topbar-secao').textContent=titulos[nome]||nome;
   if(nome==='prospeccao')prospTab('respostas');
   if(nome==='conteudo')renderConteudo();
   if(nome==='leads')carregarLeads();
   if(nome==='pagina')carregarPagina();
   if(nome==='agenda')carregarAgenda();
+  if(nome==='consultoria'){carregarConsultoria();}
 }
 
 // PROSPECCAO
@@ -2169,11 +2387,302 @@ function salvarCats(){
   saveCatsLocal(cats);fecharEditorCats();renderAgenda();
 }
 
+
+// ══ CONSULTORIA (ADMIN) ══════════════════════════════════
+let clientes = [];
+let blocos = [];
+let _clienteAtualId = null;
+let _faseAtual = 'diagnostico';
+let _filtroClientes = 'ativa';
+
+const FASE_NOMES = {diagnostico:'Diagnóstico',planejamento:'Planejamento',crescimento:'Crescimento'};
+
+async function carregarConsultoria() {
+  try {
+    clientes = await sbGet('consultoria_clientes','order=created_at.desc');
+  } catch(e) { console.error('consultoria:',e); clientes=[]; }
+  renderListaClientes();
+}
+
+function filtrarClientes(filtro, btn) {
+  _filtroClientes = filtro;
+  document.querySelectorAll('#cons-view-lista .tab-btn').forEach(b=>b.classList.remove('ativo'));
+  if(btn) btn.classList.add('ativo');
+  renderListaClientes();
+}
+
+function renderListaClientes() {
+  const lista = document.getElementById('cons-lista');
+  if(!lista) return;
+  let filtrados = clientes;
+  if(_filtroClientes !== 'todas') filtrados = clientes.filter(c=>c.status===_filtroClientes);
+  if(!filtrados.length) {
+    lista.innerHTML='<div style="text-align:center;padding:3rem;color:var(--cinza)"><i class="ti ti-users" style="font-size:2rem;display:block;margin-bottom:.5rem"></i>Nenhuma cliente encontrada.</div>';
+    return;
+  }
+  lista.innerHTML = filtrados.map(c=>`
+    <div class="cons-card ${c.status!=='ativa'?'cons-status-inativa':''}" onclick="abrirFichaCliente('${c.id}')">
+      <div class="cons-avatar">${c.nome.charAt(0).toUpperCase()}</div>
+      <div class="cons-info">
+        <div class="cons-nome">${c.nome}</div>
+        <div class="cons-sub">${c.email}${c.whatsapp?' · '+c.whatsapp:''}</div>
+      </div>
+      <span class="cons-fase-badge fase-${c.fase_atual||'diagnostico'}">${FASE_NOMES[c.fase_atual||'diagnostico']}</span>
+    </div>`).join('');
+}
+
+// ── FICHA DA CLIENTE ──────────────────────────────────────
+async function abrirFichaCliente(id) {
+  _clienteAtualId = id;
+  _faseAtual = 'diagnostico';
+  const c = clientes.find(x=>x.id===id);
+  if(!c) return;
+  // Atualizar header
+  document.getElementById('ficha-avatar').textContent = c.nome.charAt(0).toUpperCase();
+  document.getElementById('ficha-nome').textContent = c.nome;
+  document.getElementById('ficha-sub').textContent = c.email + (c.whatsapp?' · '+c.whatsapp:'') + ' · ' + (c.status==='ativa'?'Ativa':'Inativa');
+  // Mostrar ficha
+  document.getElementById('cons-view-lista').style.display='none';
+  document.getElementById('cons-view-ficha').style.display='block';
+  fichaTab('diagnostico');
+  await carregarBlocos();
+}
+
+function voltarListaClientes() {
+  _clienteAtualId = null;
+  document.getElementById('cons-view-lista').style.display='block';
+  document.getElementById('cons-view-ficha').style.display='none';
+}
+
+function fichaTab(fase) {
+  _faseAtual = fase;
+  ['diagnostico','planejamento','crescimento'].forEach(f=>{
+    document.getElementById('ftab-'+f).classList.toggle('ativo',f===fase);
+  });
+  renderBlocos();
+}
+
+async function carregarBlocos() {
+  if(!_clienteAtualId) return;
+  try {
+    blocos = await sbGet('consultoria_blocos',`cliente_id=eq.${_clienteAtualId}&order=ordem.asc,created_at.asc`);
+  } catch(e) { console.error(e); blocos=[]; }
+  renderBlocos();
+}
+
+function renderBlocos() {
+  const lista = document.getElementById('ficha-blocos');
+  if(!lista) return;
+  const doFase = blocos.filter(b=>b.fase===_faseAtual);
+  if(!doFase.length) {
+    lista.innerHTML='<div style="text-align:center;padding:2rem;color:var(--cinza);font-size:.83rem">Nenhum bloco nesta fase ainda.<br>Use os botões abaixo para adicionar.</div>';
+    return;
+  }
+  const icons = {anotacao:'<i class="ti ti-notes"></i>',pergunta:'<i class="ti ti-help"></i>',tarefa:'<i class="ti ti-checkbox"></i>'};
+  lista.innerHTML = doFase.map(b=>{
+    if(b.tipo==='tarefa') {
+      return `<div class="bloco tipo-tarefa">
+        <div class="bloco-tarefa-row">
+          <div class="bloco-check ${b.concluido?'feito':''}" onclick="toggleTarefa('${b.id}')">
+            ${b.concluido?'<i class="ti ti-check" style="font-size:.75rem"></i>':''}
+          </div>
+          <div class="bloco-conteudo" style="${b.concluido?'text-decoration:line-through;opacity:.6':''}">${b.conteudo}</div>
+          <div class="bloco-acoes">
+            <button class="btn-bloco-edit" onclick="editarBloco('${b.id}')"><i class="ti ti-pencil"></i></button>
+            <button class="btn-bloco-del" onclick="deletarBloco('${b.id}')"><i class="ti ti-trash"></i></button>
+          </div>
+        </div>
+      </div>`;
+    }
+    if(b.tipo==='pergunta') {
+      return `<div class="bloco tipo-pergunta">
+        <div class="bloco-header">
+          <div class="bloco-tipo-icon">${icons[b.tipo]}</div>
+          <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:#3a4a8a;letter-spacing:.06em">Pergunta</span>
+          <div class="bloco-acoes">
+            <button class="btn-bloco-edit" onclick="editarBloco('${b.id}')"><i class="ti ti-pencil"></i></button>
+            <button class="btn-bloco-del" onclick="deletarBloco('${b.id}')"><i class="ti ti-trash"></i></button>
+          </div>
+        </div>
+        <div class="bloco-conteudo">${b.conteudo}</div>
+        <div class="bloco-resposta-wrap">
+          <div class="bloco-resposta-label">Resposta da cliente</div>
+          ${b.resposta?`<div class="bloco-resposta-text">"${b.resposta}"</div>`:'<div class="bloco-resposta-vazia">Aguardando resposta...</div>'}
+        </div>
+      </div>`;
+    }
+    // anotacao
+    return `<div class="bloco tipo-anotacao">
+      <div class="bloco-header">
+        <div class="bloco-tipo-icon">${icons[b.tipo]}</div>
+        <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--terra);letter-spacing:.06em">Anotação</span>
+        <div class="bloco-acoes">
+          <button class="btn-bloco-edit" onclick="editarBloco('${b.id}')"><i class="ti ti-pencil"></i></button>
+          <button class="btn-bloco-del" onclick="deletarBloco('${b.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div class="bloco-conteudo">${b.conteudo}</div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleTarefa(id) {
+  const b = blocos.find(x=>x.id===id); if(!b) return;
+  b.concluido = !b.concluido;
+  renderBlocos();
+  try { await sbPatch('consultoria_blocos',`id=eq.${id}`,{concluido:b.concluido,updated_at:new Date().toISOString()}); }
+  catch(e) { b.concluido=!b.concluido; renderBlocos(); }
+}
+
+// ── MODAL BLOCO ───────────────────────────────────────────
+function addBloco(tipo) {
+  document.getElementById('bloco-id').value='';
+  document.getElementById('bloco-tipo').value=tipo;
+  document.getElementById('bloco-conteudo').value='';
+  const titulos={anotacao:'Adicionar anotação',pergunta:'Adicionar pergunta',tarefa:'Adicionar tarefa'};
+  const labels={anotacao:'Anotação *',pergunta:'Pergunta para a cliente *',tarefa:'Tarefa *'};
+  const placeholders={anotacao:'Digite a anotação...',pergunta:'Digite a pergunta que a cliente deve responder...',tarefa:'Descreva a tarefa...'};
+  document.getElementById('bloco-modal-titulo').textContent=titulos[tipo];
+  document.getElementById('bloco-label').textContent=labels[tipo];
+  document.getElementById('bloco-conteudo').placeholder=placeholders[tipo];
+  document.getElementById('modal-bloco').classList.add('aberto');
+  setTimeout(()=>document.getElementById('bloco-conteudo').focus(),100);
+}
+
+function editarBloco(id) {
+  const b=blocos.find(x=>x.id===id); if(!b) return;
+  document.getElementById('bloco-id').value=b.id;
+  document.getElementById('bloco-tipo').value=b.tipo;
+  document.getElementById('bloco-conteudo').value=b.conteudo;
+  const titulos={anotacao:'Editar anotação',pergunta:'Editar pergunta',tarefa:'Editar tarefa'};
+  document.getElementById('bloco-modal-titulo').textContent=titulos[b.tipo];
+  document.getElementById('modal-bloco').classList.add('aberto');
+}
+
+function fecharModalBloco(){document.getElementById('modal-bloco').classList.remove('aberto');}
+
+async function salvarBloco() {
+  const conteudo=document.getElementById('bloco-conteudo').value.trim();
+  if(!conteudo){alert('Preencha o conteúdo.');return;}
+  const btn=document.getElementById('bloco-salvar-btn');
+  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
+  const id=document.getElementById('bloco-id').value;
+  const tipo=document.getElementById('bloco-tipo').value;
+  const payload={conteudo,tipo,fase:_faseAtual,cliente_id:_clienteAtualId,ordem:blocos.filter(b=>b.fase===_faseAtual).length,updated_at:new Date().toISOString()};
+  try{
+    if(id){await sbPatch('consultoria_blocos',`id=eq.${id}`,{conteudo,updated_at:new Date().toISOString()});}
+    else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('consultoria_blocos',payload);}
+    fecharModalBloco();await carregarBlocos();
+  }catch(e){alert('Erro: '+e.message);}
+  btn.disabled=false;btn.textContent='Salvar';
+}
+
+async function deletarBloco(id){
+  if(!confirm('Excluir este bloco?'))return;
+  await sbDelete('consultoria_blocos',`id=eq.${id}`);
+  await carregarBlocos();
+}
+
+// ── MODAL CLIENTE ─────────────────────────────────────────
+function abrirModalNovaCliente(){
+  document.getElementById('cli-id').value='';
+  document.getElementById('cli-nome').value='';
+  document.getElementById('cli-email').value='';
+  document.getElementById('cli-whatsapp').value='';
+  document.getElementById('cli-instagram').value='';
+  document.getElementById('cli-fase').value='diagnostico';
+  document.getElementById('cli-status').value='ativa';
+  document.getElementById('cliente-modal-titulo').textContent='Nova cliente';
+  document.getElementById('cli-del-btn').style.display='none';
+  document.getElementById('modal-cliente').classList.add('aberto');
+  setTimeout(()=>document.getElementById('cli-nome').focus(),100);
+}
+
+function abrirModalEditarCliente(){
+  const c=clientes.find(x=>x.id===_clienteAtualId);if(!c)return;
+  document.getElementById('cli-id').value=c.id;
+  document.getElementById('cli-nome').value=c.nome;
+  document.getElementById('cli-email').value=c.email;
+  document.getElementById('cli-whatsapp').value=c.whatsapp||'';
+  document.getElementById('cli-instagram').value=c.instagram||'';
+  document.getElementById('cli-fase').value=c.fase_atual||'diagnostico';
+  document.getElementById('cli-status').value=c.status||'ativa';
+  document.getElementById('cliente-modal-titulo').textContent='Editar cliente';
+  document.getElementById('cli-del-btn').style.display='inline-flex';
+  document.getElementById('modal-cliente').classList.add('aberto');
+}
+
+function fecharModalCliente(){document.getElementById('modal-cliente').classList.remove('aberto');}
+
+async function salvarCliente(){
+  const nome=document.getElementById('cli-nome').value.trim();
+  const email=document.getElementById('cli-email').value.trim();
+  if(!nome||!email){alert('Preencha nome e e-mail.');return;}
+  const btn=document.getElementById('cli-salvar-btn');
+  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
+  const id=document.getElementById('cli-id').value;
+  const payload={nome,email,whatsapp:document.getElementById('cli-whatsapp').value.trim()||null,instagram:document.getElementById('cli-instagram').value.trim()||null,fase_atual:document.getElementById('cli-fase').value,status:document.getElementById('cli-status').value,updated_at:new Date().toISOString()};
+  try{
+    if(id){await sbPatch('consultoria_clientes',`id=eq.${id}`,payload);}
+    else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('consultoria_clientes',payload);}
+    fecharModalCliente();await carregarConsultoria();
+    if(id){const c=clientes.find(x=>x.id===id);if(c)abrirFichaCliente(id);}
+  }catch(e){alert('Erro: '+e.message);}
+  btn.disabled=false;btn.textContent='Salvar';
+}
+
+async function deletarCliente(){
+  const id=document.getElementById('cli-id').value;
+  if(!id||!confirm('Excluir esta cliente e todos os dados dela?'))return;
+  await sbDelete('consultoria_clientes',`id=eq.${id}`);
+  fecharModalCliente();voltarListaClientes();await carregarConsultoria();
+}
+
+// ── MODAL ACESSO ──────────────────────────────────────────
+function abrirModalAcesso(){
+  const c=clientes.find(x=>x.id===_clienteAtualId);if(!c)return;
+  document.getElementById('acesso-email').value=c.email||'';
+  document.getElementById('acesso-senha').value='';
+  document.getElementById('acesso-erro').textContent='';
+  const temAcesso=!!c.user_id;
+  document.getElementById('acesso-existente').style.display=temAcesso?'block':'none';
+  document.getElementById('acesso-email-atual').textContent=temAcesso?c.email:'';
+  document.getElementById('modal-acesso').classList.add('aberto');
+}
+function fecharModalAcesso(){document.getElementById('modal-acesso').classList.remove('aberto');}
+
+async function criarAcessoCliente(){
+  const email=document.getElementById('acesso-email').value.trim();
+  const senha=document.getElementById('acesso-senha').value;
+  const erro=document.getElementById('acesso-erro');
+  const btn=document.getElementById('acesso-btn');
+  erro.textContent='';
+  if(!email||!senha){erro.textContent='Preencha e-mail e senha.';return;}
+  if(senha.length<6){erro.textContent='Senha deve ter ao menos 6 caracteres.';return;}
+  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
+  try{
+    // Criar usuário via Supabase Auth
+    const r=await fetch(`${SB}/auth/v1/admin/users`,{
+      method:'POST',
+      headers:hdr({'Content-Type':'application/json'}),
+      body:JSON.stringify({email,password:senha,email_confirm:true})
+    });
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.msg||d.error||'Erro ao criar acesso');
+    // Vincular user_id à cliente
+    await sbPatch('consultoria_clientes',`id=eq.${_clienteAtualId}`,{user_id:d.id,email,updated_at:new Date().toISOString()});
+    await carregarConsultoria();
+    fecharModalAcesso();
+    alert('Acesso criado! A cliente pode fazer login com:\nE-mail: '+email+'\nSenha: (a que você definiu)');
+  }catch(e){erro.textContent=e.message||'Erro ao criar acesso.';}
+  btn.disabled=false;btn.textContent='Criar acesso';
+}
+
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
 document.getElementById('l-email').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('l-senha').focus();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats'].forEach(id=>document.getElementById(id).classList.remove('aberto'));}});
-['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)document.getElementById(id).classList.remove('aberto');});});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats','modal-cliente','modal-bloco','modal-acesso'].forEach(id=>document.getElementById(id).classList.remove('aberto'));}});
+['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats','modal-cliente','modal-bloco','modal-acesso'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)document.getElementById(id).classList.remove('aberto');});});
 
 // NAO ESQUECER: adicionar div kanban-nav-wrap ao HTML
 document.getElementById('kanban-nav-wrap').style.display='block';
