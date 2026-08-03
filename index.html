@@ -188,6 +188,22 @@ select.inp{cursor:pointer}
 
 
 
+
+/* Metodologia */
+.met-bloco{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem;margin-bottom:.7rem;transition:border-color .2s}
+.met-bloco:hover{border-color:var(--creme3)}
+.met-bloco-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem}
+.met-tipo-icon{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.72rem;flex-shrink:0}
+.met-tipo-anotacao .met-tipo-icon{background:#fdf0ea;color:var(--terra)}
+.met-tipo-pergunta .met-tipo-icon{background:#f0f4ff;color:#3a4a8a}
+.met-tipo-tarefa .met-tipo-icon{background:var(--verde-light);color:var(--musgo)}
+.met-tipo-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.met-tipo-anotacao .met-tipo-label{color:var(--terra)}
+.met-tipo-pergunta .met-tipo-label{color:#3a4a8a}
+.met-tipo-tarefa .met-tipo-label{color:var(--musgo)}
+.met-conteudo{font-size:.85rem;color:var(--marrom);line-height:1.6;white-space:pre-wrap}
+.met-tag-copia{font-size:.62rem;color:var(--cinza2);background:var(--creme);padding:.15rem .5rem;border-radius:10px;margin-left:auto}
+
 /* ══ CONSULTORIA ══════════════════════════════════════════ */
 .cons-lista{display:flex;flex-direction:column;gap:.7rem}
 .cons-card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:12px;padding:1rem 1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:1rem}
@@ -777,27 +793,87 @@ select.inp{cursor:pointer}
     <!-- MODULO CONSULTORIA -->
     <div class="modulo" id="modulo-consultoria">
 
-      <!-- LISTA DE CLIENTES -->
-      <div id="cons-view-lista">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem">
-          <div>
-            <div class="modulo-tag">Rafaela Ladvig · Consultoria Financeira</div>
-            <div class="modulo-titulo" style="margin-bottom:0">consultoria</div>
-          </div>
+      <!-- HEADER + TABS PRINCIPAIS -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1rem">
+        <div>
+          <div class="modulo-tag">Rafaela Ladvig · Consultoria Financeira</div>
+          <div class="modulo-titulo" style="margin-bottom:0">consultoria</div>
+        </div>
+        <div id="cons-btn-nova" style="display:flex;gap:.5rem">
           <button class="btn btn-verde" onclick="abrirModalNovaCliente()">
             <i class="ti ti-plus"></i> Nova cliente
           </button>
         </div>
+      </div>
 
+      <!-- Tabs principais: Clientes | Metodologia -->
+      <div class="tabs" style="margin-bottom:1.2rem">
+        <button class="tab-btn ativo" id="ctab-clientes" onclick="consTab('clientes')">
+          <i class="ti ti-users"></i> Clientes
+        </button>
+        <button class="tab-btn" id="ctab-metodologia" onclick="consTab('metodologia')">
+          <i class="ti ti-book"></i> Metodologia
+        </button>
+      </div>
+
+      <!-- LISTA DE CLIENTES -->
+      <div id="cons-view-lista">
         <!-- Filtros de status -->
         <div class="tabs" style="margin-bottom:1rem">
           <button class="tab-btn ativo" id="cf-ativas" onclick="filtrarClientes('ativa',this)">Ativas</button>
           <button class="tab-btn" id="cf-concluidas" onclick="filtrarClientes('concluida',this)">Concluídas</button>
           <button class="tab-btn" id="cf-todas" onclick="filtrarClientes('todas',this)">Todas</button>
         </div>
-
         <div class="cons-lista" id="cons-lista">
           <div style="text-align:center;padding:3rem;color:var(--cinza)">Carregando...</div>
+        </div>
+      </div>
+
+      <!-- METODOLOGIA -->
+      <div id="cons-view-metodologia" style="display:none">
+        <div class="ficha-tabs" style="margin-bottom:1.2rem">
+          <button class="ficha-tab ativo" id="mtab-diagnostico" onclick="metTab('diagnostico')">
+            <span class="fase-dot" style="background:#856404"></span>Diagnóstico
+          </button>
+          <button class="ficha-tab" id="mtab-planejamento" onclick="metTab('planejamento')">
+            <span class="fase-dot" style="background:#0c5460"></span>Planejamento
+          </button>
+          <button class="ficha-tab" id="mtab-crescimento" onclick="metTab('crescimento')">
+            <span class="fase-dot" style="background:#155724"></span>Crescimento
+          </button>
+        </div>
+
+        <!-- Descrição da fase -->
+        <div id="met-desc-wrap" style="margin-bottom:1rem">
+          <div style="background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+              <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza)">Descrição da fase</span>
+              <button class="btn-bloco-edit" id="met-desc-edit-btn" onclick="editarDescFase()"><i class="ti ti-pencil"></i></button>
+            </div>
+            <div id="met-desc-texto" style="font-size:.85rem;color:var(--cinza);line-height:1.6;font-style:italic">Clique no lápis para adicionar uma descrição desta fase...</div>
+            <textarea class="inp" id="met-desc-input" rows="3" style="display:none;margin-top:.5rem" placeholder="Descreva o objetivo e o que acontece nesta fase..."></textarea>
+            <div id="met-desc-btns" style="display:none;margin-top:.5rem;display:none">
+              <button class="btn btn-outline" style="font-size:.75rem;margin-right:.5rem" onclick="cancelarDescFase()">Cancelar</button>
+              <button class="btn btn-verde" style="font-size:.75rem" onclick="salvarDescFase()">Salvar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blocos da metodologia -->
+        <div class="bloco-lista" id="met-blocos"></div>
+        <div class="add-bloco-btns">
+          <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('anotacao')">
+            <i class="ti ti-notes"></i> Anotação/Checklist
+          </button>
+          <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('pergunta')">
+            <i class="ti ti-help" style="color:#3a4a8a"></i> Pergunta padrão
+          </button>
+          <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('tarefa')">
+            <i class="ti ti-checkbox" style="color:var(--musgo)"></i> Tarefa padrão
+          </button>
+        </div>
+        <div style="margin-top:1.2rem;padding:1rem;background:#fff3cd;border-radius:8px;font-size:.75rem;color:#856404;line-height:1.6">
+          <i class="ti ti-info-circle"></i> <strong>Atenção:</strong> Estes blocos serão copiados automaticamente para cada nova cliente criada.
         </div>
       </div>
 
@@ -2623,10 +2699,18 @@ async function salvarCliente(){
   const id=document.getElementById('cli-id').value;
   const payload={nome,email,whatsapp:document.getElementById('cli-whatsapp').value.trim()||null,instagram:document.getElementById('cli-instagram').value.trim()||null,fase_atual:document.getElementById('cli-fase').value,status:document.getElementById('cli-status').value,updated_at:new Date().toISOString()};
   try{
-    if(id){await sbPatch('consultoria_clientes',`id=eq.${id}`,payload);}
-    else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('consultoria_clientes',payload);}
-    fecharModalCliente();await carregarConsultoria();
-    if(id){const c=clientes.find(x=>x.id===id);if(c)abrirFichaCliente(id);}
+    if(id){
+      await sbPatch('consultoria_clientes',`id=eq.${id}`,payload);
+      fecharModalCliente();await carregarConsultoria();
+      abrirFichaCliente(id);
+    } else {
+      payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+      await sbPost('consultoria_clientes',payload);
+      fecharModalCliente();await carregarConsultoria();
+      // Copiar metodologia para nova cliente
+      await copiarMetodologiaParaCliente(payload.id);
+      abrirFichaCliente(payload.id);
+    }
   }catch(e){alert('Erro: '+e.message);}
   btn.disabled=false;btn.textContent='Salvar';
 }
@@ -2676,6 +2760,224 @@ async function criarAcessoCliente(){
     alert('Acesso criado! A cliente pode fazer login com:\nE-mail: '+email+'\nSenha: (a que você definiu)');
   }catch(e){erro.textContent=e.message||'Erro ao criar acesso.';}
   btn.disabled=false;btn.textContent='Criar acesso';
+}
+
+
+// ══ METODOLOGIA ══════════════════════════════════════════
+const MET_DESC_KEY = 'met_desc_v1';
+let metodologia = [];
+let _metFase = 'diagnostico';
+
+// Tabs principais: Clientes | Metodologia
+function consTab(tab) {
+  document.getElementById('ctab-clientes').classList.toggle('ativo', tab==='clientes');
+  document.getElementById('ctab-metodologia').classList.toggle('ativo', tab==='metodologia');
+  document.getElementById('cons-view-lista').style.display = tab==='clientes' ? 'block' : 'none';
+  document.getElementById('cons-view-metodologia').style.display = tab==='metodologia' ? 'block' : 'none';
+  document.getElementById('cons-btn-nova').style.display = tab==='clientes' ? 'flex' : 'none';
+  if (tab==='metodologia') { carregarMetodologia(); }
+}
+
+async function carregarMetodologia() {
+  try {
+    metodologia = await sbGet('consultoria_metodologia','order=ordem.asc,created_at.asc');
+  } catch(e) { console.error(e); metodologia=[]; }
+  renderDescFase();
+  renderMetBlocos();
+}
+
+// ── DESCRIÇÃO DA FASE ─────────────────────────────────────
+function metTab(fase) {
+  _metFase = fase;
+  ['diagnostico','planejamento','crescimento'].forEach(f=>{
+    document.getElementById('mtab-'+f).classList.toggle('ativo', f===fase);
+  });
+  renderDescFase();
+  renderMetBlocos();
+}
+
+function getDescs() {
+  try { return JSON.parse(localStorage.getItem(MET_DESC_KEY)||'{}'); }
+  catch { return {}; }
+}
+
+function renderDescFase() {
+  const descs = getDescs();
+  const txt = descs[_metFase] || '';
+  const el = document.getElementById('met-desc-texto');
+  const inp = document.getElementById('met-desc-input');
+  const btns = document.getElementById('met-desc-btns');
+  if (el) el.textContent = txt || 'Clique no lápis para adicionar uma descrição desta fase...';
+  if (el) el.style.fontStyle = txt ? 'normal' : 'italic';
+  if (el) el.style.color = txt ? 'var(--marrom)' : 'var(--cinza)';
+  if (inp) { inp.value = txt; inp.style.display='none'; }
+  if (btns) btns.style.display='none';
+  const editBtn = document.getElementById('met-desc-edit-btn');
+  if (editBtn) editBtn.style.display='flex';
+}
+
+function editarDescFase() {
+  const descs = getDescs();
+  const inp = document.getElementById('met-desc-input');
+  const btns = document.getElementById('met-desc-btns');
+  const el = document.getElementById('met-desc-texto');
+  const editBtn = document.getElementById('met-desc-edit-btn');
+  inp.value = descs[_metFase] || '';
+  el.style.display='none';
+  inp.style.display='block';
+  btns.style.display='flex';
+  editBtn.style.display='none';
+  inp.focus();
+}
+
+function cancelarDescFase() {
+  const el = document.getElementById('met-desc-texto');
+  const inp = document.getElementById('met-desc-input');
+  const btns = document.getElementById('met-desc-btns');
+  const editBtn = document.getElementById('met-desc-edit-btn');
+  el.style.display='block';
+  inp.style.display='none';
+  btns.style.display='none';
+  editBtn.style.display='flex';
+}
+
+function salvarDescFase() {
+  const txt = document.getElementById('met-desc-input').value.trim();
+  const descs = getDescs();
+  descs[_metFase] = txt;
+  localStorage.setItem(MET_DESC_KEY, JSON.stringify(descs));
+  const el = document.getElementById('met-desc-texto');
+  el.style.display='block';
+  renderDescFase();
+}
+
+// ── BLOCOS DA METODOLOGIA ─────────────────────────────────
+function renderMetBlocos() {
+  const lista = document.getElementById('met-blocos');
+  if (!lista) return;
+  const doFase = metodologia.filter(b=>b.fase===_metFase);
+  if (!doFase.length) {
+    lista.innerHTML='<div style="text-align:center;padding:2rem;color:var(--cinza);font-size:.83rem">Nenhum bloco nesta fase.<br>Adicione usando os botões abaixo.</div>';
+    return;
+  }
+  const icons = {anotacao:'<i class="ti ti-notes"></i>',pergunta:'<i class="ti ti-help"></i>',tarefa:'<i class="ti ti-checkbox"></i>'};
+  const labels = {anotacao:'Anotação / Checklist',pergunta:'Pergunta padrão',tarefa:'Tarefa padrão'};
+  lista.innerHTML = doFase.map((b,i)=>`
+    <div class="met-bloco met-tipo-${b.tipo}">
+      <div class="met-bloco-header">
+        <div class="met-tipo-icon">${icons[b.tipo]}</div>
+        <span class="met-tipo-label">${labels[b.tipo]}</span>
+        <span class="met-tag-copia">copiado p/ clientes</span>
+        <div class="bloco-acoes" style="margin-left:.5rem">
+          <button class="btn-bloco-edit" onclick="editarBlocoMet('${b.id}')"><i class="ti ti-pencil"></i></button>
+          <button class="btn btn-outline" style="padding:.2rem .4rem;font-size:.7rem" ${i===0?'disabled':''} onclick="moverBlocoMet('${b.id}',-1)"><i class="ti ti-arrow-up"></i></button>
+          <button class="btn btn-outline" style="padding:.2rem .4rem;font-size:.7rem" ${i===doFase.length-1?'disabled':''} onclick="moverBlocoMet('${b.id}',1)"><i class="ti ti-arrow-down"></i></button>
+          <button class="btn-bloco-del" onclick="deletarBlocoMet('${b.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div class="met-conteudo">${b.conteudo}</div>
+    </div>`).join('');
+}
+
+function addBlocoMet(tipo) {
+  document.getElementById('bloco-id').value='';
+  document.getElementById('bloco-tipo').value='met_'+tipo; // prefixo met_ para diferenciar
+  document.getElementById('bloco-conteudo').value='';
+  const titulos={anotacao:'Anotação / Checklist',pergunta:'Pergunta padrão',tarefa:'Tarefa padrão'};
+  const placeholders={
+    anotacao:'Ex: Coletar extrato bancário / Verificar dívidas / Mapear receitas',
+    pergunta:'Ex: Quais são suas principais fontes de renda?',
+    tarefa:'Ex: Separar todos os comprovantes do mês'
+  };
+  document.getElementById('bloco-modal-titulo').textContent='Adicionar '+titulos[tipo];
+  document.getElementById('bloco-label').textContent=titulos[tipo]+' *';
+  document.getElementById('bloco-conteudo').placeholder=placeholders[tipo];
+  document.getElementById('modal-bloco').classList.add('aberto');
+  setTimeout(()=>document.getElementById('bloco-conteudo').focus(),100);
+}
+
+function editarBlocoMet(id) {
+  const b = metodologia.find(x=>x.id===id); if(!b) return;
+  document.getElementById('bloco-id').value='met_'+b.id; // prefixo para salvarBloco saber
+  document.getElementById('bloco-tipo').value='met_'+b.tipo;
+  document.getElementById('bloco-conteudo').value=b.conteudo;
+  const titulos={anotacao:'Editar anotação',pergunta:'Editar pergunta',tarefa:'Editar tarefa'};
+  document.getElementById('bloco-modal-titulo').textContent=titulos[b.tipo];
+  document.getElementById('modal-bloco').classList.add('aberto');
+}
+
+async function deletarBlocoMet(id) {
+  if(!confirm('Excluir este bloco da metodologia?')) return;
+  await sbDelete('consultoria_metodologia',`id=eq.${id}`);
+  await carregarMetodologia();
+}
+
+async function moverBlocoMet(id, dir) {
+  const doFase = metodologia.filter(b=>b.fase===_metFase);
+  const idx = doFase.findIndex(b=>b.id===id);
+  const outro = doFase[idx+dir];
+  if(!outro) return;
+  // Trocar ordens
+  try {
+    await sbPatch('consultoria_metodologia',`id=eq.${id}`,{ordem:outro.ordem});
+    await sbPatch('consultoria_metodologia',`id=eq.${outro.id}`,{ordem:doFase[idx].ordem});
+    await carregarMetodologia();
+  } catch(e) { console.error(e); }
+}
+
+// ── OVERRIDE de salvarBloco para tratar metodologia ───────
+const _origSalvarBloco = salvarBloco;
+async function salvarBloco() {
+  const rawId = document.getElementById('bloco-id').value;
+  const rawTipo = document.getElementById('bloco-tipo').value;
+  const isMet = rawTipo.startsWith('met_');
+  if (!isMet) { await _origSalvarBloco(); return; }
+
+  const conteudo = document.getElementById('bloco-conteudo').value.trim();
+  if (!conteudo) { alert('Preencha o conteúdo.'); return; }
+  const btn = document.getElementById('bloco-salvar-btn');
+  btn.disabled=true; btn.innerHTML='<span class="loader"></span>';
+  const tipo = rawTipo.replace('met_','');
+  const isEdit = rawId.startsWith('met_');
+  const realId = rawId.replace('met_','');
+
+  try {
+    if (isEdit) {
+      await sbPatch('consultoria_metodologia',`id=eq.${realId}`,{conteudo,updated_at:new Date().toISOString()});
+    } else {
+      const payload = {
+        id: Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+        fase: _metFase, tipo, conteudo,
+        ordem: metodologia.filter(b=>b.fase===_metFase).length,
+      };
+      await sbPost('consultoria_metodologia',payload);
+    }
+    fecharModalBloco();
+    await carregarMetodologia();
+  } catch(e) { alert('Erro: '+e.message); }
+  btn.disabled=false; btn.textContent='Salvar';
+}
+
+// ── COPIAR METODOLOGIA PARA NOVA CLIENTE ──────────────────
+async function copiarMetodologiaParaCliente(clienteId) {
+  if (!metodologia.length) {
+    try { metodologia = await sbGet('consultoria_metodologia','order=ordem.asc,created_at.asc'); }
+    catch(e) { console.error(e); return; }
+  }
+  if (!metodologia.length) return;
+  // Criar blocos para cada item da metodologia
+  const promises = metodologia.map(m => {
+    const payload = {
+      id: Date.now().toString(36)+Math.random().toString(36).slice(2,8)+m.id.slice(-3),
+      cliente_id: clienteId,
+      fase: m.fase,
+      tipo: m.tipo,
+      conteudo: m.conteudo,
+      ordem: m.ordem,
+    };
+    return sbPost('consultoria_blocos',payload).catch(e=>console.error('Erro ao copiar bloco:',e));
+  });
+  await Promise.all(promises);
 }
 
 // INIT
