@@ -844,36 +844,46 @@ select.inp{cursor:pointer}
         </div>
 
         <!-- Descrição da fase -->
-        <div id="met-desc-wrap" style="margin-bottom:1rem">
-          <div style="background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
-              <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza)">Descrição da fase</span>
-              <button class="btn-bloco-edit" id="met-desc-edit-btn" onclick="editarDescFase()"><i class="ti ti-pencil"></i></button>
-            </div>
-            <div id="met-desc-texto" style="font-size:.85rem;color:var(--cinza);line-height:1.6;font-style:italic">Clique no lápis para adicionar uma descrição desta fase...</div>
-            <textarea class="inp" id="met-desc-input" rows="3" style="display:none;margin-top:.5rem" placeholder="Descreva o objetivo e o que acontece nesta fase..."></textarea>
-            <div id="met-desc-btns" style="display:none;margin-top:.5rem;display:none">
-              <button class="btn btn-outline" style="font-size:.75rem;margin-right:.5rem" onclick="cancelarDescFase()">Cancelar</button>
-              <button class="btn btn-verde" style="font-size:.75rem" onclick="salvarDescFase()">Salvar</button>
-            </div>
+        <div style="background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem;margin-bottom:1rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+            <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza)">Descrição da fase</span>
+            <button class="btn-bloco-edit" id="met-desc-edit-btn" onclick="editarDescFase()"><i class="ti ti-pencil"></i></button>
+          </div>
+          <div id="met-desc-texto" style="font-size:.85rem;color:var(--cinza);line-height:1.6;font-style:italic">Clique no lápis para adicionar uma descrição desta fase...</div>
+          <textarea class="inp" id="met-desc-input" rows="3" style="display:none;margin-top:.5rem" placeholder="Descreva o objetivo e o que acontece nesta fase..."></textarea>
+          <div id="met-desc-btns" style="display:none;gap:.5rem;margin-top:.5rem">
+            <button class="btn btn-outline" style="font-size:.75rem" onclick="cancelarDescFase()">Cancelar</button>
+            <button class="btn btn-verde" style="font-size:.75rem" onclick="salvarDescFase()">Salvar</button>
           </div>
         </div>
 
-        <!-- Blocos da metodologia -->
-        <div class="bloco-lista" id="met-blocos"></div>
-        <div class="add-bloco-btns">
-          <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('anotacao')">
-            <i class="ti ti-notes"></i> Anotação/Checklist
-          </button>
-          <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('pergunta')">
-            <i class="ti ti-help" style="color:#3a4a8a"></i> Pergunta padrão
-          </button>
-          <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('tarefa')">
-            <i class="ti ti-checkbox" style="color:var(--musgo)"></i> Tarefa padrão
-          </button>
+        <!-- Passo a passo -->
+        <div style="background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem;margin-bottom:1rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+            <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza)">Passo a passo · Como conduzir</span>
+            <button class="btn btn-verde" style="font-size:.72rem;padding:.3rem .7rem" onclick="abrirModalPasso(null)">
+              <i class="ti ti-plus"></i> Adicionar passo
+            </button>
+          </div>
+          <div class="passos-lista" id="met-passos-lista">
+            <div class="passo-vazio">Nenhum passo ainda. Clique em + para adicionar.</div>
+          </div>
         </div>
-        <div style="margin-top:1.2rem;padding:1rem;background:#fff3cd;border-radius:8px;font-size:.75rem;color:#856404;line-height:1.6">
-          <i class="ti ti-info-circle"></i> <strong>Atenção:</strong> Estes blocos serão copiados automaticamente para cada nova cliente criada.
+
+        <!-- Blocos padrão (clientes) -->
+        <div style="margin-top:1.5rem;padding-bottom:.5rem;border-top:1.5px solid var(--creme2);padding-top:1rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem">
+            <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza)">Blocos padrão para clientes</span>
+          </div>
+          <div class="bloco-lista" id="met-blocos"></div>
+          <div class="add-bloco-btns">
+            <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('anotacao')"><i class="ti ti-notes"></i> Anotação</button>
+            <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('pergunta')"><i class="ti ti-help" style="color:#3a4a8a"></i> Pergunta</button>
+            <button class="btn btn-outline" style="font-size:.75rem" onclick="addBlocoMet('tarefa')"><i class="ti ti-checkbox" style="color:var(--musgo)"></i> Tarefa</button>
+          </div>
+          <div style="margin-top:.8rem;padding:.7rem 1rem;background:#fff3cd;border-radius:8px;font-size:.73rem;color:#856404">
+            <i class="ti ti-info-circle"></i> Estes blocos são copiados automaticamente para cada nova cliente.
+          </div>
         </div>
       </div>
 
@@ -1034,6 +1044,30 @@ select.inp{cursor:pointer}
   </div>
 </div>
 
+<!-- MODAL PASSO A PASSO -->
+<div class="backdrop" id="modal-passo">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+      <h3 class="modal-titulo" id="passo-modal-titulo" style="margin-bottom:0">Nova etapa</h3>
+      <button class="btn-ghost" onclick="fecharModalPasso()"><i class="ti ti-x"></i></button>
+    </div>
+    <input type="hidden" id="passo-id">
+    <div class="form-grupo">
+      <label class="campo-label">Título da etapa *</label>
+      <input class="inp" id="passo-titulo" placeholder="Ex: Abertura da reunião de diagnóstico">
+    </div>
+    <div class="form-grupo">
+      <label class="campo-label">Como conduzir</label>
+      <textarea class="inp" id="passo-conteudo" rows="5" placeholder="Descreva como conduzir esta etapa, o que perguntar, o que observar, quanto tempo dedicar..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="passo-del-btn" onclick="deletarPasso()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
+      <button class="btn btn-outline" onclick="fecharModalPasso()">Cancelar</button>
+      <button class="btn btn-verde" id="passo-salvar-btn" onclick="salvarPasso()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL ACESSO DA CLIENTE -->
 <div class="backdrop" id="modal-acesso">
   <div class="modal-box">
@@ -1055,6 +1089,30 @@ select.inp{cursor:pointer}
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="fecharModalAcesso()">Cancelar</button>
       <button class="btn btn-verde" id="acesso-btn" onclick="criarAcessoCliente()">Criar acesso</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PASSO A PASSO -->
+<div class="backdrop" id="modal-passo">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+      <h3 class="modal-titulo" id="passo-modal-titulo" style="margin-bottom:0">Novo passo</h3>
+      <button class="btn-ghost" onclick="fecharModalPasso()"><i class="ti ti-x"></i></button>
+    </div>
+    <input type="hidden" id="passo-id">
+    <div class="form-grupo">
+      <label class="campo-label">Título do passo *</label>
+      <input class="inp" id="passo-titulo" placeholder="Ex: Abertura — boas-vindas e alinhamento">
+    </div>
+    <div class="form-grupo">
+      <label class="campo-label">Como conduzir</label>
+      <textarea class="inp" id="passo-conteudo" rows="6" placeholder="Descreva como conduzir este passo, o que perguntar, o que observar, quanto tempo dedicar, qual o objetivo..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="passo-del-btn" onclick="deletarPasso()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
+      <button class="btn btn-outline" onclick="fecharModalPasso()">Cancelar</button>
+      <button class="btn btn-verde" id="passo-salvar-btn" onclick="salvarPasso()">Salvar</button>
     </div>
   </div>
 </div>
@@ -2741,23 +2799,24 @@ async function criarAcessoCliente(){
   const erro=document.getElementById('acesso-erro');
   const btn=document.getElementById('acesso-btn');
   erro.textContent='';
-  if(!email||!senha){erro.textContent='Preencha e-mail e senha.';return;}
+  if(!email||!senha){erro.textContent='Preencha e-mail e senha provisória.';return;}
   if(senha.length<6){erro.textContent='Senha deve ter ao menos 6 caracteres.';return;}
   btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
   try{
-    // Criar usuário via Supabase Auth
-    const r=await fetch(`${SB}/auth/v1/admin/users`,{
+    // Criar via signup padrão (sem service_role)
+    const r=await fetch(`${SB}/auth/v1/signup`,{
       method:'POST',
-      headers:hdr({'Content-Type':'application/json'}),
-      body:JSON.stringify({email,password:senha,email_confirm:true})
+      headers:{'Content-Type':'application/json','apikey':SBKEY},
+      body:JSON.stringify({email,password:senha,data:{precisa_trocar_senha:true,tipo:'cliente'}})
     });
     const d=await r.json();
-    if(!r.ok)throw new Error(d.msg||d.error||'Erro ao criar acesso');
-    // Vincular user_id à cliente
-    await sbPatch('consultoria_clientes',`id=eq.${_clienteAtualId}`,{user_id:d.id,email,updated_at:new Date().toISOString()});
+    if(!r.ok)throw new Error(d.msg||d.error_description||d.message||'Erro ao criar acesso');
+    if(!d.user&&!d.id)throw new Error('Conta não criada. Verifique se o e-mail já está em uso.');
+    const userId=d.user?.id||d.id;
+    await sbPatch('consultoria_clientes',`id=eq.${_clienteAtualId}`,{user_id:userId,email,updated_at:new Date().toISOString()});
     await carregarConsultoria();
     fecharModalAcesso();
-    alert('Acesso criado! A cliente pode fazer login com:\nE-mail: '+email+'\nSenha: (a que você definiu)');
+    alert('✅ Acesso criado!\n\nDados de login:\nE-mail: '+email+'\nSenha provisória: '+senha+'\n\nNa primeira entrada ela será solicitada a criar uma nova senha.');
   }catch(e){erro.textContent=e.message||'Erro ao criar acesso.';}
   btn.disabled=false;btn.textContent='Criar acesso';
 }
@@ -2783,6 +2842,7 @@ async function carregarMetodologia() {
     metodologia = await sbGet('consultoria_metodologia','order=ordem.asc,created_at.asc');
   } catch(e) { console.error(e); metodologia=[]; }
   renderDescFase();
+  renderPassos();
   renderMetBlocos();
 }
 
@@ -2793,6 +2853,7 @@ function metTab(fase) {
     document.getElementById('mtab-'+f).classList.toggle('ativo', f===fase);
   });
   renderDescFase();
+  renderPassos();
   renderMetBlocos();
 }
 
@@ -2980,11 +3041,106 @@ async function copiarMetodologiaParaCliente(clienteId) {
   await Promise.all(promises);
 }
 
+
+// ── PASSO A PASSO DA METODOLOGIA ─────────────────────────
+const PASSOS_KEY = 'met_passos_v1';
+
+function getPassos(fase) {
+  try {
+    const all = JSON.parse(localStorage.getItem(PASSOS_KEY)||'{}');
+    return all[fase] || [];
+  } catch { return []; }
+}
+function savePassos(fase, passos) {
+  try {
+    const all = JSON.parse(localStorage.getItem(PASSOS_KEY)||'{}');
+    all[fase] = passos;
+    localStorage.setItem(PASSOS_KEY, JSON.stringify(all));
+  } catch(e) {}
+}
+
+function renderPassos() {
+  const lista = document.getElementById('met-passos-lista');
+  if (!lista) return;
+  const passos = getPassos(_metFase);
+  if (!passos.length) {
+    lista.innerHTML = '<div class="passo-vazio">Nenhum passo ainda. Clique em + para adicionar.</div>';
+    return;
+  }
+  lista.innerHTML = passos.map((p, i) => `
+    <div class="passo-item">
+      <div class="passo-num">${i+1}</div>
+      <div class="passo-body">
+        <div class="passo-titulo">${p.titulo}</div>
+        ${p.conteudo ? `<div class="passo-desc">${p.conteudo}</div>` : ''}
+      </div>
+      <div class="passo-acoes">
+        <button class="btn btn-outline" style="padding:.2rem .4rem;font-size:.7rem" ${i===0?'disabled':''} onclick="moverPasso(${i},-1)"><i class="ti ti-arrow-up"></i></button>
+        <button class="btn btn-outline" style="padding:.2rem .4rem;font-size:.7rem" ${i===passos.length-1?'disabled':''} onclick="moverPasso(${i},1)"><i class="ti ti-arrow-down"></i></button>
+        <button class="btn-bloco-edit" onclick="abrirModalPasso(${i})"><i class="ti ti-pencil"></i></button>
+        <button class="btn-bloco-del" onclick="deletarPasso(${i})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function abrirModalPasso(idx) {
+  const passos = getPassos(_metFase);
+  const p = idx !== null ? passos[idx] : null;
+  document.getElementById('passo-id').value = idx !== null ? String(idx) : '';
+  document.getElementById('passo-titulo').value = p?.titulo || '';
+  document.getElementById('passo-conteudo').value = p?.conteudo || '';
+  document.getElementById('passo-modal-titulo').textContent = p ? 'Editar passo' : 'Novo passo';
+  document.getElementById('passo-del-btn').style.display = p ? 'inline-flex' : 'none';
+  document.getElementById('modal-passo').classList.add('aberto');
+  setTimeout(() => document.getElementById('passo-titulo').focus(), 100);
+}
+function fecharModalPasso() {
+  document.getElementById('modal-passo').classList.remove('aberto');
+}
+
+function salvarPasso() {
+  const titulo = document.getElementById('passo-titulo').value.trim();
+  if (!titulo) { alert('Preencha o título do passo.'); return; }
+  const conteudo = document.getElementById('passo-conteudo').value.trim();
+  const idxStr = document.getElementById('passo-id').value;
+  const passos = getPassos(_metFase);
+  if (idxStr !== '') {
+    const idx = parseInt(idxStr);
+    passos[idx] = { titulo, conteudo };
+  } else {
+    passos.push({ titulo, conteudo });
+  }
+  savePassos(_metFase, passos);
+  fecharModalPasso();
+  renderPassos();
+}
+
+function deletarPasso(idx) {
+  if (idx === undefined) {
+    idx = parseInt(document.getElementById('passo-id').value);
+    if (!confirm('Excluir este passo?')) return;
+    fecharModalPasso();
+  }
+  const passos = getPassos(_metFase);
+  passos.splice(idx, 1);
+  savePassos(_metFase, passos);
+  renderPassos();
+}
+
+function moverPasso(idx, dir) {
+  const passos = getPassos(_metFase);
+  const outro = idx + dir;
+  if (outro < 0 || outro >= passos.length) return;
+  [passos[idx], passos[outro]] = [passos[outro], passos[idx]];
+  savePassos(_metFase, passos);
+  renderPassos();
+}
+
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
 document.getElementById('l-email').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('l-senha').focus();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats','modal-cliente','modal-bloco','modal-acesso'].forEach(id=>document.getElementById(id).classList.remove('aberto'));}});
-['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats','modal-cliente','modal-bloco','modal-acesso'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)document.getElementById(id).classList.remove('aberto');});});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats','modal-cliente','modal-bloco','modal-acesso','modal-passo'].forEach(id=>document.getElementById(id).classList.remove('aberto'));}});
+['modal-post','modal-ideia','modal-perg','modal-lead','modal-lead-det','modal-evento','modal-cats','modal-cliente','modal-bloco','modal-acesso','modal-passo'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)document.getElementById(id).classList.remove('aberto');});});
 
 // NAO ESQUECER: adicionar div kanban-nav-wrap ao HTML
 document.getElementById('kanban-nav-wrap').style.display='block';
