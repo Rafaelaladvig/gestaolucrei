@@ -2594,6 +2594,9 @@ async function abrirFichaCliente(id) {
   document.getElementById('cons-view-ficha').style.display='block';
   fichaTab('diagnostico');
   await carregarBlocos();
+  // Carregar anexos
+  _anexos = Array.isArray(c.anexos) ? c.anexos : [];
+  renderAnexos();
 }
 
 function voltarListaClientes() {
@@ -3242,14 +3245,7 @@ async function salvarAnexos() {
   } catch(e) { console.error('Erro ao salvar anexos:', e); }
 }
 
-// Carregar anexos ao abrir ficha (override de abrirFichaCliente)
-const _origAbrirFicha = abrirFichaCliente;
-async function abrirFichaCliente(id) {
-  await _origAbrirFicha(id);
-  const c = clientes.find(x=>x.id===id);
-  _anexos = Array.isArray(c?.anexos) ? c.anexos : [];
-  renderAnexos();
-}
+// anexos carregados diretamente em abrirFichaCliente (integrado abaixo)
 
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
