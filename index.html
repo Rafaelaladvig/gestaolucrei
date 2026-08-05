@@ -934,6 +934,20 @@ select.inp{cursor:pointer}
               <i class="ti ti-checkbox" style="color:var(--musgo)"></i> Tarefa
             </button>
           </div>
+
+          <!-- ANEXOS -->
+          <div style="margin-top:1rem;background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+              <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza)"><i class="ti ti-paperclip"></i> Anexos</span>
+              <button class="btn-upload-anexo" onclick="document.getElementById('anexo-input').click()">
+                <i class="ti ti-upload"></i> Enviar arquivo
+              </button>
+              <input type="file" id="anexo-input" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt" style="display:none" onchange="adicionarAnexos(this)">
+            </div>
+            <div class="anexos-grid" id="ficha-anexos">
+              <div style="color:var(--cinza2);font-size:.73rem;grid-column:1/-1;padding:.5rem;text-align:center;font-style:italic">Nenhum anexo ainda.</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2803,20 +2817,31 @@ async function criarAcessoCliente(){
   if(senha.length<6){erro.textContent='Senha deve ter ao menos 6 caracteres.';return;}
   btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
   try{
-    // Criar via signup padrão (sem service_role)
+    // 1) Criar conta via signup
     const r=await fetch(`${SB}/auth/v1/signup`,{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':SBKEY},
       body:JSON.stringify({email,password:senha,data:{precisa_trocar_senha:true,tipo:'cliente'}})
     });
     const d=await r.json();
-    if(!r.ok)throw new Error(d.msg||d.error_description||d.message||'Erro ao criar acesso');
-    if(!d.user&&!d.id)throw new Error('Conta não criada. Verifique se o e-mail já está em uso.');
-    const userId=d.user?.id||d.id;
+    if(!r.ok)throw new Error(d.msg||d.error_description||d.message||'Erro ao criar conta');
+
+    // 2) Fazer login imediato para confirmar e obter user_id real
+    const r2=await fetch(`${SB}/auth/v1/token?grant_type=password`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SBKEY},
+      body:JSON.stringify({email,password:senha})
+    });
+    const d2=await r2.json();
+    if(!r2.ok)throw new Error('Conta criada mas login falhou. Verifique se confirmação de e-mail está desativada no Supabase (Authentication → Settings).');
+    const userId=d2.user?.id;
+    if(!userId)throw new Error('Não foi possível obter o ID do usuário.');
+
+    // 3) Vincular user_id à ficha
     await sbPatch('consultoria_clientes',`id=eq.${_clienteAtualId}`,{user_id:userId,email,updated_at:new Date().toISOString()});
     await carregarConsultoria();
     fecharModalAcesso();
-    alert('✅ Acesso criado!\n\nDados de login:\nE-mail: '+email+'\nSenha provisória: '+senha+'\n\nNa primeira entrada ela será solicitada a criar uma nova senha.');
+    alert('✅ Acesso criado e testado com sucesso!\n\nDados de login para passar à cliente:\nE-mail: '+email+'\nSenha provisória: '+senha+'\n\nNa primeira entrada ela poderá criar uma senha própria.');
   }catch(e){erro.textContent=e.message||'Erro ao criar acesso.';}
   btn.disabled=false;btn.textContent='Criar acesso';
 }
@@ -3134,6 +3159,96 @@ function moverPasso(idx, dir) {
   [passos[idx], passos[outro]] = [passos[outro], passos[idx]];
   savePassos(_metFase, passos);
   renderPassos();
+}
+
+
+// ══ ANEXOS DA FICHA ══════════════════════════════════════
+let _anexos = []; // [{nome, tipo, data, tamanho}]
+
+function renderAnexos() {
+  const grid = document.getElementById('ficha-anexos');
+  if (!grid) return;
+  if (!_anexos.length) {
+    grid.innerHTML = '<div style="color:var(--cinza2);font-size:.73rem;grid-column:1/-1;padding:.5rem;text-align:center;font-style:italic">Nenhum anexo ainda.</div>';
+    return;
+  }
+  const icones = {
+    pdf:'📄', doc:'📝', docx:'📝', xls:'📊', xlsx:'📊',
+    png:'🖼️', jpg:'🖼️', jpeg:'🖼️', gif:'🖼️', webp:'🖼️',
+    txt:'📃', default:'📎'
+  };
+  grid.innerHTML = _anexos.map((a, i) => {
+    const ext = a.nome.split('.').pop().toLowerCase();
+    const icon = icones[ext] || icones.default;
+    const tamanho = a.tamanho < 1024*1024
+      ? Math.round(a.tamanho/1024)+'KB'
+      : (a.tamanho/1024/1024).toFixed(1)+'MB';
+    return `<div class="anexo-card">
+      <div class="anexo-icon">${icon}</div>
+      <div class="anexo-nome">${a.nome}</div>
+      <div class="anexo-tipo">${tamanho}</div>
+      <div class="anexo-acoes">
+        <button class="btn btn-outline" style="font-size:.65rem;padding:.2rem .5rem" onclick="baixarAnexo(${i})"><i class="ti ti-download"></i></button>
+        <button class="btn-bloco-del" onclick="removerAnexo(${i})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function adicionarAnexos(input) {
+  const files = Array.from(input.files);
+  let processados = 0;
+  files.forEach(file => {
+    if (file.size > 5 * 1024 * 1024) {
+      alert(`"${file.name}" é maior que 5MB e não pode ser anexado.`);
+      processados++;
+      if (processados === files.length) input.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async e => {
+      _anexos.push({ nome: file.name, tipo: file.type, tamanho: file.size, data: e.target.result });
+      renderAnexos();
+      await salvarAnexos();
+      processados++;
+      if (processados === files.length) input.value = '';
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function baixarAnexo(i) {
+  const a = _anexos[i]; if (!a) return;
+  const link = document.createElement('a');
+  link.href = a.data;
+  link.download = a.nome;
+  link.click();
+}
+
+async function removerAnexo(i) {
+  if (!confirm('Remover este anexo?')) return;
+  _anexos.splice(i, 1);
+  renderAnexos();
+  await salvarAnexos();
+}
+
+async function salvarAnexos() {
+  if (!_clienteAtualId) return;
+  try {
+    await sbPatch('consultoria_clientes', `id=eq.${_clienteAtualId}`, {
+      anexos: _anexos.map(a => ({nome:a.nome,tipo:a.tipo,tamanho:a.tamanho,data:a.data})),
+      updated_at: new Date().toISOString()
+    });
+  } catch(e) { console.error('Erro ao salvar anexos:', e); }
+}
+
+// Carregar anexos ao abrir ficha (override de abrirFichaCliente)
+const _origAbrirFicha = abrirFichaCliente;
+async function abrirFichaCliente(id) {
+  await _origAbrirFicha(id);
+  const c = clientes.find(x=>x.id===id);
+  _anexos = Array.isArray(c?.anexos) ? c.anexos : [];
+  renderAnexos();
 }
 
 // INIT
