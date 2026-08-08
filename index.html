@@ -1492,9 +1492,16 @@ function iniciarSistema(user){
 
 // NAVEGACAO
 function irParaMenu(){
+  // Se estamos na ficha de uma cliente, voltar para a lista primeiro
+  const btnVoltar = document.getElementById('btn-voltar');
+  if(btnVoltar.dataset.nivel==='ficha'){
+    btnVoltar.dataset.nivel='';
+    voltarListaClientes();
+    return;
+  }
   document.getElementById('menu').classList.add('vis');
   document.querySelectorAll('.modulo').forEach(m=>m.classList.remove('ativo'));
-  document.getElementById('btn-voltar').classList.remove('vis');
+  btnVoltar.classList.remove('vis');
   document.getElementById('topbar-secao').textContent='Painel';
   const cont = document.querySelector('.conteudo');
   if(cont) cont.scrollTop = 0;
@@ -2667,6 +2674,8 @@ async function abrirFichaCliente(id) {
   // Mostrar ficha
   document.getElementById('cons-view-lista').style.display='none';
   document.getElementById('cons-view-ficha').style.display='block';
+  // Indicar que estamos na ficha para o botão voltar saber o que fazer
+  document.getElementById('btn-voltar').dataset.nivel='ficha';
   fichaTab('diagnostico');
   await carregarBlocos();
   // Carregar anexos
@@ -2678,10 +2687,12 @@ function voltarListaClientes() {
   _clienteAtualId = null;
   document.getElementById('cons-view-lista').style.display='block';
   document.getElementById('cons-view-ficha').style.display='none';
-  // Garantir que está na tab clientes
   document.getElementById('ctab-clientes').classList.add('ativo');
   document.getElementById('ctab-metodologia').classList.remove('ativo');
   document.getElementById('cons-view-metodologia').style.display='none';
+  // Limpar nível para próximo clique no voltar ir ao menu
+  const btn = document.getElementById('btn-voltar');
+  if(btn) btn.dataset.nivel='';
 }
 
 function fichaTab(fase) {
@@ -2921,31 +2932,58 @@ async function criarAcessoCliente(){
   if(senha.length<6){erro.textContent='Senha deve ter ao menos 6 caracteres.';return;}
   btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
   try{
-    // 1) Criar conta via signup
+    let userId = null;
+
+    // 1) Tentar criar conta via signup
     const r=await fetch(`${SB}/auth/v1/signup`,{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':SBKEY},
       body:JSON.stringify({email,password:senha,data:{precisa_trocar_senha:true,tipo:'cliente'}})
     });
     const d=await r.json();
-    if(!r.ok)throw new Error(d.msg||d.error_description||d.message||'Erro ao criar conta');
 
-    // 2) Fazer login imediato para confirmar e obter user_id real
-    const r2=await fetch(`${SB}/auth/v1/token?grant_type=password`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SBKEY},
-      body:JSON.stringify({email,password:senha})
-    });
-    const d2=await r2.json();
-    if(!r2.ok)throw new Error('Conta criada mas login falhou. Verifique se confirmação de e-mail está desativada no Supabase (Authentication → Settings).');
-    const userId=d2.user?.id;
+    // Se já existe, atualizar senha via login + update
+    if(!r.ok || d.code==='user_already_exists' || (d.error_description||'').includes('already') || (d.msg||'').includes('already')){
+      // Usuário já existe — atualizar senha e vincular
+      erro.textContent='';
+      // Fazer login com a nova senha para verificar
+      const rLogin=await fetch(`${SB}/auth/v1/token?grant_type=password`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SBKEY},
+        body:JSON.stringify({email,password:senha})
+      });
+      if(rLogin.ok){
+        const dLogin=await rLogin.json();
+        userId=dLogin.user?.id;
+      } else {
+        // Senha diferente — não conseguimos atualizar sem service_role
+        // Mas podemos vincular pelo e-mail buscando na tabela de clientes
+        throw new Error('Esta conta já existe com outra senha. Acesse Authentication → Users no Supabase, delete o usuário "'+email+'" e tente criar o acesso novamente.');
+      }
+    } else {
+      // 2) Conta criada — fazer login para obter user_id
+      const r2=await fetch(`${SB}/auth/v1/token?grant_type=password`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SBKEY},
+        body:JSON.stringify({email,password:senha})
+      });
+      const d2=await r2.json();
+      if(!r2.ok)throw new Error('Conta criada mas login falhou. Desative confirmação de e-mail no Supabase → Authentication → Sign In / Providers.');
+      userId=d2.user?.id;
+    }
+
     if(!userId)throw new Error('Não foi possível obter o ID do usuário.');
 
-    // 3) Vincular user_id à ficha
-    await sbPatch('consultoria_clientes',`id=eq.${_clienteAtualId}`,{user_id:userId,email,updated_at:new Date().toISOString()});
+    // 3) Vincular user_id à ficha e resetar contrato se necessário
+    await sbPatchComRenovacao('consultoria_clientes',`id=eq.${_clienteAtualId}`,{
+      user_id:userId, email,
+      contrato_aceito:false,
+      contrato_aceito_em:null,
+      updated_at:new Date().toISOString()
+    });
     await carregarConsultoria();
     fecharModalAcesso();
-    alert('✅ Acesso criado e testado com sucesso!\n\nDados de login para passar à cliente:\nE-mail: '+email+'\nSenha provisória: '+senha+'\n\nNa primeira entrada ela poderá criar uma senha própria.');
+    alert('✅ Acesso configurado!\n\nDados de login:\nE-mail: '+email+'\nSenha: '+senha+'\n\nNa primeira entrada ela assinará o contrato e poderá criar uma senha própria.');
   }catch(e){erro.textContent=e.message||'Erro ao criar acesso.';}
   btn.disabled=false;btn.textContent='Criar acesso';
 }
