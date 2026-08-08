@@ -1356,6 +1356,58 @@ select.inp{cursor:pointer}
 const SB='https://ceqvwrzyqjpxvekapqto.supabase.co';
 const SBKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcXZ3cnp5cWpweHZla2FwcXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDU1MDUsImV4cCI6MjA5NzgyMTUwNX0.IJZlL7UT07KHHDRMpkkMShWIVQfQgcbZjSxWtpF3VvU';
 let TOKEN=null;
+let REFRESH_TOKEN=null;
+
+async function renovarToken() {
+  if(!REFRESH_TOKEN) { fazerLogout(); return false; }
+  try {
+    const r=await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SBKEY},
+      body:JSON.stringify({refresh_token:REFRESH_TOKEN})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.access_token) { fazerLogout(); return false; }
+    TOKEN=d.access_token;
+    if(d.refresh_token) REFRESH_TOKEN=d.refresh_token;
+    return true;
+  } catch(e) { return false; }
+}
+
+// Wrapper que renova o token automaticamente em caso de JWT expired
+async function sbPatchComRenovacao(t,q,b) {
+  try {
+    return await sbPatch(t,q,b);
+  } catch(e) {
+    if(e.message&&e.message.includes('JWT')) {
+      const renovado = await renovarToken();
+      if(renovado) return await sbPatch(t,q,b);
+    }
+    throw e;
+  }
+}
+async function sbPostComRenovacao(t,b) {
+  try {
+    return await sbPost(t,b);
+  } catch(e) {
+    if(e.message&&e.message.includes('JWT')) {
+      const renovado = await renovarToken();
+      if(renovado) return await sbPost(t,b);
+    }
+    throw e;
+  }
+}
+async function sbGetComRenovacao(t,q) {
+  try {
+    return await sbGet(t,q);
+  } catch(e) {
+    if(e.message&&e.message.includes('JWT')) {
+      const renovado = await renovarToken();
+      if(renovado) return await sbGet(t,q);
+    }
+    throw e;
+  }
+}
 
 function hdr(ex){return{'Content-Type':'application/json','apikey':SBKEY,'Authorization':'Bearer '+(TOKEN||SBKEY),...(ex||{})}}
 async function sbGet(t,q){const r=await fetch(`${SB}/rest/v1/${t}?${q||''}`,{headers:hdr()});if(!r.ok)throw new Error(await r.text());return r.json();}
@@ -1389,6 +1441,7 @@ async function fazerLogin(){
       btn.disabled=false; btn.textContent='Entrar'; return;
     }
     TOKEN=d.access_token;
+    if(d.refresh_token) REFRESH_TOKEN=d.refresh_token;
     iniciarSistema(d.user||{email});
   }catch(e){err.textContent=e.message||'Erro de conexao.';}
   btn.disabled=false;btn.textContent='Entrar';
@@ -2563,7 +2616,7 @@ const FASE_NOMES = {diagnostico:'Diagnóstico',planejamento:'Planejamento',cresc
 
 async function carregarConsultoria() {
   try {
-    clientes = await sbGet('consultoria_clientes','order=created_at.desc');
+    clientes = await sbGetComRenovacao('consultoria_clientes','order=created_at.desc');
   } catch(e) { console.error('consultoria:',e); clientes=[]; }
   renderListaClientes();
 }
@@ -2823,12 +2876,12 @@ async function salvarCliente(){
   };
   try{
     if(id){
-      await sbPatch('consultoria_clientes',`id=eq.${id}`,payload);
+      await sbPatchComRenovacao('consultoria_clientes',`id=eq.${id}`,payload);
       fecharModalCliente();await carregarConsultoria();
       abrirFichaCliente(id);
     } else {
       payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-      await sbPost('consultoria_clientes',payload);
+      await sbPostComRenovacao('consultoria_clientes',payload);
       fecharModalCliente();await carregarConsultoria();
       // Copiar metodologia para nova cliente
       await copiarMetodologiaParaCliente(payload.id);
@@ -3294,6 +3347,11 @@ async function salvarAnexos() {
 }
 
 // anexos carregados diretamente em abrirFichaCliente (integrado abaixo)
+
+// Renovar token automaticamente a cada 50 minutos
+setInterval(()=>{
+  if(TOKEN && REFRESH_TOKEN) renovarToken();
+}, 50*60*1000);
 
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
