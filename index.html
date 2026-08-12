@@ -1061,6 +1061,19 @@ select.inp{cursor:pointer}
       <label class="campo-label" id="bloco-label">Anotação *</label>
       <textarea class="inp" id="bloco-conteudo" rows="4" placeholder="Digite aqui..."></textarea>
     </div>
+    <div class="form-grupo">
+      <label class="campo-label">Visibilidade</label>
+      <div style="display:flex;gap:.8rem;margin-top:.3rem">
+        <label style="display:flex;align-items:center;gap:.4rem;font-size:.82rem;cursor:pointer">
+          <input type="radio" name="bloco-pub" id="bloco-pub-sim" value="sim" checked> 
+          <span>👁️ Visível para a cliente</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:.4rem;font-size:.82rem;cursor:pointer">
+          <input type="radio" name="bloco-pub" id="bloco-pub-nao" value="nao"> 
+          <span>🔒 Só para mim</span>
+        </label>
+      </div>
+    </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="fecharModalBloco()">Cancelar</button>
       <button class="btn btn-verde" id="bloco-salvar-btn" onclick="salvarBloco()">Salvar</button>
@@ -1321,10 +1334,17 @@ select.inp{cursor:pointer}
     <div class="form-row">
       <div class="form-grupo"><label class="campo-label">ID do campo *</label><input class="inp" id="perg-campo-id" placeholder="Ex: nome"></div>
       <div class="form-grupo"><label class="campo-label">Tipo</label>
-        <select class="inp" id="perg-tipo"><option value="text">Texto curto</option><option value="tel">Telefone</option><option value="textarea">Texto longo</option><option value="choice">Escolha unica</option><option value="choice-other">Escolha + outro</option><option value="multi">Multipla escolha</option></select>
+        <select class="inp" id="perg-tipo" onchange="onPergTipoChange()"><option value="text">Texto curto</option><option value="tel">Telefone</option><option value="textarea">Texto longo</option><option value="choice">Escolha unica</option><option value="choice-other">Escolha + outro</option><option value="multi">Multipla escolha</option></select>
       </div>
     </div>
     <div class="form-grupo"><label class="campo-label">Placeholder</label><input class="inp" id="perg-placeholder" placeholder="Texto de exemplo"></div>
+    <div class="form-grupo" id="perg-opcoes-wrap" style="display:none">
+      <label class="campo-label">Opções de escolha</label>
+      <div id="perg-opcoes-lista" style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px"></div>
+      <button type="button" class="btn btn-outline" style="font-size:.73rem;padding:.35rem .7rem" onclick="addOpcaoPerg()">
+        <i class="ti ti-plus"></i> Adicionar opção
+      </button>
+    </div>
     <div class="form-grupo"><label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;cursor:pointer"><input type="checkbox" id="perg-obrig" checked> Pergunta obrigatoria</label></div>
     <div class="modal-footer">
       <button class="btn-danger" id="perg-del-btn" onclick="deletarPergunta()" style="display:none;margin-right:auto"><i class="ti ti-trash"></i> Excluir</button>
@@ -1592,6 +1612,27 @@ async function carregarPerguntas(){
       </div>`).join('');
   }catch(e){lista.innerHTML='<div style="color:red;padding:1rem">Erro: '+e.message+'</div>';}
 }
+function onPergTipoChange(){
+  const tipo=document.getElementById('perg-tipo').value;
+  const temOpcoes=['choice','choice-other','multi'].includes(tipo);
+  document.getElementById('perg-opcoes-wrap').style.display=temOpcoes?'block':'none';
+}
+
+function addOpcaoPerg(valor=''){
+  const lista=document.getElementById('perg-opcoes-lista');
+  const div=document.createElement('div');
+  div.style.cssText='display:flex;gap:6px;align-items:center';
+  div.innerHTML=`<input class="inp" style="flex:1" placeholder="Opção..." value="${valor}">
+    <button type="button" class="btn-bloco-del" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>`;
+  lista.appendChild(div);
+  div.querySelector('input').focus();
+}
+
+function getOpcoesPerg(){
+  return Array.from(document.querySelectorAll('#perg-opcoes-lista input'))
+    .map(i=>i.value.trim()).filter(Boolean);
+}
+
 function abrirModalPerg(id){
   const p=id?pergCache.find(x=>x.id===id):null;
   document.getElementById('perg-id').value=p?.id||'';
@@ -1603,6 +1644,10 @@ function abrirModalPerg(id){
   document.getElementById('perg-obrig').checked=p?.obrigatoria!==false;
   document.getElementById('perg-modal-titulo').textContent=id?'Editar pergunta':'Nova pergunta';
   document.getElementById('perg-del-btn').style.display=id?'inline-flex':'none';
+  // Opções
+  document.getElementById('perg-opcoes-lista').innerHTML='';
+  if(p?.opcoes?.length) p.opcoes.forEach(o=>addOpcaoPerg(o));
+  onPergTipoChange();
   document.getElementById('modal-perg').classList.add('aberto');
 }
 function fecharModalPerg(){document.getElementById('modal-perg').classList.remove('aberto');}
@@ -1613,7 +1658,8 @@ async function salvarPergunta(){
   const id=document.getElementById('perg-id').value;
   const btn=document.getElementById('perg-salvar-btn');
   btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
-  const payload={titulo,campo_id,subtitulo:document.getElementById('perg-sub').value.trim()||null,tipo:document.getElementById('perg-tipo').value,placeholder:document.getElementById('perg-placeholder').value.trim()||null,obrigatoria:document.getElementById('perg-obrig').checked,ordem:id?(pergCache.find(p=>p.id===id)?.ordem||1):pergCache.length+1,ativa:true,opcoes:[]};
+  const opcoes=getOpcoesPerg();
+  const payload={titulo,campo_id,subtitulo:document.getElementById('perg-sub').value.trim()||null,tipo:document.getElementById('perg-tipo').value,placeholder:document.getElementById('perg-placeholder').value.trim()||null,obrigatoria:document.getElementById('perg-obrig').checked,ordem:id?(pergCache.find(p=>p.id===id)?.ordem||1):pergCache.length+1,ativa:true,opcoes};
   try{
     if(id){await sbPatch('perguntas',`id=eq.${id}`,payload);}
     else{payload.id=crypto.randomUUID();await sbPost('perguntas',payload);}
@@ -2721,18 +2767,23 @@ function renderBlocos() {
   }
   const icons = {anotacao:'<i class="ti ti-notes"></i>',pergunta:'<i class="ti ti-help"></i>',tarefa:'<i class="ti ti-checkbox"></i>'};
   lista.innerHTML = doFase.map(b=>{
+    const pub = b.publicado!==false;
+    const pubBtn = `<button class="vis-btn ${pub?'publico':'privado'}" onclick="togglePublico('${b.id}','${b.publicado}')" style="margin-left:auto">
+      ${pub?'<i class="ti ti-eye"></i> Visível':'<i class="ti ti-eye-off"></i> Só para mim'}
+    </button>`;
     if(b.tipo==='tarefa') {
       return `<div class="bloco tipo-tarefa">
         <div class="bloco-tarefa-row">
           <div class="bloco-check ${b.concluido?'feito':''}" onclick="toggleTarefa('${b.id}')">
             ${b.concluido?'<i class="ti ti-check" style="font-size:.75rem"></i>':''}
           </div>
-          <div class="bloco-conteudo" style="${b.concluido?'text-decoration:line-through;opacity:.6':''}">${b.conteudo}</div>
+          <div class="bloco-conteudo" style="${b.concluido?'text-decoration:line-through;opacity:.6':''}">$\{b.conteudo}</div>
           <div class="bloco-acoes">
             <button class="btn-bloco-edit" onclick="editarBloco('${b.id}')"><i class="ti ti-pencil"></i></button>
             <button class="btn-bloco-del" onclick="deletarBloco('${b.id}')"><i class="ti ti-trash"></i></button>
           </div>
         </div>
+        <div class="bloco-vis-toggle">${pubBtn}</div>
       </div>`;
     }
     if(b.tipo==='pergunta') {
@@ -2750,9 +2801,9 @@ function renderBlocos() {
           <div class="bloco-resposta-label">Resposta da cliente</div>
           ${b.resposta?`<div class="bloco-resposta-text">"${b.resposta}"</div>`:'<div class="bloco-resposta-vazia">Aguardando resposta...</div>'}
         </div>
+        <div class="bloco-vis-toggle">${pubBtn}</div>
       </div>`;
     }
-    // anotacao
     return `<div class="bloco tipo-anotacao">
       <div class="bloco-header">
         <div class="bloco-tipo-icon">${icons[b.tipo]}</div>
@@ -2763,8 +2814,17 @@ function renderBlocos() {
         </div>
       </div>
       <div class="bloco-conteudo">${b.conteudo}</div>
+      <div class="bloco-vis-toggle">${pubBtn}</div>
     </div>`;
   }).join('');
+}
+
+async function togglePublico(id, atual) {
+  const b = blocos.find(x=>x.id===id); if(!b) return;
+  b.publicado = b.publicado===false ? true : false;
+  renderBlocos();
+  try { await sbPatch('consultoria_blocos',`id=eq.${id}`,{publicado:b.publicado,updated_at:new Date().toISOString()}); }
+  catch(e) { b.publicado=!b.publicado; renderBlocos(); }
 }
 
 async function toggleTarefa(id) {
@@ -2795,6 +2855,10 @@ function editarBloco(id) {
   document.getElementById('bloco-id').value=b.id;
   document.getElementById('bloco-tipo').value=b.tipo;
   document.getElementById('bloco-conteudo').value=b.conteudo;
+  // Preencher visibilidade
+  const pub = b.publicado!==false;
+  document.getElementById('bloco-pub-sim').checked=pub;
+  document.getElementById('bloco-pub-nao').checked=!pub;
   const titulos={anotacao:'Editar anotação',pergunta:'Editar pergunta',tarefa:'Editar tarefa'};
   document.getElementById('bloco-modal-titulo').textContent=titulos[b.tipo];
   document.getElementById('modal-bloco').classList.add('aberto');
@@ -2809,7 +2873,8 @@ async function salvarBloco() {
   btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
   const id=document.getElementById('bloco-id').value;
   const tipo=document.getElementById('bloco-tipo').value;
-  const payload={conteudo,tipo,fase:_faseAtual,cliente_id:_clienteAtualId,ordem:blocos.filter(b=>b.fase===_faseAtual).length,updated_at:new Date().toISOString()};
+  const publicado=document.getElementById('bloco-pub-sim')?.checked!==false;
+  const payload={conteudo,tipo,fase:_faseAtual,cliente_id:_clienteAtualId,ordem:blocos.filter(b=>b.fase===_faseAtual).length,publicado,updated_at:new Date().toISOString()};
   try{
     if(id){await sbPatch('consultoria_blocos',`id=eq.${id}`,{conteudo,updated_at:new Date().toISOString()});}
     else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('consultoria_blocos',payload);}
