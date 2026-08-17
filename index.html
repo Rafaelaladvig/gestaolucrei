@@ -489,12 +489,61 @@ select.inp{cursor:pointer}
       <div class="tabs">
         <button class="tab-btn ativo" id="ptab-respostas" onclick="prospTab('respostas')">&#128203; Respostas</button>
         <button class="tab-btn" id="ptab-perguntas" onclick="prospTab('perguntas')">&#10067; Perguntas</button>
+        <button class="tab-btn" id="ptab-rastreamento" onclick="prospTab('rastreamento')">&#128269; Rastreamento</button>
       </div>
       <div id="pview-respostas">
         <div id="resp-loading" style="text-align:center;padding:2rem;color:var(--cinza)">Carregando...</div>
         <div id="resp-lista"></div>
         <div id="resp-vazio" style="display:none;text-align:center;padding:3rem;color:var(--cinza)">Nenhuma resposta ainda.</div>
       </div>
+      <!-- Rastreamento -->
+      <div id="pview-rastreamento" style="display:none">
+
+        <!-- Funil -->
+        <div class="funil-wrap">
+          <div class="funil-card">
+            <div class="funil-num" id="funil-visitou">—</div>
+            <div class="funil-label">Visitaram</div>
+            <div class="funil-pct" id="funil-pct-iniciou"></div>
+          </div>
+          <div class="funil-card">
+            <div class="funil-num" id="funil-iniciou">—</div>
+            <div class="funil-label">Começaram</div>
+            <div class="funil-pct" id="funil-pct-completou"></div>
+          </div>
+          <div class="funil-card">
+            <div class="funil-num" id="funil-completou">—</div>
+            <div class="funil-label">Completaram</div>
+            <div class="funil-pct" id="funil-taxa"></div>
+          </div>
+        </div>
+
+        <!-- Cliques na página -->
+        <div style="background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem;margin-bottom:1rem">
+          <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza);margin-bottom:.8rem">
+            <i class="ti ti-cursor"></i> Cliques na Minha Página
+          </div>
+          <div class="cliques-lista" id="cliques-lista">
+            <div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:1rem">Carregando...</div>
+          </div>
+        </div>
+
+        <!-- Lista visitantes -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;flex-wrap:wrap;gap:.5rem">
+          <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza)">
+            <i class="ti ti-users"></i> Todos os visitantes
+          </span>
+          <div style="display:flex;gap:.4rem">
+            <button class="tab-btn ativo" id="rfiltro-todos" style="font-size:.7rem;padding:.3rem .7rem" onclick="filtrarRastr('todos',this)">Todos</button>
+            <button class="tab-btn" id="rfiltro-iniciou" style="font-size:.7rem;padding:.3rem .7rem" onclick="filtrarRastr('iniciou',this)">Incompletos</button>
+            <button class="tab-btn" id="rfiltro-visitou" style="font-size:.7rem;padding:.3rem .7rem" onclick="filtrarRastr('visitou',this)">Só visitaram</button>
+          </div>
+        </div>
+        <div class="rastr-lista" id="rastr-lista">
+          <div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:2rem;font-style:italic">Carregando...</div>
+        </div>
+      </div>
+
       <div id="pview-perguntas" style="display:none">
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
           <button class="btn btn-verde" onclick="abrirModalPerg(null)"><i class="ti ti-plus"></i> Nova pergunta</button>
@@ -1048,28 +1097,54 @@ select.inp{cursor:pointer}
   </div>
 </div>
 
-<!-- MODAL BLOCO (anotação/pergunta/tarefa) -->
+<!-- MODAL BLOCO UNIFICADO -->
 <div class="backdrop" id="modal-bloco">
   <div class="modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
-      <h3 class="modal-titulo" id="bloco-modal-titulo" style="margin-bottom:0">Adicionar anotação</h3>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <h3 class="modal-titulo" id="bloco-modal-titulo" style="margin-bottom:0">Adicionar</h3>
       <button class="btn-ghost" onclick="fecharModalBloco()"><i class="ti ti-x"></i></button>
     </div>
     <input type="hidden" id="bloco-id">
     <input type="hidden" id="bloco-tipo">
+    <!-- Seletor de tipo -->
+    <div class="tipo-selector" id="bloco-tipo-selector">
+      <button class="tipo-opt ativo" id="tipo-opt-anotacao" onclick="selecionarTipoBloco('anotacao')">
+        <i class="ti ti-notes"></i>Anotação
+      </button>
+      <button class="tipo-opt" id="tipo-opt-tarefa" onclick="selecionarTipoBloco('tarefa')">
+        <i class="ti ti-checkbox"></i>Tarefa
+      </button>
+      <button class="tipo-opt" id="tipo-opt-lista" onclick="selecionarTipoBloco('lista')">
+        <i class="ti ti-list-check"></i>Checklist
+      </button>
+      <button class="tipo-opt" id="tipo-opt-pergunta" onclick="selecionarTipoBloco('pergunta')">
+        <i class="ti ti-help"></i>Pergunta
+      </button>
+    </div>
     <div class="form-grupo">
-      <label class="campo-label" id="bloco-label">Anotação *</label>
-      <textarea class="inp" id="bloco-conteudo" rows="4" placeholder="Digite aqui..."></textarea>
+      <label class="campo-label">Título *</label>
+      <input class="inp" id="bloco-titulo-inp" placeholder="Ex: Documentos necessários">
+    </div>
+    <div class="form-grupo" id="bloco-desc-wrap">
+      <label class="campo-label" id="bloco-label">Descrição</label>
+      <textarea class="inp" id="bloco-conteudo" rows="3" placeholder="Detalhes, observações..."></textarea>
+    </div>
+    <div class="form-grupo" id="bloco-checklist-wrap" style="display:none">
+      <label class="campo-label">Itens do checklist *</label>
+      <div class="modal-checklist-lista" id="modal-checklist-lista"></div>
+      <button type="button" class="btn btn-outline" style="font-size:.73rem;width:100%;justify-content:center;margin-top:4px" onclick="addItemChecklist()">
+        <i class="ti ti-plus"></i> Adicionar item
+      </button>
     </div>
     <div class="form-grupo">
       <label class="campo-label">Visibilidade</label>
       <div style="display:flex;gap:.8rem;margin-top:.3rem">
         <label style="display:flex;align-items:center;gap:.4rem;font-size:.82rem;cursor:pointer">
-          <input type="radio" name="bloco-pub" id="bloco-pub-sim" value="sim" checked> 
+          <input type="radio" name="bloco-pub" id="bloco-pub-sim" value="sim" checked>
           <span>👁️ Visível para a cliente</span>
         </label>
         <label style="display:flex;align-items:center;gap:.4rem;font-size:.82rem;cursor:pointer">
-          <input type="radio" name="bloco-pub" id="bloco-pub-nao" value="nao"> 
+          <input type="radio" name="bloco-pub" id="bloco-pub-nao" value="nao">
           <span>🔒 Só para mim</span>
         </label>
       </div>
@@ -1546,12 +1621,13 @@ function abrirModulo(nome){
 
 // PROSPECCAO
 async function prospTab(tab){
-  ['respostas','perguntas'].forEach(t=>{
-    document.getElementById('pview-'+t).style.display=t===tab?'block':'none';
-    document.getElementById('ptab-'+t).classList.toggle('ativo',t===tab);
+  ['respostas','perguntas','rastreamento'].forEach(t=>{
+    document.getElementById('pview-'+t)&&(document.getElementById('pview-'+t).style.display=t===tab?'block':'none');
+    document.getElementById('ptab-'+t)&&document.getElementById('ptab-'+t).classList.toggle('ativo',t===tab);
   });
   if(tab==='respostas')carregarRespostas();
   if(tab==='perguntas')carregarPerguntas();
+  if(tab==='rastreamento')carregarRastreamento();
 }
 async function carregarRespostas(){
   const lista=document.getElementById('resp-lista');
@@ -1570,19 +1646,19 @@ async function carregarRespostas(){
         <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.6rem;margin-bottom:.5rem">
           <div><div class="resp-nome">${r.nome||'&mdash;'}</div><div class="resp-data">${dt}</div></div>
           <div style="display:flex;gap:.4rem;flex-wrap:wrap">
-            ${wa?`<a href="https://wa.me/55${wa}" target="_blank" class="btn btn-verde" style="font-size:.72rem;padding:.35rem .7rem;text-decoration:none;border-radius:6px"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>`:''}
+            ${wa?('<a href="https://wa.me/55'+wa+'" target="_blank" class="btn btn-verde" style="font-size:.72rem;padding:.35rem .7rem;text-decoration:none;border-radius:6px"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>'):''}
             <button class="btn btn-outline" style="font-size:.72rem;padding:.35rem .7rem;color:var(--danger);border-color:var(--danger)" onclick="deletarResposta('${r.id}')"><i class="ti ti-trash"></i></button>
           </div>
         </div>
         <div class="resp-grid">
-          ${r.profissao?`<div class="resp-item"><span>Profissao: </span>${r.profissao}</div>`:''}
-          ${r.faturamento?`<div class="resp-item"><span>Faturamento: </span>${r.faturamento}</div>`:''}
-          ${r.tempo?`<div class="resp-item"><span>Tempo no negocio: </span>${r.tempo}</div>`:''}
-          ${r.investimento?`<div class="resp-item"><span>Investimento: </span>${r.investimento}</div>`:''}
-          ${r.instagram?`<div class="resp-item"><span>Instagram: </span>${r.instagram}</div>`:''}
+          ${r.profissao?('<div class="resp-item"><span>Profissao: </span>'+r.profissao+'</div>'):'' }
+          ${r.faturamento?('<div class="resp-item"><span>Faturamento: </span>'+r.faturamento+'</div>'):''}
+          ${r.tempo?('<div class="resp-item"><span>Tempo no negocio: </span>'+r.tempo+'</div>'):''}
+          ${r.investimento?('<div class="resp-item"><span>Investimento: </span>'+r.investimento+'</div>'):''}
+          ${r.instagram?('<div class="resp-item"><span>Instagram: </span>'+r.instagram+'</div>'):''}
         </div>
-        ${dores?`<div class="resp-dor"><span style="color:var(--cinza)">Maiores dores: </span>${dores}</div>`:''}
-        ${r.mensagem?`<div class="resp-msg">"${r.mensagem}"</div>`:''}
+        ${dores?('<div class="resp-dor"><span style="color:var(--cinza)">Maiores dores: </span>'+dores+'</div>'):''}
+        ${r.mensagem?('<div class="resp-msg">"'+r.mensagem+'"</div>'):''}
       </div>`;
     }).join('');
   }catch(e){loading.textContent='Erro: '+e.message;}
@@ -2742,11 +2818,15 @@ function voltarListaClientes() {
 }
 
 function fichaTab(fase) {
-  _faseAtual = fase;
+  const isAnexos = fase==='anexos';
+  _faseAtual = isAnexos ? _faseAtual : fase;
   ['diagnostico','planejamento','crescimento'].forEach(f=>{
-    document.getElementById('ftab-'+f).classList.toggle('ativo',f===fase);
+    document.getElementById('ftab-'+f)?.classList.toggle('ativo',f===fase);
   });
-  renderBlocos();
+  document.getElementById('ftab-anexos')?.classList.toggle('ativo', isAnexos);
+  document.getElementById('ficha-fase-conteudo').style.display = isAnexos?'none':'block';
+  document.getElementById('ficha-aba-anexos').style.display = isAnexos?'block':'none';
+  if(!isAnexos) renderBlocos();
 }
 
 async function carregarBlocos() {
@@ -2755,6 +2835,25 @@ async function carregarBlocos() {
     blocos = await sbGet('consultoria_blocos',`cliente_id=eq.${_clienteAtualId}&order=ordem.asc,created_at.asc`);
   } catch(e) { console.error(e); blocos=[]; }
   renderBlocos();
+}
+
+function gerarChecklistHtml(itens, blocoId) {
+  if(!itens.length) return '<div style="color:var(--cinza2);font-size:.75rem;font-style:italic">Sem itens</div>';
+  const rows = itens.map(function(item,i){
+    const texto = typeof item==='string'?item:(item.texto||'');
+    const feito = typeof item==='object'?!!item.feito:false;
+    const cbClass = 'checklist-cb' + (feito?' feito':'');
+    const txClass = 'checklist-texto' + (feito?' feito':'');
+    const checkIcon = feito?'<i class="ti ti-check" style="font-size:.7rem"></i>':'';
+    const oc = 'toggleChecklistItem(' + JSON.stringify(blocoId) + ',' + i + ')';
+    return '<div class="checklist-item">' +
+      '<div class="'+cbClass+'" onclick="'+oc+'">' +
+      checkIcon +
+      '</div>' +
+      '<span class="'+txClass+'">' + texto + '</span>' +
+      '</div>';
+  });
+  return '<div class="checklist-wrap">'+rows.join('')+'</div>';
 }
 
 function renderBlocos() {
@@ -2768,55 +2867,88 @@ function renderBlocos() {
   const icons = {anotacao:'<i class="ti ti-notes"></i>',pergunta:'<i class="ti ti-help"></i>',tarefa:'<i class="ti ti-checkbox"></i>'};
   lista.innerHTML = doFase.map(b=>{
     const pub = b.publicado!==false;
-    const pubBtn = `<button class="vis-btn ${pub?'publico':'privado'}" onclick="togglePublico('${b.id}','${b.publicado}')" style="margin-left:auto">
+    const pubBtn = `<button class="vis-btn ${pub?'publico':'privado'}" onclick="togglePublico('${b.id}')" style="margin-left:auto">
       ${pub?'<i class="ti ti-eye"></i> Visível':'<i class="ti ti-eye-off"></i> Só para mim'}
     </button>`;
+    const tituloEl = b.titulo ? `<div class="bloco-titulo-text">${b.titulo}</div>` : '';
+    const conteudoEl = b.conteudo ? `<div class="bloco-conteudo">${b.conteudo}</div>` : '';
+    const acoes = `<div class="bloco-acoes">
+      <button class="btn-bloco-edit" onclick="editarBloco('${b.id}')"><i class="ti ti-pencil"></i></button>
+      <button class="btn-bloco-del" onclick="deletarBloco('${b.id}')"><i class="ti ti-trash"></i></button>
+    </div>`;
+
+    if(b.tipo==='lista') {
+      const itens = Array.isArray(b.checklist) ? b.checklist : [];
+      const checklistHtml = gerarChecklistHtml(itens, b.id);
+      return `<div class="bloco tipo-anotacao">
+        <div class="bloco-header">
+          <span class="bloco-tipo-label-sm label-lista"><i class="ti ti-list-check"></i> Checklist</span>
+          ${acoes}
+        </div>
+        ${tituloEl}
+        ${conteudoEl}
+        ${checklistHtml}
+        <div class="bloco-vis-toggle">${pubBtn}</div>
+      </div>`;
+    }
+
     if(b.tipo==='tarefa') {
+      const feito = !!b.concluido;
       return `<div class="bloco tipo-tarefa">
+        <div class="bloco-header">
+          <span class="bloco-tipo-label-sm label-tarefa"><i class="ti ti-checkbox"></i> Tarefa</span>
+          ${acoes}
+        </div>
         <div class="bloco-tarefa-row">
-          <div class="bloco-check ${b.concluido?'feito':''}" onclick="toggleTarefa('${b.id}')">
-            ${b.concluido?'<i class="ti ti-check" style="font-size:.75rem"></i>':''}
+          <div class="bloco-check ${feito?'feito':''}" onclick="toggleTarefa('${b.id}')">
+            ${feito?'<i class="ti ti-check" style="font-size:.75rem"></i>':''}
           </div>
-          <div class="bloco-conteudo" style="${b.concluido?'text-decoration:line-through;opacity:.6':''}">$\{b.conteudo}</div>
-          <div class="bloco-acoes">
-            <button class="btn-bloco-edit" onclick="editarBloco('${b.id}')"><i class="ti ti-pencil"></i></button>
-            <button class="btn-bloco-del" onclick="deletarBloco('${b.id}')"><i class="ti ti-trash"></i></button>
+          <div>
+            ${tituloEl}
+            ${conteudoEl}
           </div>
         </div>
         <div class="bloco-vis-toggle">${pubBtn}</div>
       </div>`;
     }
+
     if(b.tipo==='pergunta') {
       return `<div class="bloco tipo-pergunta">
         <div class="bloco-header">
-          <div class="bloco-tipo-icon">${icons[b.tipo]}</div>
-          <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:#3a4a8a;letter-spacing:.06em">Pergunta</span>
-          <div class="bloco-acoes">
-            <button class="btn-bloco-edit" onclick="editarBloco('${b.id}')"><i class="ti ti-pencil"></i></button>
-            <button class="btn-bloco-del" onclick="deletarBloco('${b.id}')"><i class="ti ti-trash"></i></button>
-          </div>
+          <span class="bloco-tipo-label-sm label-pergunta"><i class="ti ti-help"></i> Pergunta</span>
+          ${acoes}
         </div>
-        <div class="bloco-conteudo">${b.conteudo}</div>
+        ${tituloEl}
+        ${b.conteudo?'<div class="bloco-conteudo" style="color:var(--cinza)">'+b.conteudo+'</div>':''}
         <div class="bloco-resposta-wrap">
           <div class="bloco-resposta-label">Resposta da cliente</div>
-          ${b.resposta?`<div class="bloco-resposta-text">"${b.resposta}"</div>`:'<div class="bloco-resposta-vazia">Aguardando resposta...</div>'}
+          ${b.resposta?'<div class="bloco-resposta-text">"'+b.resposta+'"</div>':'<div class="bloco-resposta-vazia">Aguardando resposta...</div>'}
         </div>
         <div class="bloco-vis-toggle">${pubBtn}</div>
       </div>`;
     }
+
+    // anotacao (default)
     return `<div class="bloco tipo-anotacao">
       <div class="bloco-header">
-        <div class="bloco-tipo-icon">${icons[b.tipo]}</div>
-        <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--terra);letter-spacing:.06em">Anotação</span>
-        <div class="bloco-acoes">
-          <button class="btn-bloco-edit" onclick="editarBloco('${b.id}')"><i class="ti ti-pencil"></i></button>
-          <button class="btn-bloco-del" onclick="deletarBloco('${b.id}')"><i class="ti ti-trash"></i></button>
-        </div>
+        <span class="bloco-tipo-label-sm label-anotacao"><i class="ti ti-notes"></i> Anotação</span>
+        ${acoes}
       </div>
-      <div class="bloco-conteudo">${b.conteudo}</div>
+      ${tituloEl}
+      ${conteudoEl}
       <div class="bloco-vis-toggle">${pubBtn}</div>
     </div>`;
   }).join('');
+}
+
+async function toggleChecklistItem(blocoId, idx) {
+  const b = blocos.find(x=>x.id===blocoId); if(!b||!Array.isArray(b.checklist)) return;
+  const item = b.checklist[idx];
+  if(typeof item==='string') b.checklist[idx] = {texto:item, feito:true};
+  else b.checklist[idx] = {...item, feito:!item.feito};
+  renderBlocos();
+  try { await sbPatch('consultoria_blocos',`id=eq.${blocoId}`,{checklist:b.checklist,updated_at:new Date().toISOString()}); }
+  catch(e) { console.error(e); }
 }
 
 async function togglePublico(id, atual) {
@@ -2836,51 +2968,127 @@ async function toggleTarefa(id) {
 }
 
 // ── MODAL BLOCO ───────────────────────────────────────────
-function addBloco(tipo) {
-  document.getElementById('bloco-id').value='';
-  document.getElementById('bloco-tipo').value=tipo;
-  document.getElementById('bloco-conteudo').value='';
-  const titulos={anotacao:'Adicionar anotação',pergunta:'Adicionar pergunta',tarefa:'Adicionar tarefa'};
-  const labels={anotacao:'Anotação *',pergunta:'Pergunta para a cliente *',tarefa:'Tarefa *'};
-  const placeholders={anotacao:'Digite a anotação...',pergunta:'Digite a pergunta que a cliente deve responder...',tarefa:'Descreva a tarefa...'};
-  document.getElementById('bloco-modal-titulo').textContent=titulos[tipo];
-  document.getElementById('bloco-label').textContent=labels[tipo];
-  document.getElementById('bloco-conteudo').placeholder=placeholders[tipo];
+function selecionarTipoBloco(tipo) {
+  document.getElementById('bloco-tipo').value = tipo;
+  ['anotacao','tarefa','lista','pergunta'].forEach(t => {
+    document.getElementById('tipo-opt-'+t)?.classList.toggle('ativo', t===tipo);
+  });
+  const temChecklist = tipo==='lista';
+  const temDesc = tipo!=='lista';
+  document.getElementById('bloco-checklist-wrap').style.display = temChecklist?'block':'none';
+  document.getElementById('bloco-desc-wrap').style.display = temDesc?'block':'none';
+  const labels = {anotacao:'Descrição',tarefa:'Descrição da tarefa',pergunta:'Pergunta para a cliente'};
+  const placeholders = {anotacao:'Detalhes, observações...',tarefa:'O que precisa ser feito?',pergunta:'Digite a pergunta que a cliente deve responder...'};
+  const lEl = document.getElementById('bloco-label');
+  const cEl = document.getElementById('bloco-conteudo');
+  if(lEl) lEl.textContent = labels[tipo]||'Descrição';
+  if(cEl) cEl.placeholder = placeholders[tipo]||'';
+}
+
+function addItemChecklist(valor='') {
+  const lista = document.getElementById('modal-checklist-lista');
+  const div = document.createElement('div');
+  div.className = 'modal-checklist-row';
+  div.innerHTML = `<input placeholder="Ex: Extrato bancário dos últimos 3 meses" value="${valor}">
+    <button type="button" class="btn-bloco-del" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>`;
+  lista.appendChild(div);
+  div.querySelector('input').focus();
+}
+
+function getChecklistItens() {
+  return Array.from(document.querySelectorAll('#modal-checklist-lista input'))
+    .map(i => i.value.trim()).filter(Boolean);
+}
+
+function abrirModalBlocoNovo() {
+  document.getElementById('bloco-id').value = '';
+  document.getElementById('bloco-titulo-inp').value = '';
+  document.getElementById('bloco-conteudo').value = '';
+  document.getElementById('modal-checklist-lista').innerHTML = '';
+  document.getElementById('bloco-pub-sim').checked = true;
+  document.getElementById('bloco-modal-titulo').textContent = 'Adicionar';
+  document.getElementById('bloco-tipo-selector').style.display = 'grid';
+  selecionarTipoBloco('anotacao');
   document.getElementById('modal-bloco').classList.add('aberto');
-  setTimeout(()=>document.getElementById('bloco-conteudo').focus(),100);
+  setTimeout(()=>document.getElementById('bloco-titulo-inp').focus(),100);
 }
 
 function editarBloco(id) {
-  const b=blocos.find(x=>x.id===id); if(!b) return;
-  document.getElementById('bloco-id').value=b.id;
-  document.getElementById('bloco-tipo').value=b.tipo;
-  document.getElementById('bloco-conteudo').value=b.conteudo;
-  // Preencher visibilidade
-  const pub = b.publicado!==false;
-  document.getElementById('bloco-pub-sim').checked=pub;
-  document.getElementById('bloco-pub-nao').checked=!pub;
-  const titulos={anotacao:'Editar anotação',pergunta:'Editar pergunta',tarefa:'Editar tarefa'};
-  document.getElementById('bloco-modal-titulo').textContent=titulos[b.tipo];
+  const b = blocos.find(x=>x.id===id); if(!b) return;
+  document.getElementById('bloco-id').value = b.id;
+  document.getElementById('bloco-titulo-inp').value = b.titulo||'';
+  document.getElementById('bloco-conteudo').value = b.conteudo||'';
+  document.getElementById('bloco-modal-titulo').textContent = 'Editar';
+  document.getElementById('bloco-tipo-selector').style.display = 'none';
+  document.getElementById('bloco-tipo').value = b.tipo;
+  // Checklist
+  document.getElementById('modal-checklist-lista').innerHTML = '';
+  if(b.tipo==='lista' && Array.isArray(b.checklist)) {
+    b.checklist.forEach(item => addItemChecklist(item.texto||item));
+    document.getElementById('bloco-checklist-wrap').style.display = 'block';
+    document.getElementById('bloco-desc-wrap').style.display = 'none';
+  } else {
+    document.getElementById('bloco-checklist-wrap').style.display = 'none';
+    document.getElementById('bloco-desc-wrap').style.display = 'block';
+  }
+  if(b.publicado===false) document.getElementById('bloco-pub-nao').checked = true;
+  else document.getElementById('bloco-pub-sim').checked = true;
   document.getElementById('modal-bloco').classList.add('aberto');
 }
 
 function fecharModalBloco(){document.getElementById('modal-bloco').classList.remove('aberto');}
 
+// addBloco mantido para compatibilidade (chamado por código legado)
+function addBloco(tipo) { abrirModalBlocoNovo(); selecionarTipoBloco(tipo); }
+
 async function salvarBloco() {
-  const conteudo=document.getElementById('bloco-conteudo').value.trim();
-  if(!conteudo){alert('Preencha o conteúdo.');return;}
-  const btn=document.getElementById('bloco-salvar-btn');
-  btn.disabled=true;btn.innerHTML='<span class="loader"></span>';
-  const id=document.getElementById('bloco-id').value;
-  const tipo=document.getElementById('bloco-tipo').value;
-  const publicado=document.getElementById('bloco-pub-sim')?.checked!==false;
-  const payload={conteudo,tipo,fase:_faseAtual,cliente_id:_clienteAtualId,ordem:blocos.filter(b=>b.fase===_faseAtual).length,publicado,updated_at:new Date().toISOString()};
-  try{
-    if(id){await sbPatch('consultoria_blocos',`id=eq.${id}`,{conteudo,updated_at:new Date().toISOString()});}
+  const titulo = document.getElementById('bloco-titulo-inp').value.trim();
+  const tipo = document.getElementById('bloco-tipo').value || 'anotacao';
+  const publicado = document.getElementById('bloco-pub-sim').checked;
+
+  if(!titulo) { alert('Preencha o título.'); return; }
+  if(tipo==='lista' && getChecklistItens().length===0) { alert('Adicione pelo menos um item ao checklist.'); return; }
+
+  const btn = document.getElementById('bloco-salvar-btn');
+  btn.disabled=true; btn.innerHTML='<span class="loader"></span>';
+
+  const id = document.getElementById('bloco-id').value;
+  const conteudo = document.getElementById('bloco-conteudo').value.trim();
+
+  // Checklist: array de {texto, feito}
+  const checklist = tipo==='lista'
+    ? getChecklistItens().map(t => ({texto:t, feito:false}))
+    : (id ? (blocos.find(b=>b.id===id)?.checklist||null) : null);
+
+  const rawTipo = tipo;
+  const isMet = rawTipo.startsWith('met_');
+
+  if(isMet) {
+    // Salvar na metodologia
+    const tipoReal = rawTipo.replace('met_','');
+    const payload = {conteudo:titulo+(conteudo?' '+conteudo:''),tipo:tipoReal,fase:_metFase,ordem:metodologia.filter(b=>b.fase===_metFase).length};
+    try {
+      if(id.startsWith('met_')){await sbPatch('consultoria_metodologia',`id=eq.${id.replace('met_','')}`,{conteudo:payload.conteudo,updated_at:new Date().toISOString()});}
+      else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('consultoria_metodologia',payload);}
+      fecharModalBloco(); await carregarMetodologia();
+    } catch(e){alert('Erro: '+e.message);}
+    btn.disabled=false; btn.textContent='Salvar'; return;
+  }
+
+  const payload = {
+    titulo, conteudo: conteudo||null, tipo,
+    fase:_faseAtual, cliente_id:_clienteAtualId,
+    ordem: id ? (blocos.find(b=>b.id===id)?.ordem||0) : blocos.filter(b=>b.fase===_faseAtual).length,
+    publicado, checklist: checklist||null,
+    updated_at: new Date().toISOString()
+  };
+
+  try {
+    if(id){await sbPatch('consultoria_blocos',`id=eq.${id}`,{titulo,conteudo:conteudo||null,publicado,checklist:checklist||null,updated_at:new Date().toISOString()});}
     else{payload.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await sbPost('consultoria_blocos',payload);}
-    fecharModalBloco();await carregarBlocos();
-  }catch(e){alert('Erro: '+e.message);}
-  btn.disabled=false;btn.textContent='Salvar';
+    fecharModalBloco(); await carregarBlocos();
+  } catch(e){alert('Erro: '+e.message);}
+  btn.disabled=false; btn.textContent='Salvar';
 }
 
 async function deletarBloco(id){
@@ -2888,6 +3096,7 @@ async function deletarBloco(id){
   await sbDelete('consultoria_blocos',`id=eq.${id}`);
   await carregarBlocos();
 }
+
 
 // ── MODAL CLIENTE ─────────────────────────────────────────
 function abrirModalNovaCliente(){
@@ -3455,6 +3664,82 @@ async function salvarAnexos() {
 setInterval(()=>{
   if(TOKEN && REFRESH_TOKEN) renovarToken();
 }, 50*60*1000);
+
+// ══ RASTREAMENTO ═════════════════════════════════════════
+let _rastrData = [];
+let _cliquesData = [];
+let _rastrFiltro = 'todos';
+
+async function carregarRastreamento() {
+  try { _rastrData = await sbGetComRenovacao('prospeccao_acessos','order=updated_at.desc&limit=200'); }
+  catch(e) { _rastrData=[]; }
+  try { _cliquesData = await sbGetComRenovacao('pagina_cliques','order=created_at.desc&limit=500'); }
+  catch(e) { _cliquesData=[]; }
+  renderFunil(); renderCliques(); renderRastrLista();
+}
+
+function renderFunil() {
+  const total=_rastrData.length;
+  const iniciou=_rastrData.filter(r=>r.status==='iniciou'||r.status==='completou').length;
+  const completou=_rastrData.filter(r=>r.status==='completou').length;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('funil-visitou',total);
+  set('funil-iniciou',iniciou);
+  set('funil-completou',completou);
+  set('funil-pct-iniciou',(total>0?Math.round(iniciou/total*100):0)+'% do total');
+  set('funil-pct-completou',(iniciou>0?Math.round(completou/iniciou*100):0)+'% dos que começaram');
+  set('funil-taxa',(total>0?Math.round(completou/total*100):0)+'% de conversão');
+}
+
+function renderCliques() {
+  const el=document.getElementById('cliques-lista'); if(!el)return;
+  if(!_cliquesData.length){el.innerHTML='<div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:1rem;font-style:italic">Nenhum clique registrado ainda.</div>';return;}
+  const cont={};
+  _cliquesData.forEach(c=>{cont[c.link_label]=(cont[c.link_label]||0)+1;});
+  const max=Math.max(...Object.values(cont));
+  const sorted=Object.entries(cont).sort((a,b)=>b[1]-a[1]);
+  el.innerHTML=sorted.map(([label,n])=>
+    '<div class="clique-row">'+
+    '<span class="clique-label">'+label+'</span>'+
+    '<div class="clique-bar-wrap"><div class="clique-bar" style="width:'+Math.round(n/max*100)+'%"></div></div>'+
+    '<span class="clique-num">'+n+'</span>'+
+    '</div>'
+  ).join('');
+}
+
+function filtrarRastr(filtro,btn) {
+  _rastrFiltro=filtro;
+  document.querySelectorAll('[id^="rfiltro-"]').forEach(b=>b.classList.remove('ativo'));
+  if(btn)btn.classList.add('ativo');
+  renderRastrLista();
+}
+
+function renderRastrLista() {
+  const el=document.getElementById('rastr-lista'); if(!el)return;
+  let dados=_rastrData;
+  if(_rastrFiltro==='iniciou') dados=_rastrData.filter(r=>r.status==='iniciou');
+  else if(_rastrFiltro==='visitou') dados=_rastrData.filter(r=>r.status==='visitou');
+  if(!dados.length){el.innerHTML='<div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:2rem;font-style:italic">Nenhum visitante ainda.</div>';return;}
+  const icons={visitou:'<i class="ti ti-eye"></i>',iniciou:'<i class="ti ti-pencil"></i>',completou:'<i class="ti ti-check"></i>'};
+  const labels={visitou:'Só visitou',iniciou:'Incompleto',completou:'Completou'};
+  el.innerHTML=dados.map(r=>{
+    const d=r.dados||{};
+    const nome=d.nome||d.whatsapp||'';
+    const resumo=[nome?nome:null,r.etapa?'Parou na etapa '+r.etapa:null,d.profissao||null].filter(Boolean).join(' · ');
+    const hora=new Date(r.updated_at||r.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    return '<div class="rastr-card">'+
+      '<div class="rastr-icon '+(r.status||'visitou')+'">'+(icons[r.status]||'?')+'</div>'+
+      '<div class="rastr-info">'+
+        '<div style="display:flex;align-items:center;gap:.5rem">'+
+          '<span class="rastr-status '+(r.status||'visitou')+'">'+(labels[r.status]||r.status)+'</span>'+
+          (resumo?'<span style="font-size:.78rem;color:var(--marrom)">'+resumo+'</span>':'')+
+        '</div>'+
+        (r.etapa?'<div class="rastr-etapa">Última etapa: '+r.etapa+'</div>':'')+
+      '</div>'+
+      '<span class="rastr-hora">'+hora+'</span>'+
+      '</div>';
+  }).join('');
+}
 
 // INIT
 document.getElementById('l-senha').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
