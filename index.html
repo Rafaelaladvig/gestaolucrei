@@ -399,6 +399,53 @@ select.inp{cursor:pointer}
 .btn-edit-opts:hover{border-color:var(--musgo);color:var(--musgo)}
 
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--creme2)}::-webkit-scrollbar-thumb{background:var(--cinza2);border-radius:3px}
+
+/* ══ RASTREAMENTO ═══════════════════════════════════════ */
+.funil-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem}
+.funil-card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:14px;padding:1.2rem 1rem;display:flex;flex-direction:column;gap:.3rem;position:relative;overflow:hidden}
+.funil-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.funil-card.card-visitou::before{background:#94a3b8}
+.funil-card.card-iniciou::before{background:#f59e0b}
+.funil-card.card-completou::before{background:var(--musgo)}
+.funil-icon-wrap{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.3rem;flex-shrink:0}
+.card-visitou .funil-icon-wrap{background:#f1f5f9;color:#64748b}
+.card-iniciou .funil-icon-wrap{background:#fef3c7;color:#d97706}
+.card-completou .funil-icon-wrap{background:#dcfce7;color:#16a34a}
+.funil-num{font-size:1.9rem;font-weight:700;color:var(--marrom);line-height:1;font-family:'Cormorant Garamond',serif}
+.funil-label{font-size:.72rem;font-weight:600;color:var(--marrom2)}
+.funil-pct-text{font-size:.67rem;color:var(--cinza);margin-top:1px}
+.funil-prog{height:4px;background:var(--creme2);border-radius:2px;margin-top:.6rem;overflow:hidden}
+.funil-prog-bar{height:100%;border-radius:2px;transition:width .8s ease}
+.card-visitou .funil-prog-bar{background:#94a3b8}
+.card-iniciou .funil-prog-bar{background:#f59e0b}
+.card-completou .funil-prog-bar{background:var(--musgo)}
+.rastr-box{background:var(--branco);border:1.5px solid var(--creme2);border-radius:12px;padding:1rem;margin-bottom:1rem}
+.rastr-box-titulo{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--cinza);display:flex;align-items:center;gap:.35rem;margin-bottom:.8rem}
+.cliques-lista{display:flex;flex-direction:column;gap:.1rem}
+.clique-row{display:flex;align-items:center;gap:.7rem;padding:.55rem 0;border-bottom:1px solid var(--creme2)}
+.clique-row:last-child{border-bottom:none}
+.clique-icon{width:28px;height:28px;border-radius:7px;background:var(--verde-light);color:var(--musgo);display:flex;align-items:center;justify-content:center;font-size:.78rem;flex-shrink:0}
+.clique-label{font-size:.78rem;font-weight:500;color:var(--marrom);flex:1}
+.clique-bar-wrap{width:100px;height:5px;background:var(--creme2);border-radius:3px;overflow:hidden;flex-shrink:0}
+.clique-bar{height:100%;background:var(--musgo);border-radius:3px;transition:width .6s ease}
+.clique-num{font-size:.78rem;font-weight:700;color:var(--musgo);min-width:24px;text-align:right;flex-shrink:0}
+.rastr-lista{display:flex;flex-direction:column;gap:.5rem}
+.rastr-card{background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:.8rem 1rem;display:flex;align-items:center;gap:.75rem;transition:border-color .2s}
+.rastr-card:hover{border-color:var(--musgo)}
+.rastr-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
+.rastr-icon.visitou{background:#f1f5f9;color:#64748b}
+.rastr-icon.iniciou{background:#fef3c7;color:#d97706}
+.rastr-icon.completou{background:#dcfce7;color:#16a34a}
+.rastr-info{flex:1;min-width:0}
+.rastr-nome{font-size:.82rem;font-weight:600;color:var(--marrom);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rastr-detalhe{font-size:.68rem;color:var(--cinza);margin-top:1px}
+.rastr-right{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0}
+.rastr-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.6rem;font-weight:700;padding:.18rem .5rem;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
+.rastr-badge.visitou{background:#f1f5f9;color:#64748b}
+.rastr-badge.iniciou{background:#fef3c7;color:#d97706}
+.rastr-badge.completou{background:#dcfce7;color:#16a34a}
+.rastr-hora{font-size:.62rem;color:var(--cinza2);white-space:nowrap}
+
 </style>
 </head>
 <body>
@@ -499,51 +546,56 @@ select.inp{cursor:pointer}
       <!-- Rastreamento -->
       <div id="pview-rastreamento" style="display:none">
 
-        <!-- Funil -->
+        <!-- Funil de conversão -->
         <div class="funil-wrap">
-          <div class="funil-card">
+          <div class="funil-card card-visitou">
+            <div class="funil-icon-wrap"><i class="ti ti-eye"></i></div>
             <div class="funil-num" id="funil-visitou">—</div>
-            <div class="funil-label">Visitaram</div>
-            <div class="funil-pct" id="funil-pct-iniciou"></div>
+            <div class="funil-label">Visitaram o formulário</div>
+            <div class="funil-pct-text" id="funil-pct-iniciou"></div>
+            <div class="funil-prog"><div class="funil-prog-bar" id="funil-bar-visitou" style="width:100%"></div></div>
           </div>
-          <div class="funil-card">
+          <div class="funil-card card-iniciou">
+            <div class="funil-icon-wrap"><i class="ti ti-pencil"></i></div>
             <div class="funil-num" id="funil-iniciou">—</div>
-            <div class="funil-label">Começaram</div>
-            <div class="funil-pct" id="funil-pct-completou"></div>
+            <div class="funil-label">Começaram a preencher</div>
+            <div class="funil-pct-text" id="funil-pct-completou"></div>
+            <div class="funil-prog"><div class="funil-prog-bar" id="funil-bar-iniciou" style="width:0%"></div></div>
           </div>
-          <div class="funil-card">
+          <div class="funil-card card-completou">
+            <div class="funil-icon-wrap"><i class="ti ti-check"></i></div>
             <div class="funil-num" id="funil-completou">—</div>
             <div class="funil-label">Completaram</div>
-            <div class="funil-pct" id="funil-taxa"></div>
+            <div class="funil-pct-text" id="funil-taxa"></div>
+            <div class="funil-prog"><div class="funil-prog-bar" id="funil-bar-completou" style="width:0%"></div></div>
           </div>
         </div>
 
-        <!-- Cliques na página -->
-        <div style="background:var(--branco);border:1.5px solid var(--creme2);border-radius:10px;padding:1rem;margin-bottom:1rem">
-          <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza);margin-bottom:.8rem">
-            <i class="ti ti-cursor"></i> Cliques na Minha Página
+        <!-- Cliques na página pública -->
+        <div class="rastr-box">
+          <div class="rastr-box-titulo">
+            <i class="ti ti-cursor-text"></i> Cliques na Minha Página
           </div>
           <div class="cliques-lista" id="cliques-lista">
-            <div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:1rem">Carregando...</div>
+            <div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:.8rem;font-style:italic">Carregando...</div>
           </div>
         </div>
 
-        <!-- Lista visitantes -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;flex-wrap:wrap;gap:.5rem">
-          <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza)">
+        <!-- Lista de visitantes -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;flex-wrap:wrap;gap:.5rem">
+          <div class="rastr-box-titulo" style="margin-bottom:0">
             <i class="ti ti-users"></i> Todos os visitantes
-          </span>
-          <div style="display:flex;gap:.4rem">
-            <button class="tab-btn ativo" id="rfiltro-todos" style="font-size:.7rem;padding:.3rem .7rem" onclick="filtrarRastr('todos',this)">Todos</button>
-            <button class="tab-btn" id="rfiltro-iniciou" style="font-size:.7rem;padding:.3rem .7rem" onclick="filtrarRastr('iniciou',this)">Incompletos</button>
-            <button class="tab-btn" id="rfiltro-visitou" style="font-size:.7rem;padding:.3rem .7rem" onclick="filtrarRastr('visitou',this)">Só visitaram</button>
+          </div>
+          <div style="display:flex;gap:.35rem">
+            <button class="tab-btn ativo" id="rfiltro-todos" style="font-size:.68rem;padding:.28rem .65rem" onclick="filtrarRastr('todos',this)">Todos</button>
+            <button class="tab-btn" id="rfiltro-iniciou" style="font-size:.68rem;padding:.28rem .65rem" onclick="filtrarRastr('iniciou',this)">Incompletos</button>
+            <button class="tab-btn" id="rfiltro-visitou" style="font-size:.68rem;padding:.28rem .65rem" onclick="filtrarRastr('visitou',this)">Só visitaram</button>
           </div>
         </div>
         <div class="rastr-lista" id="rastr-lista">
           <div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:2rem;font-style:italic">Carregando...</div>
         </div>
       </div>
-
       <div id="pview-perguntas" style="display:none">
         <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
           <button class="btn btn-verde" onclick="abrirModalPerg(null)"><i class="ti ti-plus"></i> Nova pergunta</button>
@@ -3683,28 +3735,45 @@ function renderFunil() {
   const iniciou=_rastrData.filter(r=>r.status==='iniciou'||r.status==='completou').length;
   const completou=_rastrData.filter(r=>r.status==='completou').length;
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
-  set('funil-visitou',total);
-  set('funil-iniciou',iniciou);
-  set('funil-completou',completou);
-  set('funil-pct-iniciou',(total>0?Math.round(iniciou/total*100):0)+'% do total');
-  set('funil-pct-completou',(iniciou>0?Math.round(completou/iniciou*100):0)+'% dos que começaram');
-  set('funil-taxa',(total>0?Math.round(completou/total*100):0)+'% de conversão');
+  const setW=(id,pct)=>{const e=document.getElementById(id);if(e)e.style.width=pct+'%';};
+  set('funil-visitou', total||0);
+  set('funil-iniciou', iniciou||0);
+  set('funil-completou', completou||0);
+  const pctI = total>0?Math.round(iniciou/total*100):0;
+  const pctC = iniciou>0?Math.round(completou/iniciou*100):0;
+  const taxa = total>0?Math.round(completou/total*100):0;
+  set('funil-pct-iniciou', pctI+'% partiram para preencher');
+  set('funil-pct-completou', pctC+'% dos que começaram');
+  set('funil-taxa', taxa+'% de conversão geral');
+  // Barras de progresso animadas
+  setTimeout(()=>{
+    setW('funil-bar-visitou', 100);
+    setW('funil-bar-iniciou', pctI);
+    setW('funil-bar-completou', taxa);
+  }, 100);
 }
 
 function renderCliques() {
   const el=document.getElementById('cliques-lista'); if(!el)return;
-  if(!_cliquesData.length){el.innerHTML='<div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:1rem;font-style:italic">Nenhum clique registrado ainda.</div>';return;}
+  if(!_cliquesData.length){
+    el.innerHTML='<div style="color:var(--cinza2);font-size:.75rem;text-align:center;padding:1rem;font-style:italic">Nenhum clique registrado ainda.<br><span style="font-size:.68rem">Os cliques aparecem quando alguém interage com sua página pública.</span></div>';
+    return;
+  }
   const cont={};
   _cliquesData.forEach(c=>{cont[c.link_label]=(cont[c.link_label]||0)+1;});
   const max=Math.max(...Object.values(cont));
   const sorted=Object.entries(cont).sort((a,b)=>b[1]-a[1]);
-  el.innerHTML=sorted.map(([label,n])=>
-    '<div class="clique-row">'+
-    '<span class="clique-label">'+label+'</span>'+
-    '<div class="clique-bar-wrap"><div class="clique-bar" style="width:'+Math.round(n/max*100)+'%"></div></div>'+
-    '<span class="clique-num">'+n+'</span>'+
-    '</div>'
-  ).join('');
+  el.innerHTML=sorted.map(([label,n])=>{
+    const pct=Math.round(n/max*100);
+    const icons={'whatsapp':'ti-brand-whatsapp','instagram':'ti-brand-instagram','lucrei':'ti-app-window','consultoria':'ti-briefcase','link':'ti-link'};
+    const iconKey=Object.keys(icons).find(k=>label.toLowerCase().includes(k))||'link';
+    return '<div class="clique-row">'+
+      '<div class="clique-icon"><i class="ti '+icons[iconKey]+'"></i></div>'+
+      '<span class="clique-label">'+label+'</span>'+
+      '<div class="clique-bar-wrap"><div class="clique-bar" style="width:'+pct+'%"></div></div>'+
+      '<span class="clique-num">'+n+'</span>'+
+      '</div>';
+  }).join('');
 }
 
 function filtrarRastr(filtro,btn) {
@@ -3724,19 +3793,23 @@ function renderRastrLista() {
   const labels={visitou:'Só visitou',iniciou:'Incompleto',completou:'Completou'};
   el.innerHTML=dados.map(r=>{
     const d=r.dados||{};
-    const nome=d.nome||d.whatsapp||'';
-    const resumo=[nome?nome:null,r.etapa?'Parou na etapa '+r.etapa:null,d.profissao||null].filter(Boolean).join(' · ');
+    const nome=d.nome||'Visitante anônimo';
+    const detalhe=[d.profissao||null, r.etapa&&r.status!=='completou'?'Parou na etapa '+r.etapa+' de '+(_rastrData[0]?'?':'?'):null].filter(Boolean).join(' · ');
     const hora=new Date(r.updated_at||r.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    const status=r.status||'visitou';
+    const badgeIcons={visitou:'ti-eye',iniciou:'ti-pencil',completou:'ti-check'};
     return '<div class="rastr-card">'+
-      '<div class="rastr-icon '+(r.status||'visitou')+'">'+(icons[r.status]||'?')+'</div>'+
+      '<div class="rastr-icon '+status+'"><i class="ti '+(badgeIcons[status]||'ti-user')+'"></i></div>'+
       '<div class="rastr-info">'+
-        '<div style="display:flex;align-items:center;gap:.5rem">'+
-          '<span class="rastr-status '+(r.status||'visitou')+'">'+(labels[r.status]||r.status)+'</span>'+
-          (resumo?'<span style="font-size:.78rem;color:var(--marrom)">'+resumo+'</span>':'')+
-        '</div>'+
-        (r.etapa?'<div class="rastr-etapa">Última etapa: '+r.etapa+'</div>':'')+
+        '<div class="rastr-nome">'+nome+'</div>'+
+        (detalhe?'<div class="rastr-detalhe">'+detalhe+'</div>':'')+
       '</div>'+
-      '<span class="rastr-hora">'+hora+'</span>'+
+      '<div class="rastr-right">'+
+        '<span class="rastr-badge '+status+'">'+
+          '<i class="ti '+(badgeIcons[status]||'ti-user')+'"></i> '+(labels[status]||status)+
+        '</span>'+
+        '<span class="rastr-hora">'+hora+'</span>'+
+      '</div>'+
       '</div>';
   }).join('');
 }
